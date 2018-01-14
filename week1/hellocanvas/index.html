@@ -8,7 +8,25 @@
 		canvas {
 			border: 1px solid gray;
 		}
+
+		#fontLoader {
+			height: 0;
+			width: 0;
+			overflow: hidden;
+		}
+
+		#indie {
+			font-family: 'Indie Flower', cursive;
+		}
+
+		#lobster {
+			font-family: 'Lobster', cursive;
+		}
 	</style>
+	<link href="https://fonts.googleapis.com/css?family=Indie+Flower"
+	      rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Lobster"
+	      rel="stylesheet">
 	<script>
 		// #0 - In this course we will always use ECMAScript 5's "strict" mode
 		// See what 'use strict' does here:
@@ -28,45 +46,84 @@
 			// B - the ctx variable points at a “2D drawing context”
 			const ctx = canvas.getContext('2d');
 			// C - all fill operations are now in yellow
-			ctx.fillStyle = 'yellow';
+			ctx.fillStyle = 'black';
 			// D - fill a rectangle with the current fill color
 			ctx.fillRect(0, 0, 640, 480);
 
+			ctx.save();
+
+			ctx.shadowColor = "red";
+			ctx.shadowOffsetX = 0;
+			ctx.shadowOffsetY = 0;
+			ctx.shadowBlur = 30;
+
+			// horizontal alignment
+			ctx.textAlign = "center";
+			// vertical alignment
+			ctx.textBaseline = "middle";
+
 			// E - set the current font
-			ctx.font = 'bold 60pt Verdana';
+			ctx.font = 'bold 45pt sans';
 			// F - change the current fill color
-			ctx.fillStyle = '#44aa44';
+			ctx.fillStyle = 'white';
 			// G - draw and fill text using current fill color
-			ctx.fillText('L.A.B', 50, 240);
+			ctx.fillText('L.A.B', 320, 240);
 
+			ctx.fillRect(90, 135, 50, 50)
+			ctx.fillRect(45, 180, 50, 50)
 
-			/*
-			Make your version different:
+			// E - set the current font
+			ctx.font = '36pt Lobster';
+			// F - change the current fill color
+			ctx.fillStyle = 'red';
+			// G - draw and fill text using current fill color
+			ctx.fillText('IGM', 320, 306);
 
-			i) Change the yellow rectangle to a different solid color.
+			for (let i = 9; i > 0; i--) {
+				drawEquilateralTriangle(ctx, 'white', i, 18 + i, new Vector2(320, 450 - i * 9))
+			}
+			drawEquilateralTriangle(ctx, 'white', 4.5, -18, new Vector2(594, 45))
 
-			ii) Change the text to your name, and change the color of the text to
-			something else. Note: Color can be specified in any legal CSS way,
-			i.e. pre-defined keyword, hex, shorthand hex, RGB value, RGB percentage, RGBA,
-			 or even HSL
-			http://www.w3schools.com/cssref/css_colors_legal.asp
+			ctx.restore();
 
+			drawLine(ctx, 'red', 9, new Vector2(540, 0), new Vector2(540, 480))
+			drawLine(ctx, 'white', 4.5, new Vector2(0, 100), new Vector2(640, 100))
 
-			iii) Change the font of your name to something else. If you know how to embed
-			 web fonts, find something here and use it: http://www.google.com/fonts
+		}
 
-			iv) Add another line of text that reads “IGM”. Make sure that this text
-			 appears in a different color and font than your name did.
+		function drawEquilateralTriangle(ctx, color, thickness, size, center) {
+			const p1 = new Vector2(center.x, center.y + size);
+			const p2 = new Vector2(center.x - size, center.y - size);
+			const p3 = new Vector2(center.x + size, center.y - size);
 
-			v) Add two squares to your canvas (50 x 50  or so) using
-			ctx.fillRect(x,y,width,height)- and make sure that the square color is the
-			same as the first text you
-			drew (your name).
+			ctx.strokeStyle = color;
+			ctx.lineWidth = thickness;
 
-			*/
+			ctx.beginPath();
+			ctx.moveTo(p1.x, p1.y);
+			ctx.lineTo(p2.x, p2.y);
+			ctx.lineTo(p3.x, p3.y);
 
+			ctx.closePath();
+			ctx.stroke();
+		}
 
+		function drawLine(ctx, color, thickness, start, end) {
+			ctx.strokeStyle = color;
+			ctx.lineWidth = thickness;
 
+			ctx.beginPath();
+			ctx.moveTo(start.x, start.y);
+			ctx.lineTo(end.x, end.y);
+			ctx.closePath();
+			ctx.stroke();
+		}
+
+		class Vector2 {
+			constructor(x, y) {
+				this.x = x;
+				this.y = y;
+			}
 		}
 	</script>
 </head>
@@ -77,6 +134,10 @@
 		Get a real browser!
 		<!-- The user will only see the above text if their browser is older and doesn't support <canvas> -->
 	</canvas>
+	<div id="fontLoader">
+		<p id="indie">Indie Font</p>
+		<p id="lobster">Lobster Font</p>
+	</div>
 </body>
 
 </html>
