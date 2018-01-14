@@ -1,13 +1,28 @@
 'use strict';
 
-window.addEventListener('load', onLoad);
+window.addEventListener('load', main);
 
-function onLoad() {
+// Main function
+function main() {
 
     const canvas = document.querySelector('canvas');
 
     const context = canvas.getContext('2d');
 
+    draw(canvas, context);
+
+    canvas.addEventListener('click', ()=>{
+        clearCanvas(canvas, context)
+        draw(canvas, context)
+    })
+
+    setInterval(() => {
+        clearCanvas(canvas, context)
+        draw(canvas, context)
+    }, 450);
+}
+
+function draw(canvas, context) {
     const horizonRatio = 3 / 4; // = sky / (sky+ ground)
 
     const horizonY = canvas.height * horizonRatio;
@@ -53,6 +68,7 @@ function onLoad() {
     })
 }
 
+// Draw the face
 function drawSmileyFace(ctx, {
     x,
     y,
@@ -88,6 +104,7 @@ function drawSmileyFace(ctx, {
     drawCircle(ctx, x + radius / 2, y + radius / 3.6, radius / 9)
 }
 
+// Draw the random tree
 function drawTree(ctx, {
     color,
     x,
