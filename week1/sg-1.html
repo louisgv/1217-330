@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Canvas 1</title>
+	<style type="text/css">
+		body {
+			background: #dddddd;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 100vw;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+
+		canvas {
+			background: #ffffff;
+			cursor: pointer;
+			box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+		}
+	</style>
+
+	<script>
+		"use strict";
+		// #1 - wait for page to load
+		window.onload = init;
+
+		function init() {
+			console.log("init() called");
+			// #2 - get pointer to <canvas> element on page
+			const canvas = document.querySelector('canvas');
+
+			// #3 - get pointer to "drawing context" and drawing API
+			const ctx = canvas.getContext('2d');
+
+			/* #4 - start drawing! */
+
+			// draw filled square
+			// ctx.fillStyle = "red";
+			// // ctx.fillRect(x,y,width,height);
+			// ctx.fillRect(20,20,100,100);
+
+			// A. Write code that will fill a black 50x50 square at (0,0)
+			ctx.fillStyle = 'black';
+			ctx.fillRect(0, 0, 50, 50);
+
+			// B. Write code that will fill a purple 50x50 square at (300,300)
+			ctx.fillStyle = 'purple';
+			ctx.fillRect(300, 300, 50, 50);
+
+			// C. Write code that will stroke a purple 50x50 square at (300,300)
+			ctx.strokeStyle = 'purple';
+			ctx.strokeRect(300, 300, 50, 50);
+
+			// D. Write code that will stroke a 5 pixel thick green line between (0,100) and (100,500)
+
+			ctx.strokeStyle = 'green';
+			ctx.lineWidth = 5;
+			ctx.beginPath();
+			ctx.moveTo(0, 100);
+			ctx.lineTo(100, 500);
+			ctx.closePath();
+			ctx.stroke();
+
+
+			// E. Write code to fill a black circle at (0,0) that has a radius of 50 pixels.
+
+			//  ctx.arc(x,y,radius,startAngle,endAngle, clockwise)
+			ctx.fillStyle = 'rgba(255, 255, 255, 1)';
+			ctx.beginPath();
+			ctx.arc(0, 0, 50, 0, Math.PI * 2, false);
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+
+			// F. Write code to fill a yellow semi-circle (180 degrees ie. Math.PI radians) at (200,200) that has a radius of 100 pixels.
+
+			ctx.fillStyle = 'yellow';
+			ctx.beginPath();
+			ctx.arc(200, 200, 100, 0, Math.PI);
+			ctx.closePath();
+			ctx.fill();
+
+			/**
+			// Bonus: A Parallelogram
+			ctx.beginPath();
+            ctx.moveTo(50, 50); // "pick up" pen and move to top-left corner
+            ctx.lineTo(250, 50); // extend path to top-right corner
+            ctx.lineTo(200, 150); // extend path to bottom-right corner
+            ctx.lineTo(0, 150); // extend path to bottom-left corner
+
+            // closing the path will automatically extend the path back to (50,50) where it started
+            ctx.closePath();
+
+            // we can't yet see the path, so stroke and fill it.
+            ctx.fillStyle = "yellow";
+            ctx.fill();
+            ctx.strokeStyle="#red";
+            ctx.lineWidth=10;
+			ctx.stroke();
+			**/
+			console.log(ctx);
+
+
+		}
+
+		console.log("In bottom of <script> tag!");
+	</script>
+
+</head>
+
+<body>
+	<canvas width="750"
+	        height="500">
+         Get a browser that supports Canvas!
+         <!-- The user will only see the above text if their browser is older and doesn't support <canvas> -->
+
+      </canvas>
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+body {
+  overflow-x: hidden;
+}
+
+#Center {
+  top: 135px;
+  left: calc(50vw - 27vw);
+  height: auto;
+  width: 54vw;
+  flex-direction: column;
+  margin-bottom: 90px;
+
+  opacity: 0;
+  animation: appear 0.5s ease-in forwards;
+  animation-delay: 0.5s;
+}
+
+li {
+  margin-bottom: 0.9em;
+  line-height: 1.35em;
+}
+
+#PortraitContainer {
+  opacity: 0;
+  right: 0;
+  top: 0;
+  animation: appear 0.5s ease-in forwards;
+	animation-delay: 0.5s;
+}
+
+#Portrait {
+  height: 45vh;
+  transform: rotate(-18deg) translateX(63px);
+}
+
+@media only screen and (max-device-width: 1024px){
+  #Portrait {
+    max-height: 450px;
+    transform: rotate(-18deg) translateX(90px);
+  }
+}
+
+#GithubLinkContainer {
+  opacity: 0;
+  right: 45px;
+  bottom: 45px;
+  animation: appear 0.5s ease-in forwards;
+  animation-delay: 2s;
+}
+
+#GithubIcon {
+  transition: 0.36s;
+  border-radius: 100%;
+}
+
+.ProjectLinksContainer {
+  width: 100%;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
+
+.ProjectLinksContainer a {
+  margin: 9px;
+}

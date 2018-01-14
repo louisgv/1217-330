@@ -1,0 +1,217 @@
+h1, h2, h3 {
+	display: block;
+	margin: 0;
+	font-weight: lighter;
+}
+
+h1 {
+	font-size: 2.7em;
+}
+
+h2 {
+	font-size: 1.44em;
+	color: gray;
+}
+
+h3 {
+  font-size: 1.35em;
+}
+
+a {
+	opacity: 0.54;
+
+	transition: 0.36s;
+}
+
+a:link {
+	color: #193441;
+}
+
+a:visited {
+	color: black;
+}
+
+a:visited:hover {
+	color: #193441;
+}
+
+a:hover {
+	opacity: 1;
+	text-decoration: underline;
+}
+
+a:active {
+	text-decoration: none;
+}
+
+#Copyright {
+	bottom: 0;
+	width: 100vw;
+	color: gray;
+	text-align: center;
+
+	opacity: 0;
+	animation: appear 0.5s ease-in forwards;
+	animation-delay: 1s;
+}
+
+#CopyrightText {
+	background: white;
+}
+
+#LicenseLogoAnchor:hover {
+	background: white;
+}
+
+.LicenseLogo {
+	display: inline-block;
+	border: none;
+	height: 1em;
+	opacity: 0.45;
+	transition: 0.36s;
+}
+
+.LicenseLogo:hover {
+	opacity: 1;
+}
+
+#TopLeft {
+	top: 45px;
+  left: 45px;
+}
+
+#TopRight {
+	top: 45px;
+  right: 45px;
+}
+
+#Back::before {
+	content: "<";
+}
+
+#Back:hover::after {
+	content: "back";
+}
+
+.ResponsiveButton {
+	width: 45px;
+  height: 45px;
+}
+
+.CircleButton {
+	opacity: 1;
+	border-radius: 45px;
+
+  border: 1.8px solid #193441;
+	text-decoration: none;
+	color: #193441;
+	font-family: monospace;
+	font-size: 1.44em;
+	transition: 0.36s;
+}
+
+.CircleButton:hover {
+	width: 180px;
+	background: #193441;
+	color: white;
+	text-decoration: none;
+}
+
+.CircleButton:visited {
+	color: gray;
+	border: 1.8px solid gray;
+}
+
+.CircleButton:visited:hover {
+	width: 180px;
+	background: #193441;
+	border: 1.8px solid white;
+	color: white;
+	text-decoration: none;
+}
+
+.BubbleButton {
+	opacity: 1;
+  border-radius: 45px;
+  width: 180px;
+  height: 45px;
+  border: 1.8px solid #193441;
+	text-decoration: none;
+	color: #193441;
+	font-family: monospace;
+	font-size: 1.44em;
+	transition: 0.36s;
+}
+
+.BubbleButton:hover {
+	background: #193441;
+	color: white;
+	text-decoration: none;
+}
+
+.BubbleButton:visited {
+	color: gray;
+	border: 1.8px solid gray;
+}
+
+.BubbleButton:visited:hover {
+	background: #193441;
+	color: white;
+	text-decoration: none;
+	border: 1.8px solid white;
+}
+
+.Absolute {
+  position: absolute;
+}
+
+.Fixed  {
+	position: fixed;
+}
+
+.FlexSpaceAround {
+	display: flex;
+  justify-content: space-around;
+  align-items: center;
+	flex-wrap: wrap;
+}
+
+.FlexSpaceBetween {
+	display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.FlexCenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.LastAppear {
+	opacity: 0;
+	animation: appear 0.5s ease-in forwards;
+	animation-delay: 4s;
+}
+
+@keyframes droplet {
+  0% {
+    top: -270px;
+    border-radius: 50% 50% 50% 50%;
+  }
+  100% {
+    top: 45px;
+    height: 36px;
+    width: 36px;
+    border-radius: 50% 50% 50% 4.5%;
+  }
+}
+
+@keyframes appear {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
