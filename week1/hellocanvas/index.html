@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8" />
 	<title>Template</title>
 	<style type="text/css">
-	canvas{
-		border:1px solid gray;
-	}
+		canvas {
+			border: 1px solid gray;
+		}
 	</style>
 	<script>
 		// #0 - In this course we will always use ECMAScript 5's "strict" mode
@@ -18,21 +19,18 @@
 		// this is called an "event handler"
 		window.onload = init;
 
-		function init(){
+		function init() {
 			// #2 Now that the page has loaded, start drawing!
 			console.log('init called');
 
 			// A - canvas variable points at <canvas> tag
-			
-
-			// B - the ctx variable points at a "2D drawing context"
-
-
+			const canvas = document.querySelector('canvas');
+			// B - the ctx variable points at a “2D drawing context”
+			const ctx = canvas.getContext('2d');
 			// C - all fill operations are now in yellow
-
-
+			ctx.fillStyle = 'yellow';
 			// D - fill a rectangle with the current fill color
-
+			ctx.fillRect(0, 0, 640, 480);
 
 			// E - set the current font
 
@@ -73,10 +71,13 @@
 		}
 	</script>
 </head>
+
 <body>
-	<canvas width="640" height="480">
+	<canvas width="640"
+	        height="480">
 		Get a real browser!
 		<!-- The user will only see the above text if their browser is older and doesn't support <canvas> -->
 	</canvas>
 </body>
+
 </html>
