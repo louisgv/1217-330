@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <!--
+		A canvas example from:
+		https://developer.apple.com/library/safari/documentation/AudioVideo/Conceptual/HTML-canvas-guide/DrawingLinesandShapes/DrawingLinesandShapes.html
+		Their coding style is different from what we'll be using in class - use our style, not theirs.
+	-->
+    <title>Simple curve example</title>
+    <style>
+        canvas {
+            background: #ffffff;
+            cursor: pointer;
+            margin-left: 10px;
+            margin-top: 10px;
+            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+
+    <script src="./shared/Vector2.js"
+            charset="utf-8"></script>
+
+    <script src="./utils.js"
+            charset="utf-8"></script>
+
+    <script type="text/javascript">
+        let canvas, ctx;
+
+        const p1 = new Vector2(5, 150)
+        const p2 = new Vector2(50, 300)
+
+        function init() {
+            canvas = document.querySelector("canvas");
+            ctx = canvas.getContext("2d");
+            drawCurves();
+        }
+
+        function drawCurves() {
+            if (!ctx) {
+                return;
+            }
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.lineWidth = "3";
+            ctx.strokeStyle = "black";
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.quadraticCurveTo(p1.x, p1.y, canvas.width, canvas.height);
+            ctx.stroke();
+
+            ctx.strokeStyle = "red";
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(p1.x, p1.y, p2.x, p2.y, canvas.width, canvas.height);
+            ctx.stroke();
+        }
+
+        function animate() {
+            const randomOffset = new Vector2(randomBetween(-2, 1), randomBetween(-2, 1))
+            p1.translate(randomOffset)
+            p2.translate(randomOffset)
+
+            drawCurves()
+
+            requestAnimationFrame(animate)
+        }
+
+        requestAnimationFrame(animate)
+    </script>
+</head>
+
+<body onload="init()"
+      style="background-color:#e0e0e0">
+    <canvas height="400"
+            width="600">
+    </canvas>
+</body>
+
+</html>
