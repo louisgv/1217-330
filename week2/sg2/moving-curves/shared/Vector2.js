@@ -6,8 +6,8 @@ class Vector2 {
         this.y = y;
     }
 
-    translate({x, y}) {
-        this.x += x;
-        this.y += y;
+    translate({x, y}, speed) {
+        this.x += x * speed;
+        this.y += y * speed;
     }
 }
