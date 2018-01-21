@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Canvas Paint App</title>
+	<style>
+		body {
+			background: #eeeeee;
+			font-family: tahoma, verdana, sans serif;
+		}
+
+		#mainCanvas {
+			background: #ffffff;
+			position: absolute;
+			z-index: 0;
+			left: 10px;
+			top: 10px;
+			box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
+		}
+
+		#controls {
+			position: absolute;
+			z-index: 2;
+			left: 25px;
+			top: 25px;
+		}
+
+		label {
+			font-size: 12px;
+			margin-right: 0.75em;
+		}
+	</style>
+
+	<script src='./shared/Vector2.js'
+	        charset='utf-8'></script>
+	<script src='./utils.js'
+	        charset='utf-8'></script>
+
+	<script>
+		"use strict";
+		window.onload = init;
+
+		// GLOBALS
+		var canvas, ctx, dragging = false,
+			lineWidth, strokeStyle;
+
+		// CONSTANTS
+		const DEFAULT_LINE_WIDTH = 3;
+		const DEFAULT_STROKE_STYLE = "red";
+
+		// FUNCTIONS
+		function init() {
+			// initialize some globals
+			canvas = document.querySelector('#mainCanvas');
+			ctx = canvas.getContext('2d');
+
+			lineWidth = DEFAULT_LINE_WIDTH;
+			strokeStyle = DEFAULT_STROKE_STYLE;
+
+			ctx.lineWidth = lineWidth;
+			ctx.strokeStyle = strokeStyle;
+
+			ctx.lineCap = "round";
+			ctx.lineJoin = "round";
+
+			drawGrid(ctx, 'lightgray', 10, 10);
+
+			canvas.onmousedown = doMousedown;
+			canvas.onmousemove = doMousemove;
+			canvas.onmouseup = doMouseup;
+			canvas.onmouseout = doMouseout;
+
+			document.querySelector('#lineWidthChooser').onchange = doLineWidthChange;
+			document.querySelector('#strokeStyleChooser').onchange = doStrokeStyleChange;
+			document.querySelector('#clearButton').onclick = doClear;
+
+		}
+
+
+		// EVENT CALLBACK FUNCTIONS
+		function doMousedown(e) {
+			console.log(e.type);
+
+			dragging = true;
+
+			const {
+				x,
+				y
+			} = getMouse(e);
+
+			ctx.beginPath();
+
+			ctx.moveTo(x, y);
+		}
+
+		function doMousemove(e) {
+			if (!dragging) {
+				return;
+			}
+
+			const {
+				x,
+				y
+			} = getMouse(e);
+
+			ctx.strokeStyle = strokeStyle;
+			ctx.lineWidth = lineWidth;
+
+			ctx.lineTo(x, y);
+
+			ctx.stroke();
+		}
+
+		function doMouseup(e) {
+			console.log(e.type);
+			dragging = false;
+
+			ctx.closePath()
+		}
+
+		// if the user drags out of the canvas
+		function doMouseout(e) {
+			console.log(e.type);
+			dragging = false;
+
+			ctx.closePath()
+		}
+
+		function doClear() {
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			drawGrid(ctx, 'lightgray', 10, 10);
+		}
+
+		function doLineWidthChange(e) {
+			lineWidth = e.target.value;
+		}
+
+		function doStrokeStyleChange(e) {
+			strokeStyle = e.target.value;
+		}
+
+		// UTILITY FUNCTIONS
+		/*
+		These utility functions do not depend on any global variables being in existence,
+		and produce no "side effects" such as changing ctx state variables.
+		They are "pure functions" - see: http://en.wikipedia.org/wiki/Pure_function
+		*/
+
+		// Function Name: getMouse()
+		// returns mouse position in local coordinate system of element
+		// Author: Tony Jefferson
+		// Last update: 3/1/2014
+		function getMouse(e) {
+			var mouse = {}
+			mouse.x = e.pageX - e.target.offsetLeft;
+			mouse.y = e.pageY - e.target.offsetTop;
+			return mouse;
+		}
+
+		/*
+		Function Name: drawGrid()
+		Description: Fills the entire canvas with a grid
+		Last update: 9/1/2014
+		*/
+		function drawGrid(ctx, color, cellWidth, cellHeight) {
+			// save the current drawing state as it existed before this function was called
+			ctx.save()
+
+			// set some drawing state variables
+			ctx.strokeStyle = color;
+			ctx.fillStyle = '#ffffff';
+			ctx.lineWidth = 0.5;
+			ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+			// vertical lines all set!
+			for (var x = cellWidth + 0.5; x < ctx.canvas.width; x += cellWidth) {
+				ctx.beginPath();
+				ctx.moveTo(x, 0);
+				ctx.lineTo(x, ctx.canvas.height);
+				ctx.stroke();
+			}
+
+			/*
+				Need horizontal lines!
+				You write it!
+			*/
+
+			for (let y = cellHeight + 0.5; y < ctx.canvas.height; y += cellHeight) {
+				ctx.beginPath();
+				ctx.moveTo(0, y);
+				ctx.lineTo(ctx.canvas.width, y);
+				ctx.stroke();
+			}
+
+
+			// restore the drawing state
+			ctx.restore();
+		}
+	</script>
+</head>
+
+<body>
+	<canvas id="mainCanvas"
+	        width="700"
+	        height="500">
+	Get a real browser!
+	</canvas>
+
+	<div id="controls">
+		<label>Tool:
+			<select id="toolChooser">
+				<option value="toolPencil">Pencil</option>
+    		</select>
+    	</label>
+
+		<label>Line Width:
+			<select id="lineWidthChooser">
+				<option value="1">1</option>
+				<option value="2">2</option>
+        		<option value="3" selected>3</option>
+        		<option value="4">4</option>
+				<option value="5">5</option>
+        		<option value="6">6</option>
+        		<option value="7">7</option>
+				<option value="8">8</option>
+        		<option value="9">9</option>
+        		<option value="10">10</option>
+    		</select>
+    	</label>
+
+		<label>Stroke Style:
+			<select id="strokeStyleChooser">
+				<option value="red">red</option>
+				<option value="blue">blue</option>
+				<option value="green">green</option>
+				<option value="yellow">yellow</option>
+				<option value="black" selected>black</option>
+			</select>
+		</label>
+
+		<span><input id="clearButton" type="button" value="Clear"/></span>
+	</div>
+
+</body>
+
+</html>
