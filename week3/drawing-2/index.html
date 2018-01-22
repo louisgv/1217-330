@@ -19,6 +19,15 @@
 			box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);
 		}
 
+		#topCanvas {
+			background: rgba(0, 0, 0, 0);
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			z-index: 1;
+			cursor: pointer;
+		}
+
 		#controls {
 			position: absolute;
 			z-index: 2;
@@ -42,12 +51,19 @@
 		window.onload = init;
 
 		// GLOBALS
-		var canvas, ctx, dragging = false,
-			lineWidth, strokeStyle;
+		let canvas, ctx,
+			topCanvas, topCtx,
+			dragging = false,
+			lineWidth, strokeStyle,
+			currentTool, fillStyle, origin;
 
 		// CONSTANTS
 		const DEFAULT_LINE_WIDTH = 3;
 		const DEFAULT_STROKE_STYLE = "red";
+		const DEFAULT_FILL_STYLE = "blue";
+		const TOOL_PENCIL = "toolPencil";
+		const TOOL_RECTANGLE = "toolRectangle";
+		const TOOL_LINE = "toolLine";
 
 		// FUNCTIONS
 		function init() {
@@ -55,28 +71,48 @@
 			canvas = document.querySelector('#mainCanvas');
 			ctx = canvas.getContext('2d');
 
+			topCanvas = document.querySelector('#topCanvas');
+			topCtx = topCanvas.getContext('2d');
+
 			lineWidth = DEFAULT_LINE_WIDTH;
 			strokeStyle = DEFAULT_STROKE_STYLE;
 
-			ctx.lineWidth = lineWidth;
-			ctx.strokeStyle = strokeStyle;
+			fillStyle = DEFAULT_FILL_STYLE;
+			currentTool = TOOL_PENCIL;
+			origin = new Vector2();
 
-			ctx.lineCap = "round";
-			ctx.lineJoin = "round";
+			setDrawingProps();
 
 			drawGrid(ctx, 'lightgray', 10, 10);
 
-			canvas.onmousedown = doMousedown;
-			canvas.onmousemove = doMousemove;
-			canvas.onmouseup = doMouseup;
-			canvas.onmouseout = doMouseout;
+			topCanvas.onmousedown = doMousedown;
+			topCanvas.onmousemove = doMousemove;
+			topCanvas.onmouseup = doMouseup;
+			topCanvas.onmouseout = doMouseout;
 
 			document.querySelector('#lineWidthChooser').onchange = doLineWidthChange;
 			document.querySelector('#strokeStyleChooser').onchange = doStrokeStyleChange;
 			document.querySelector('#clearButton').onclick = doClear;
 
+			document.querySelector('#fillStyleChooser').onchange = (e) => {
+				fillStyle = e.target.value;
+			}
+
+			document.querySelector('#toolChooser').onchange = (e) => {
+				currentTool = e.target.value;
+
+				console.log(`currentTool =  ${currentTool}`);
+			}
+
 		}
 
+		function setDrawingProps() {
+			topCtx.lineWidth = ctx.lineWidth = lineWidth;
+			topCtx.strokeStyle = ctx.strokeStyle = strokeStyle;
+			topCtx.fillStyle = ctx.fillStyle = fillStyle;
+			topCtx.lineCap = ctx.lineCap = "round";
+			topCtx.lineJoin = ctx.lineJoin = "round";
+		}
 
 		// EVENT CALLBACK FUNCTIONS
 		function doMousedown(e) {
@@ -89,9 +125,17 @@
 				y
 			} = getMouse(e);
 
-			ctx.beginPath();
+			switch (currentTool) {
+				case TOOL_RECTANGLE:
+				case TOOL_LINE:
+					origin = new Vector2(x, y)
+					break;
+				case TOOL_PENCIL:
+				default:
+					ctx.beginPath();
+					ctx.moveTo(x, y);
+			}
 
-			ctx.moveTo(x, y);
 		}
 
 		function doMousemove(e) {
@@ -103,33 +147,85 @@
 				x,
 				y
 			} = getMouse(e);
+			setDrawingProps()
 
-			ctx.strokeStyle = strokeStyle;
-			ctx.lineWidth = lineWidth;
+			switch (currentTool) {
+				case TOOL_RECTANGLE:
+					const pos = new Vector2(
+						Math.min(x, origin.x),
+						Math.min(y, origin.y)
+					);
 
-			ctx.lineTo(x, y);
+					const size = new Vector2(
+						Math.abs(x - origin.x),
+						Math.abs(y - origin.y)
+					)
 
-			ctx.stroke();
+					doClearTopCanvas()
+
+					topCtx.fillRect(pos.x, pos.y, size.x, size.y);
+					topCtx.strokeRect(pos.x, pos.y, size.x, size.y);
+
+					break;
+				case TOOL_LINE:
+					doClearTopCanvas()
+					topCtx.beginPath();
+					topCtx.moveTo(origin.x, origin.y);
+					topCtx.lineTo(x, y);
+					topCtx.stroke();
+
+					break;
+				case TOOL_PENCIL:
+				default:
+
+					ctx.lineTo(x, y);
+
+					ctx.stroke();
+			}
 		}
 
 		function doMouseup(e) {
 			console.log(e.type);
-			dragging = false;
 
-			ctx.closePath()
+			switch (currentTool) {
+				case TOOL_RECTANGLE:
+				case TOOL_LINE:
+					if (dragging) {
+						ctx.drawImage(topCanvas, 0, 0);
+						doClearTopCanvas();
+					}
+					break;
+				case TOOL_PENCIL:
+				default:
+					ctx.closePath()
+			}
+
+			dragging = false;
 		}
 
 		// if the user drags out of the canvas
 		function doMouseout(e) {
 			console.log(e.type);
-			dragging = false;
 
-			ctx.closePath()
+			switch (currentTool) {
+				case TOOL_RECTANGLE:
+				case TOOL_LINE:
+					doClearTopCanvas()
+					break;
+				case TOOL_PENCIL:
+				default:
+					ctx.closePath()
+			}
+			dragging = false;
 		}
 
 		function doClear() {
 			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 			drawGrid(ctx, 'lightgray', 10, 10);
+		}
+
+		function doClearTopCanvas() {
+			topCtx.clearRect(0, 0, topCtx.canvas.width, topCtx.canvas.height);
 		}
 
 		function doLineWidthChange(e) {
@@ -207,10 +303,20 @@
 	Get a real browser!
 	</canvas>
 
+	<canvas id="topCanvas"
+	        width="700"
+	        height="500">
+	Get a real browser!
+	</canvas>
+
+
+
 	<div id="controls">
 		<label>Tool:
 			<select id="toolChooser">
 				<option value="toolPencil">Pencil</option>
+				<option value="toolRectangle">Rectangle</option>
+				<option value="toolLine">Line</option>
     		</select>
     	</label>
 
@@ -231,6 +337,16 @@
 
 		<label>Stroke Style:
 			<select id="strokeStyleChooser">
+				<option value="red">red</option>
+				<option value="blue">blue</option>
+				<option value="green">green</option>
+				<option value="yellow">yellow</option>
+				<option value="black" selected>black</option>
+			</select>
+		</label>
+
+		<label>Fill Style:
+			<select id="fillStyleChooser">
 				<option value="red">red</option>
 				<option value="blue">blue</option>
 				<option value="green">green</option>
