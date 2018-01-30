@@ -1,5 +1,5 @@
 // All of these functions are in the global scope
-		
+
 "use strict";
 
 // returns mouse position in local coordinate system of element
@@ -45,8 +45,8 @@ function getRandomUnitVector(){
 		x /= length;
 		y /= length;
 	}
-	
-	return {x:x, y:y};
+
+	return new Vector2(x, y);
 }
 
 function simplePreload(imageArray){
@@ -62,7 +62,7 @@ function loadImagesWithCallback(sources, callback) {
 	var imageObjects = [];
 	var numImages = sources.length;
 	var numLoadedImages = 0;
-	
+
 	for (var i = 0; i < numImages; i++) {
 	  imageObjects[i] = new Image();
 	  imageObjects[i].onload = function() {
@@ -72,7 +72,7 @@ function loadImagesWithCallback(sources, callback) {
 		  callback(imageObjects); // send the images back
 		}
 	  };
-	  
+
 	  imageObjects[i].src = sources[i];
 	}
   }
@@ -83,7 +83,7 @@ Function Name: clamp(val, min, max)
 Author: Web - various sources
 Return Value: the constrained value
 Description: returns a value that is
-constrained between min and max (inclusive) 
+constrained between min and max (inclusive)
 */
 function clamp(val, min, max){
 	return Math.max(min, Math.min(max, val));
@@ -109,5 +109,3 @@ function requestFullscreen(element) {
 Array.prototype.randomElement = function(){
 	return this[Math.floor(Math.random() * this.length)];
 }
-
-
