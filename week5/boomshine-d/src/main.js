@@ -99,6 +99,12 @@ app.main = {
             return;
         }
 
+        if (this.gameState === this.GAME_STATE.ROUND_OVER) {
+
+            this.gameState = this.GAME_STATE.DEFAULT;
+            this.reset();
+        }
+
         const mouse = getMouse(e);
         this.checkCircleClicked(mouse);
     },
@@ -136,7 +142,7 @@ app.main = {
 
             for (let j = 0; j < notExplodingCircles.length; j++) {
                 const c2 = notExplodingCircles[j]
-                
+
                 if (c1 === c2) {
                     continue;
                 }
@@ -244,9 +250,30 @@ app.main = {
     },
 
     drawHUD(ctx) {
+        ctx.save();
+
         this.fillText(`This Round: ${this.roundScore} of ${this.numCircles}`, 20, 20, '14pt courier', '#ddd');
 
         this.fillText(`Total Score: ${this.totalScore}`, this.WIDTH - 200, 20, '14pt courier', '#ddd');
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        switch (this.gameState) {
+            case this.GAME_STATE.BEGIN:{
+                this.fillText(`To begin, click a circle`, this.WIDTH/2, this.HEIGHT/2, '30pt courier', 'white');
+                break;
+            }
+            case this.GAME_STATE.ROUND_OVER: {
+                this.fillText(`Round Over`, this.WIDTH/2, this.HEIGHT/2 - 40, '30pt courier', 'red');
+                this.fillText(`Click to Continue`, this.WIDTH/2, this.HEIGHT/2, '30pt courier', 'red');
+                this.fillText(`Next round there are ${this.numCircles + 5} circles`, this.WIDTH/2, this.HEIGHT/2 + 40, '14pt courier', 'white');
+                break;
+            }
+            default:
+        }
+
+        ctx.restore();
     },
 
     drawCircles(ctx) {
