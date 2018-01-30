@@ -14,15 +14,11 @@ window.onload = function() {
 }
 
 window.onblur = function() {
-    app.main.paused = true;
-    cancelAnimationFrame(app.main.animationID);
-    app.main.update();
+    app.main.pauseGame();
 }
 
 window.onfocus = function() {
-    cancelAnimationFrame(app.main.animationID);
-    app.main.paused = false;
-    app.main.update();
+    app.main.resumeGame();
 }
 
 /*

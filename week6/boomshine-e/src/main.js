@@ -24,7 +24,7 @@ app.main = {
     CIRCLE: Object.freeze({
         NUM_CIRCLES_START: 5,
         NUM_CIRCLES_END: 20,
-        START_RADIUS: 8,
+        START_RADIUS: 18,
         MAX_RADIUS: 45,
         MIN_RADIUS: 2,
         MAX_LIFETIME: 2.5,
@@ -33,7 +33,13 @@ app.main = {
         IMPLOSION_SPEED: 84
     }),
 
-    CIRCLE_STATE: Object.freeze({NORMAL: 0, EXPLODING: 1, MAX_SIZE: 2, IMPLODING: 3, DONE: 4}),
+    CIRCLE_STATE: Object.freeze({ // Circle enum
+        NORMAL: 0,
+        EXPLODING: 1,
+        MAX_SIZE: 2,
+        IMPLODING: 3,
+        DONE: 4
+    }),
 
     GAME_STATE: Object.freeze({ // another fake enumeration
         BEGIN: 0,
@@ -43,6 +49,17 @@ app.main = {
         REPEAT_LEVEL: 4,
         END: 5
     }),
+
+    colors: [
+        "#FD5B78",
+        "#FF6037",
+        "#FF9966",
+        "#FFFF66",
+        "#66FF66",
+        "#50BFE6",
+        "#FF6EFF",
+        "#EE34D2"
+    ],
 
     circles: [],
     numCircles: this.NUM_CIRCLES_START,
@@ -56,6 +73,13 @@ app.main = {
     gameState: undefined,
     roundScore: 0,
     totalScore: 0,
+
+    bgAudio: undefined,
+    currentEffect: 0,
+    currentDirection: 1,
+    effectSounds: Array.from({
+        length: 8
+    }, (value, i) => `${i + 1}.mp3`),
 
     // Circle property were refactored into
     // default prop of the Ball class
@@ -74,12 +98,35 @@ app.main = {
 
         this.gameState = this.GAME_STATE.BEGIN;
 
+        this.bgAudio = document.querySelector('#bgAudio');
+        this.bgAudio.volume = 0.25;
+
         this.canvas.addEventListener('mousedown', (e) => this.doMousedown(e));
 
         this.reset();
 
         // start the game loop
         this.update();
+    },
+
+    stopBGAudio() {
+        this.bgAudio.pause();
+        this.bgAudio.currentTime = 0;
+    },
+
+    pauseGame() {
+        this.paused = true;
+        cancelAnimationFrame(this.animationID);
+        this.update();
+
+        this.stopBGAudio();
+    },
+
+    resumeGame() {
+        cancelAnimationFrame(this.animationID);
+        this.paused = false;
+        this.update();
+        this.bgAudio.play();
     },
 
     reset() {
@@ -89,6 +136,8 @@ app.main = {
     },
 
     doMousedown(e) {
+        this.bgAudio.play();
+
         if (this.paused) {
             this.paused = false;
             this.update();
@@ -115,12 +164,14 @@ app.main = {
             const circle = this.circles[i];
 
             if (circle.isPointInside(mouse)) {
-                circle.fillStyle = 'red';
+                // circle.fillStyle = 'red';
+
                 circle.speed.mScale(0, 0);
                 circle.state = this.CIRCLE_STATE.EXPLODING;
                 this.gameState = this.GAME_STATE.EXPLODING;
                 this.roundScore++;
 
+                this.playEffect();
                 break;
             }
         }
@@ -151,6 +202,8 @@ app.main = {
                     c2.state = this.CIRCLE_STATE.EXPLODING;
                     c2.speed.mScale(0, 0);
                     this.roundScore++;
+                    
+                    this.playEffect();
                 }
             }
         }
@@ -158,8 +211,23 @@ app.main = {
         if (explodingCircles.length === 0) {
             this.gameState = this.GAME_STATE.ROUND_OVER;
             this.totalScore += this.roundScore
+            this.stopBGAudio();
         }
 
+    },
+
+    playEffect() {
+        const effectSound = document.createElement('audio');
+        effectSound.volume = 0.3;
+        effectSound.src = `media/${this.effectSounds[this.currentEffect]}`
+        effectSound.play();
+
+        this.currentEffect += this.currentDirection;
+
+        if (this.currentEffect === this.effectSounds.length || this.currentEffect === -1) {
+            this.currentDirection *= -1;
+            this.currentEffect += this.currentDirection;
+        }
     },
 
     update() {
@@ -198,7 +266,7 @@ app.main = {
         // iv) draw debug info
         if (this.debug) {
             // draw dt in bottom right corner
-            this.fillText("dt: " + dt.toFixed(3), this.WIDTH - 150, this.HEIGHT - 10, "18pt courier", "white");
+            this.fillText(this.ctx, "dt: " + dt.toFixed(3), this.WIDTH - 150, this.HEIGHT - 10, "18pt courier", "white");
         }
     },
 
@@ -243,7 +311,9 @@ app.main = {
                     {
                         c.move(dt);
 
-                        c.bounce(this.WIDTH, this.HEIGHT);
+                        if (c.bounce(this.WIDTH, this.HEIGHT)) {
+                            c.move(dt);
+                        }
                     }
             }
         }
@@ -252,24 +322,26 @@ app.main = {
     drawHUD(ctx) {
         ctx.save();
 
-        this.fillText(`This Round: ${this.roundScore} of ${this.numCircles}`, 20, 20, '14pt courier', '#ddd');
+        this.fillText(this.ctx, `This Round: ${this.roundScore} of ${this.numCircles}`, 20, 20, '14pt courier', '#ddd');
 
-        this.fillText(`Total Score: ${this.totalScore}`, this.WIDTH - 200, 20, '14pt courier', '#ddd');
+        this.fillText(this.ctx, `Total Score: ${this.totalScore}`, this.WIDTH - 200, 20, '14pt courier', '#ddd');
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
         switch (this.gameState) {
-            case this.GAME_STATE.BEGIN:{
-                this.fillText(`To begin, click a circle`, this.WIDTH/2, this.HEIGHT/2, '30pt courier', 'white');
-                break;
-            }
-            case this.GAME_STATE.ROUND_OVER: {
-                this.fillText(`Round Over`, this.WIDTH/2, this.HEIGHT/2 - 40, '30pt courier', 'red');
-                this.fillText(`Click to Continue`, this.WIDTH/2, this.HEIGHT/2, '30pt courier', 'red');
-                this.fillText(`Next round there are ${this.numCircles + 5} circles`, this.WIDTH/2, this.HEIGHT/2 + 40, '14pt courier', 'white');
-                break;
-            }
+            case this.GAME_STATE.BEGIN:
+                {
+                    this.fillText(this.ctx, `To begin, click a circle`, this.WIDTH / 2, this.HEIGHT / 2, '30pt courier', 'white');
+                    break;
+                }
+            case this.GAME_STATE.ROUND_OVER:
+                {
+                    this.fillText(this.ctx, `Round Over`, this.WIDTH / 2, this.HEIGHT / 2 - 40, '30pt courier', 'red');
+                    this.fillText(this.ctx, `Click to Continue`, this.WIDTH / 2, this.HEIGHT / 2, '30pt courier', 'red');
+                    this.fillText(this.ctx, `Next round there are ${this.numCircles + 5} circles`, this.WIDTH / 2, this.HEIGHT / 2 + 40, '14pt courier', 'white');
+                    break;
+                }
             default:
         }
 
@@ -306,7 +378,7 @@ app.main = {
             const pos = new Vector2(getRandom(minPosCoord, this.WIDTH - minPosCoord), getRandom(minPosCoord, this.HEIGHT - minPosCoord));
             const speed = getRandomUnitVector();
 
-            const fillStyle = getRandomColor();
+            const fillStyle = this.colors[i % this.colors.length];
 
             const circle = new Ball({pos, speed, fillStyle, radius, maxSpeed});
 
@@ -329,18 +401,18 @@ app.main = {
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        this.fillText('. . . PAUSED . . .', this.WIDTH / 2, this.HEIGHT / 2, '40pt courier', 'white');
+        this.fillText(this.ctx, '. . . PAUSED . . .', this.WIDTH / 2, this.HEIGHT / 2, '40pt courier', 'white');
 
         ctx.restore();
     },
 
-    fillText: function(string, x, y, css, color) {
-        this.ctx.save();
+    fillText: function(ctx, string, x, y, css, color) {
+        ctx.save();
         // https://developer.mozilla.org/en-US/docs/Web/CSS/font
-        this.ctx.font = css;
-        this.ctx.fillStyle = color;
-        this.ctx.fillText(string, x, y);
-        this.ctx.restore();
+        ctx.font = css;
+        ctx.fillStyle = color;
+        ctx.fillText(string, x, y);
+        ctx.restore();
     },
 
     calculateDeltaTime: function() {

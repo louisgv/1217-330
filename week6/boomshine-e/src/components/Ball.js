@@ -18,13 +18,18 @@ class Ball {
     }
 
     bounce(width, height) {
+        let bounced = false;
         if (this.hitBorder(this.pos.x, width)) {
             this.speed.mScale(-1, 1);
+            bounced = true;
         }
 
         if (this.hitBorder(this.pos.y, height)) {
             this.speed.mScale(1, -1);
+            bounced = true;
         }
+        
+        return bounced;
     }
 
     hitBorder(side, limit) {
@@ -37,7 +42,7 @@ class Ball {
         return diff.dot(diff) <= this.radius * this.radius;
     }
 
-    isIntersectWith(otherBall){
+    isIntersectWith(otherBall) {
         const diff = this.pos.iSub(otherBall.pos);
         const radiSum = this.radius + otherBall.radius;
         return diff.dot(diff) < radiSum * radiSum;
