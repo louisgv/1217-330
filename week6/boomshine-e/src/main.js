@@ -74,12 +74,7 @@ app.main = {
     roundScore: 0,
     totalScore: 0,
 
-    bgAudio: undefined,
-    currentEffect: 0,
-    currentDirection: 1,
-    effectSounds: Array.from({
-        length: 8
-    }, (value, i) => `${i + 1}.mp3`),
+    sound: undefined,
 
     // Circle property were refactored into
     // default prop of the Ball class
@@ -98,9 +93,6 @@ app.main = {
 
         this.gameState = this.GAME_STATE.BEGIN;
 
-        this.bgAudio = document.querySelector('#bgAudio');
-        this.bgAudio.volume = 0.25;
-
         this.canvas.addEventListener('mousedown', (e) => this.doMousedown(e));
 
         this.reset();
@@ -108,10 +100,8 @@ app.main = {
         // start the game loop
         this.update();
     },
-
     stopBGAudio() {
-        this.bgAudio.pause();
-        this.bgAudio.currentTime = 0;
+        this.sound.stopBGAudio()
     },
 
     pauseGame() {
@@ -119,14 +109,14 @@ app.main = {
         cancelAnimationFrame(this.animationID);
         this.update();
 
-        this.stopBGAudio();
+        this.sound.stopBGAudio();
     },
 
     resumeGame() {
         cancelAnimationFrame(this.animationID);
         this.paused = false;
         this.update();
-        this.bgAudio.play();
+        this.sound.playBGAudio();
     },
 
     reset() {
@@ -136,7 +126,7 @@ app.main = {
     },
 
     doMousedown(e) {
-        this.bgAudio.play();
+        this.sound.playBGAudio();
 
         if (this.paused) {
             this.paused = false;
@@ -171,7 +161,7 @@ app.main = {
                 this.gameState = this.GAME_STATE.EXPLODING;
                 this.roundScore++;
 
-                this.playEffect();
+                this.sound.playEffect();
                 break;
             }
         }
@@ -202,8 +192,8 @@ app.main = {
                     c2.state = this.CIRCLE_STATE.EXPLODING;
                     c2.speed.mScale(0, 0);
                     this.roundScore++;
-                    
-                    this.playEffect();
+
+                    this.sound.playEffect();
                 }
             }
         }
@@ -211,23 +201,9 @@ app.main = {
         if (explodingCircles.length === 0) {
             this.gameState = this.GAME_STATE.ROUND_OVER;
             this.totalScore += this.roundScore
-            this.stopBGAudio();
+            this.sound.stopBGAudio();
         }
 
-    },
-
-    playEffect() {
-        const effectSound = document.createElement('audio');
-        effectSound.volume = 0.3;
-        effectSound.src = `media/${this.effectSounds[this.currentEffect]}`
-        effectSound.play();
-
-        this.currentEffect += this.currentDirection;
-
-        if (this.currentEffect === this.effectSounds.length || this.currentEffect === -1) {
-            this.currentDirection *= -1;
-            this.currentEffect += this.currentDirection;
-        }
     },
 
     update() {
@@ -262,6 +238,14 @@ app.main = {
         // iii) draw HUD
         this.ctx.globalAlpha = 1.0;
         this.drawHUD(this.ctx);
+
+        if (this.gameState === this.GAME_STATE.BEGIN || this.gameState === this.GAME_STATE.ROUND_OVER) {
+            const {KEY_UP, KEY_SHIFT} = myKeys.KEYBOARD;
+            if (myKeys.keydown[KEY_UP] && myKeys.keydown[KEY_SHIFT]) {
+                this.totalScore++;
+                this.sound.playEffect();
+            }
+        }
 
         // iv) draw debug info
         if (this.debug) {
