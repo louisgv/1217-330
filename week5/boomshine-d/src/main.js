@@ -24,7 +24,7 @@ app.main = {
     CIRCLE: Object.freeze({
         NUM_CIRCLES_START: 5,
         NUM_CIRCLES_END: 20,
-        START_RADIUS: 8,
+        START_RADIUS: 18,
         MAX_RADIUS: 45,
         MIN_RADIUS: 2,
         MAX_LIFETIME: 2.5,
