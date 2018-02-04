@@ -28,7 +28,7 @@
 			"use strict";
 
 			var NUM_SAMPLES = 256;
-			var SOUND_1 = 'media/New Adventure Theme.mp3';
+			var SOUND_1 = 'media/TubShop.mp3';
 			var SOUND_2 = 'media/Peanuts Theme.mp3';
 			var SOUND_3 = 'media/The Picard Song.mp3';
 			var audioElement;
@@ -63,6 +63,13 @@
 					};
 				})
 
+				canvas.onmousedown = (e) => {
+					if (audioElement.paused) {
+						audioElement.play();
+					} else {
+						audioElement.pause();
+					}
+				}
 
 				// get reference to <audio> element on page
 				audioElement = document.querySelector('audio');
@@ -338,6 +345,13 @@
 				<option value="media/New Adventure Theme.mp3">New Adventure Theme</option>
 				<option value="media/Peanuts Theme.mp3">Peanuts Theme</option>
 				<option value="media/The Picard Song.mp3">The Picard Song</option>
+
+				<option value="media/Joji.ogg">Joji</option>
+
+				<option value="media/TubShop.mp3">Tubshop</option>
+
+				<option value="media/Hazey.ogg">hazey</option>
+
 			</select>
 		</label>
 

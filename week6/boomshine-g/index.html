@@ -11,11 +11,32 @@
 		#audioControls {
 			display: none;
 		}
+
+		#button1 {
+			font-size: 24pt;
+			border-radius: 15px;
+			position: absolute;
+			top: 150px;
+			left: 270px;
+			z-index: 1;
+		}
+
+		#button1:hover {
+			background-color: #fff;
+		}
+
+		button:focus {
+			outline: 0;
+		}
 	</style>
 	<title>Boomshine</title>
 </head>
 
 <body>
+	<button id="button1">
+		Click Me
+	</button>
+
 	<canvas>
 		Get a real browser!
 	</canvas>
