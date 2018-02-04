@@ -10,13 +10,7 @@
 // else create a new object literal
 var app = app || {};
 
-/*
- .main is an object literal that is a property of the app global
- This object literal has its own properties and methods (functions)
-
- */
-app.main = {
-
+const Game = Object.freeze({
     //  properties
     WIDTH: 640,
     HEIGHT: 480,
@@ -50,7 +44,7 @@ app.main = {
         END: 5
     }),
 
-    colors: [
+    COLORS: [
         "#FD5B78",
         "#FF6037",
         "#FF9966",
@@ -59,10 +53,17 @@ app.main = {
         "#50BFE6",
         "#FF6EFF",
         "#EE34D2"
-    ],
+    ]
+})
 
+/*
+ .main is an object literal that is a property of the app global
+ This object literal has its own properties and methods (functions)
+
+ */
+app.main = {
     circles: [],
-    numCircles: this.NUM_CIRCLES_START,
+    numCircles: Game.NUM_CIRCLES_START,
 
     canvas: undefined,
     ctx: undefined,
@@ -75,6 +76,15 @@ app.main = {
     totalScore: 0,
 
     sound: undefined,
+    myKeys: undefined,
+    Emitter: undefined,
+
+    pulsar: undefined,
+    exhaust: undefined,
+    advanceLevelButton: {
+        pos: new Vector2(295, 215),
+        size: new Vector2(50, 50)
+    },
 
     // Circle property were refactored into
     // default prop of the Ball class
@@ -84,22 +94,51 @@ app.main = {
         console.log("app.main.init() called");
         // initialize properties
         this.canvas = document.querySelector('canvas');
-        this.canvas.width = this.WIDTH;
-        this.canvas.height = this.HEIGHT;
+        this.canvas.width = Game.WIDTH;
+        this.canvas.height = Game.HEIGHT;
         this.ctx = this.canvas.getContext('2d');
 
-        this.numCircles = this.CIRCLE.NUM_CIRCLES_START;
+        this.numCircles = Game.CIRCLE.NUM_CIRCLES_START;
         this.circles = this.makeCircles(this.numCircles);
 
-        this.gameState = this.GAME_STATE.BEGIN;
+        this.gameState = Game.GAME_STATE.BEGIN;
 
         this.canvas.addEventListener('mousedown', (e) => this.doMousedown(e));
+
+        this.initExhaust();
+        this.initPulsar();
 
         this.reset();
 
         // start the game loop
         this.update();
     },
+
+    initPulsar() {
+        this.pulsar = new this.Emitter();
+        this.pulsar.red = 255;
+        this.pulsar.minXspeed = this.pulsar.minYspeed = -0.25;
+        this.pulsar.maxXspeed = this.pulsar.maxYspeed = 0.25;
+
+        this.pulsar.lifetime = 500;
+        this.pulsar.expansionRate = 0.05;
+        this.pulsar.numParticles = 100;
+        this.pulsar.xRange = 1;
+        this.pulsar.yRange = 1;
+        this.pulsar.useCircles = false;
+        this.pulsar.useSquares = true;
+
+        this.pulsar.createParticles(new Vector2(540, 100));
+    },
+
+    initExhaust() {
+        this.exhaust = new this.Emitter();
+        this.exhaust.numParticles = 100;
+        this.exhaust.red = 255;
+        this.exhaust.green = 150;
+        this.exhaust.createParticles(new Vector2(100, 100))
+    },
+
     stopBGAudio() {
         this.sound.stopBGAudio()
     },
@@ -120,6 +159,8 @@ app.main = {
     },
 
     reset() {
+        document.querySelector('#button1').style.display = 'none';
+
         this.numCircles += 5;
         this.roundScore = 0;
         this.circles = this.makeCircles(this.numCircles);
@@ -134,17 +175,18 @@ app.main = {
             return;
         }
 
-        if (this.gameState === this.GAME_STATE.EXPLODING) {
+        if (this.gameState === Game.GAME_STATE.EXPLODING) {
             return;
         }
 
-        if (this.gameState === this.GAME_STATE.ROUND_OVER) {
+        const mouse = getMouse(e);
 
-            this.gameState = this.GAME_STATE.DEFAULT;
+        if (this.gameState === Game.GAME_STATE.ROUND_OVER && isPointInRectangle(mouse, this.advanceLevelButton)) {
+
+            this.gameState = Game.GAME_STATE.DEFAULT;
             this.reset();
         }
 
-        const mouse = getMouse(e);
         this.checkCircleClicked(mouse);
     },
 
@@ -157,8 +199,8 @@ app.main = {
                 // circle.fillStyle = 'red';
 
                 circle.speed.mScale(0, 0);
-                circle.state = this.CIRCLE_STATE.EXPLODING;
-                this.gameState = this.GAME_STATE.EXPLODING;
+                circle.state = Game.CIRCLE_STATE.EXPLODING;
+                this.gameState = Game.GAME_STATE.EXPLODING;
                 this.roundScore++;
 
                 this.sound.playEffect();
@@ -168,15 +210,15 @@ app.main = {
     },
 
     checkForCollisions() {
-        if (this.gameState !== this.GAME_STATE.EXPLODING) {
+        if (this.gameState !== Game.GAME_STATE.EXPLODING) {
             return;
         }
         // filter out only exploding circle
-        const livingCircles = this.circles.filter((c) => c.state !== this.CIRCLE_STATE.DONE);
+        const livingCircles = this.circles.filter((c) => c.state !== Game.CIRCLE_STATE.DONE);
 
-        const explodingCircles = livingCircles.filter((c) => c.state !== this.CIRCLE_STATE.NORMAL);
+        const explodingCircles = livingCircles.filter((c) => c.state !== Game.CIRCLE_STATE.NORMAL);
 
-        const notExplodingCircles = livingCircles.filter((c) => c.state === this.CIRCLE_STATE.NORMAL);
+        const notExplodingCircles = livingCircles.filter((c) => c.state === Game.CIRCLE_STATE.NORMAL);
 
         for (let i = 0; i < explodingCircles.length; i++) {
             const c1 = explodingCircles[i];
@@ -189,7 +231,7 @@ app.main = {
                 }
 
                 if (c1.isIntersectWith(c2)) {
-                    c2.state = this.CIRCLE_STATE.EXPLODING;
+                    c2.state = Game.CIRCLE_STATE.EXPLODING;
                     c2.speed.mScale(0, 0);
                     this.roundScore++;
 
@@ -199,7 +241,7 @@ app.main = {
         }
 
         if (explodingCircles.length === 0) {
-            this.gameState = this.GAME_STATE.ROUND_OVER;
+            this.gameState = Game.GAME_STATE.ROUND_OVER;
             this.totalScore += this.roundScore
             this.sound.stopBGAudio();
         }
@@ -229,7 +271,7 @@ app.main = {
         // 5) DRAW
         // i) draw background
         this.ctx.fillStyle = "black";
-        this.ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+        this.ctx.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         // ii) draw circles
         this.ctx.globalAlpha = 0.9;
@@ -239,9 +281,9 @@ app.main = {
         this.ctx.globalAlpha = 1.0;
         this.drawHUD(this.ctx);
 
-        if (this.gameState === this.GAME_STATE.BEGIN || this.gameState === this.GAME_STATE.ROUND_OVER) {
-            const {KEY_UP, KEY_SHIFT} = myKeys.KEYBOARD;
-            if (myKeys.keydown[KEY_UP] && myKeys.keydown[KEY_SHIFT]) {
+        if (this.gameState === Game.GAME_STATE.BEGIN || this.gameState === Game.GAME_STATE.ROUND_OVER) {
+            const {KEY_UP, KEY_SHIFT} = this.myKeys.KEYBOARD;
+            if (this.myKeys.keydown[KEY_UP] && this.myKeys.keydown[KEY_SHIFT]) {
                 this.totalScore++;
                 this.sound.playEffect();
             }
@@ -250,7 +292,7 @@ app.main = {
         // iv) draw debug info
         if (this.debug) {
             // draw dt in bottom right corner
-            this.fillText(this.ctx, "dt: " + dt.toFixed(3), this.WIDTH - 150, this.HEIGHT - 10, "18pt courier", "white");
+            this.fillText(this.ctx, "dt: " + dt.toFixed(3), Game.WIDTH - 150, Game.HEIGHT - 10, "18pt courier", "white");
         }
     },
 
@@ -259,35 +301,35 @@ app.main = {
             const c = this.circles[i];
 
             switch (c.state) {
-                case this.CIRCLE_STATE.DONE:
+                case Game.CIRCLE_STATE.DONE:
                     break;
-                case this.CIRCLE_STATE.EXPLODING:
+                case Game.CIRCLE_STATE.EXPLODING:
                     {
-                        c.radius += this.CIRCLE.EXPLOSION_SPEED * dt;
+                        c.radius += Game.CIRCLE.EXPLOSION_SPEED * dt;
 
-                        if (c.radius >= this.CIRCLE.MAX_RADIUS) {
-                            c.state = this.CIRCLE_STATE.MAX_SIZE;
+                        if (c.radius >= Game.CIRCLE.MAX_RADIUS) {
+                            c.state = Game.CIRCLE_STATE.MAX_SIZE;
                             console.log(`Circle #${i} hits CIRCLE.MAX_RADIUS`);
                         }
                         break;
                     }
-                case this.CIRCLE_STATE.MAX_SIZE:
+                case Game.CIRCLE_STATE.MAX_SIZE:
                     {
                         c.lifeTime += dt;
 
-                        if (c.lifeTime >= this.CIRCLE.MAX_LIFETIME) {
-                            c.state = this.CIRCLE_STATE.IMPLODING;
+                        if (c.lifeTime >= Game.CIRCLE.MAX_LIFETIME) {
+                            c.state = Game.CIRCLE_STATE.IMPLODING;
                             console.log(`Circle #${i} hits CIRCLE.MAX_LIFETIME`);
                         }
                         break;
                     }
-                case this.CIRCLE_STATE.IMPLODING:
+                case Game.CIRCLE_STATE.IMPLODING:
                     {
-                        c.radius -= this.CIRCLE.IMPLOSION_SPEED * dt;
-                        if (c.radius <= this.CIRCLE.MIN_RADIUS) {
+                        c.radius -= Game.CIRCLE.IMPLOSION_SPEED * dt;
+                        if (c.radius <= Game.CIRCLE.MIN_RADIUS) {
                             console.log(`Circle #${i} hits CIRCLE.MIN_RADIUS and is gone`);
 
-                            c.state = this.CIRCLE_STATE.DONE;
+                            c.state = Game.CIRCLE_STATE.DONE;
                         }
                         break;
                     }
@@ -295,7 +337,7 @@ app.main = {
                     {
                         c.move(dt);
 
-                        if (c.bounce(this.WIDTH, this.HEIGHT)) {
+                        if (c.bounce(Game.WIDTH, Game.HEIGHT)) {
                             c.move(dt);
                         }
                     }
@@ -308,22 +350,34 @@ app.main = {
 
         this.fillText(this.ctx, `This Round: ${this.roundScore} of ${this.numCircles}`, 20, 20, '14pt courier', '#ddd');
 
-        this.fillText(this.ctx, `Total Score: ${this.totalScore}`, this.WIDTH - 200, 20, '14pt courier', '#ddd');
+        this.fillText(this.ctx, `Total Score: ${this.totalScore}`, Game.WIDTH - 200, 20, '14pt courier', '#ddd');
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
         switch (this.gameState) {
-            case this.GAME_STATE.BEGIN:
+            case Game.GAME_STATE.BEGIN:
                 {
-                    this.fillText(this.ctx, `To begin, click a circle`, this.WIDTH / 2, this.HEIGHT / 2, '30pt courier', 'white');
+                    this.fillText(this.ctx, `To begin, click a circle`, Game.WIDTH / 2, Game.HEIGHT / 2, '30pt courier', 'white');
+
+                    this.exhaust.updateAndDraw(this.ctx, new Vector2(100, 100))
+
+                    this.pulsar.updateAndDraw(this.ctx, new Vector2(540, 100))
+
                     break;
                 }
-            case this.GAME_STATE.ROUND_OVER:
+            case Game.GAME_STATE.ROUND_OVER:
                 {
-                    this.fillText(this.ctx, `Round Over`, this.WIDTH / 2, this.HEIGHT / 2 - 40, '30pt courier', 'red');
-                    this.fillText(this.ctx, `Click to Continue`, this.WIDTH / 2, this.HEIGHT / 2, '30pt courier', 'red');
-                    this.fillText(this.ctx, `Next round there are ${this.numCircles + 5} circles`, this.WIDTH / 2, this.HEIGHT / 2 + 40, '14pt courier', 'white');
+                    this.fillText(this.ctx, `Round Over`, Game.WIDTH / 2, Game.HEIGHT / 2 - 40, '30pt courier', 'red');
+                    this.fillText(this.ctx, `Click to Continue`, Game.WIDTH / 2, Game.HEIGHT / 2, '30pt courier', 'red');
+                    this.fillText(this.ctx, `Next round there are ${this.numCircles + 5} circles`, Game.WIDTH / 2, Game.HEIGHT / 2 + 40, '14pt courier', 'white');
+
+                    document.querySelector('#button1').style.display = 'inline';
+
+                    ctx.fillStyle = 'yellow';
+                    const {pos, size} = this.advanceLevelButton;
+                    ctx.fillRect(pos.x, pos.y, size.x, size.y);
+
                     break;
                 }
             default:
@@ -333,41 +387,68 @@ app.main = {
     },
 
     drawCircles(ctx) {
-        if (this.gameState === this.GAME_STATE.ROUND_OVER) {
+        if (this.gameState === Game.GAME_STATE.ROUND_OVER) {
             ctx.globalAlpha = 0.25;
         }
 
         for (let i = 0; i < this.circles.length; i++) {
             const c = this.circles[i];
 
-            if (c.state === this.CIRCLE_STATE.DONE)
+            if (c.state === Game.CIRCLE_STATE.DONE)
                 continue;
 
             c.draw(ctx)
+            if (c.pulsar) {
+                c.pulsar.updateAndDraw(ctx, c.pos)
+            }
         }
+    },
+
+    createCirclePulsar(pos) {
+        const pulsar = new this.Emitter();
+        pulsar.red = 255;
+        pulsar.green = Math.floor(getRandom(0, 255));
+        pulsar.blue = Math.floor(getRandom(0, 255));
+
+        pulsar.minXspeed = pulsar.minYspeed = -0.25;
+        pulsar.maxXspeed = pulsar.maxYspeed = 0.25;
+
+        pulsar.lifeTime = 500;
+        pulsar.expansionRate = 0.05;
+        pulsar.numParticles = 100;
+
+        pulsar.xRange = 1;
+        pulsar.yRange = 1;
+
+        pulsar.useCircles = false;
+        pulsar.useSquares = true;
+        pulsar.createParticles(pos);
+        return pulsar;
     },
 
     makeCircles(num) {
         const array = [];
         // debugger;
 
-        const radius = this.CIRCLE.START_RADIUS;
+        const radius = Game.CIRCLE.START_RADIUS;
 
         const minPosCoord = radius * 2;
 
-        const maxSpeed = this.CIRCLE.MAX_SPEED;
+        const maxSpeed = Game.CIRCLE.MAX_SPEED;
 
         for (let i = 0; i < num; i++) {
 
-            const pos = new Vector2(getRandom(minPosCoord, this.WIDTH - minPosCoord), getRandom(minPosCoord, this.HEIGHT - minPosCoord));
+            const pos = new Vector2(getRandom(minPosCoord, Game.WIDTH - minPosCoord), getRandom(minPosCoord, Game.HEIGHT - minPosCoord));
             const speed = getRandomUnitVector();
 
-            const fillStyle = this.colors[i % this.colors.length];
+            const fillStyle = Game.COLORS[i % Game.COLORS.length];
 
             const circle = new Ball({pos, speed, fillStyle, radius, maxSpeed});
 
-            circle.state = this.CIRCLE_STATE.NORMAL;
+            circle.state = Game.CIRCLE_STATE.NORMAL;
             circle.lifeTime = 0;
+
+            circle.pulsar = this.createCirclePulsar(pos);
 
             Object.seal(circle);
             array.push(circle);
@@ -380,12 +461,12 @@ app.main = {
         ctx.save();
 
         ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, this.WIDTH, this.HEIGHT);
+        ctx.fillRect(0, 0, Game.WIDTH, Game.HEIGHT);
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        this.fillText(this.ctx, '. . . PAUSED . . .', this.WIDTH / 2, this.HEIGHT / 2, '40pt courier', 'white');
+        this.fillText(this.ctx, '. . . PAUSED . . .', Game.WIDTH / 2, Game.HEIGHT / 2, '40pt courier', 'white');
 
         ctx.restore();
     },

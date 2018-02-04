@@ -19,6 +19,14 @@ function makeColor(red, green, blue, alpha) {
     return color;
 }
 
+function isPointInRectangle(point, rect) {
+    if (rect.width <= 0 || rect.height <= 0) {
+        return false;
+    }
+
+    return point.x >= rect.pos.x && point.x <= rect.pos.x + rect.size.x && point.y >= rect.pos.y && point.y <= rect.pos.y + rect.size.y;
+}
+
 // Function Name: getRandomColor()
 // returns a random color of alpha 1.0
 // http://paulirish.com/2009/random-hex-color-code-snippets/
