@@ -1,7 +1,17 @@
 class Square {
-    constructor(pos = new Vector2(), size = new Vector2(), color = 'white') {
+    constructor(pos = new Vector2(), size = 10, color = 'white') {
         this.pos = pos;
         this.size = size;
+        this.halfSize = size / 2;
+        this.color = color;
+    }
+
+    setSize(size) {
+        this.size = size;
+        this.halfSize = size / 2;
+    }
+
+    setColor(color) {
         this.color = color;
     }
 
@@ -10,7 +20,7 @@ class Square {
         ctx.beginPath();
         ctx.fillStyle = this.color;
 
-        ctx.fillRect(this.pos.x, this.pos.y, this.size.x, this.size.y);
+        ctx.fillRect(this.pos.x - this.halfSize, this.pos.y - this.halfSize, size, size);
 
         ctx.fill();
         ctx.closePath();

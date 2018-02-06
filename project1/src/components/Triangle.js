@@ -3,10 +3,14 @@ class Triangle {
         this.pos = pos;
         this.size = size;
         this.color = color;
+    }
 
-        this.p1 = new Vector2(pos.x, pos.y + size);
-        this.p2 = new Vector2(pos.x - size, pos.y - size);
-        this.p3 = new Vector2(pos.x + size, pos.y - size);
+    setSize(size) {
+        this.size = size;
+    }
+
+    setColor(color) {
+        this.color = color;
     }
 
     draw(ctx) {
@@ -16,10 +20,11 @@ class Triangle {
 
         ctx.beginPath();
 
-        ctx.moveTo(this.p1.x, this.p1.y);
-        ctx.lineTo(this.p2.x, this.p2.y);
-        ctx.lineTo(this.p3.x, this.p3.y);
+        ctx.moveTo(this.pos.x, this.pos.y + this.size);
+        ctx.lineTo(this.pos.x - this.size, this.pos.y - this.size);
+        ctx.lineTo(this.pos.x + this.size, this.pos.y - this.size);
 
+        ctx.fill();
         ctx.closePath();
 
         ctx.restore();

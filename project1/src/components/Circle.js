@@ -9,7 +9,7 @@ class Circle {
         this.color = color;
     }
 
-    setRadius(radius) {
+    setSize(radius) {
         this.radius = radius;
     }
 

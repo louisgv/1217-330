@@ -2,6 +2,16 @@
 (function() {
     "use strict";
 
+    let lookupIndex = 0;
+
+    const lookupTable = Array.from({length: 1e6}, () => Math.random());
+
+    function lookup() {
+        return ++lookupIndex >= lookupTable.length
+            ? lookupTable[lookupIndex = 0]
+            : lookupTable[lookupIndex];
+    }
+
     let NUM_SAMPLES = 256;
     let SOUND_1 = 'media/Hazey.ogg';
 
@@ -15,9 +25,9 @@
     // create a new array of 8-bit integers (0-255)
     const data = new Uint8Array(NUM_SAMPLES / 2);
 
-    const smCentralCache = [];
-    const mdCentralCache = [];
-    const lgCentralCache = [];
+    const smCentralCache = new Array(NUM_SAMPLES / 2);
+    const mdCentralCache = new Array(NUM_SAMPLES / 2);
+    const lgCentralCache = new Array(NUM_SAMPLES / 2);
 
     let filter = {
         invert: false,
@@ -82,12 +92,13 @@
     }
 
     function setupCache() {
+        smCentralCache.fill(new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'))
+
+        mdCentralCache.fill(new Triangle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'))
+
+        lgCentralCache.fill(new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'))
+
         // const circle = new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white')
-        for (let i = 0; i < NUM_SAMPLES / 2; i++) {
-            smCentralCache.push(new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'));
-            mdCentralCache.push(new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'));
-            lgCentralCache.push(new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white'));
-        }
     }
 
     function playStream(audioElement, path) {
@@ -115,7 +126,7 @@
         //analyserNode.getByteTimeDomainData(data);  waveform data
 
         // DRAW!
-        clearCanvas(ctx);
+        // clearCanvas(ctx);
 
         let barWidth = 4;
         let barSpacing = 1;
@@ -146,17 +157,22 @@
             // drawCircle(i * (barWidth + barSpacing), topSpacing + 256 - data[i], ctx, makeColor(0, 255, 0, .34 - percent / 3.0), circleRadius * 0.1)
 
             smCentralCache[i].setColor(makeColor(200, 200, 0, .5 - percent / 5.0));
-            smCentralCache[i].setRadius(circleRadius * .50);
+            smCentralCache[i].setSize(circleRadius * .50);
             smCentralCache[i].draw(ctx);
 
             mdCentralCache[i].setColor(makeColor(255, 111, 111, .34 - percent / 3.0));
-            mdCentralCache[i].setRadius(circleRadius);
+            mdCentralCache[i].setSize(circleRadius);
             mdCentralCache[i].draw(ctx);
 
             lgCentralCache[i].setColor(makeColor(0, 0, 255, .10 - percent / 10.0));
-            lgCentralCache[i].setRadius(circleRadius * 1.5);
+            lgCentralCache[i].setSize(circleRadius * 1.5);
             lgCentralCache[i].draw(ctx);
 
+            // drawCentralCircle(ctx, makeColor(255, 111, 111, .34 - percent / 3.0), circleRadius)
+            //
+            // drawCentralCircle(ctx, makeColor(0, 0, 255, .10 - percent / 10.0), circleRadius * 1.5)
+            //
+            // drawCentralCircle(ctx, makeColor(200, 200, 0, .5 - percent / 5.0), circleRadius * .50)
         }
 
         manipulatePixels()
@@ -165,32 +181,27 @@
     function manipulatePixels() {
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-        const {data, width} = imageData;
+        for (let i = 0; i < imageData.data.length; i += 4) {
 
-        for (let i = 0; i < data.length; i += 4) {
-            if (filter.tintRed) {
-                tintFilter(imageData, i)
+            if (lookup() > 0.90) {
+                Filter.noise(imageData, i, 0);
             }
-
-            if (filter.invert) {
-                invertFilter(imageData, i)
-            }
-
-            if (filter.noise && Math.random() < .10) {
-                whiteNoiseFilter(imageData, i);
-            }
-
-            if (filter.lines) {
-                lineFilter(imageData, i)
-            }
-
-            if (filter.bonus) {
-                shiftRGBFilter(imageData, i)
-            }
-
-            if (filter.redeye) {
-                redMirrorFilter(imageData, i)
-            }
+            //
+            // if (filter.invert) {
+            //     Filter.invert(imageData, i)
+            // }
+            //
+            // if (filter.lines) {
+            //     Filter.line(imageData, i)
+            // }
+            //
+            // if (filter.bonus) {
+            //     Filter.shiftRGB(imageData, i)
+            // }
+            //
+            // if (filter.redeye) {
+            //     Filter.redMirror(imageData, i)
+            // }
         }
 
         ctx.putImageData(imageData, 0, 0)
