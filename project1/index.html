@@ -39,72 +39,19 @@
 </head>
 
 <body>
-	<canvas id="canvas"></canvas>
+	<canvas></canvas>
 	<div id="controls">
-		<audio controls
-		       loop></audio>
+		<audio loop></audio>
 
-		<label>Track:
+		<!-- <label>Track:
 			<select id="trackSelect">
 				<option value="media/Joji.ogg">Joji</option>
 				<option value="media/Hazey.ogg">Hazey</option>
 				<option value="media/TubShop.mp3">Tubshop</option>
 			</select>
-		</label>
+		</label> -->
 
 	</div>
-
-	<section id="filter">
-
-		<h2>Filter</h2>
-
-		<span>
-				<input type="checkbox" id="tintRed">
-				<label for="tintRed">Tint Red</label>
-			</span> |
-
-		<span>
-				<input type="checkbox" id="invert">
-				<label for="invert">Invert</label>
-			</span> |
-
-		<span>
-				<input type="checkbox" id="noise">
-				<label for="noise">Noise</label>
-			</span> |
-
-		<span>
-				<input type="checkbox" id="lines">
-				<label for="lines">Lines</label>
-			</span> |
-
-		<span>
-				<input type="checkbox" id="bonus">
-				<label for="bonus">Bonus</label>
-			</span> |
-
-		<span>
-				<input type="checkbox" id="redeye">
-				<label for="redeye">Bonus 2</label>
-			</span>
-
-		<br>
-		<div>
-			<label for="radiusSlider">Max Circle Size: </label>
-			<input id="radiusSlider"
-			       type="range"
-			       min="10"
-			       max="400.0"
-			       step="1"
-			       value="200.0" />
-			<span style="float:right"
-			      id="sliderResults">
-				  </span>
-		</div>
-
-		<p id="status">???</p>
-
-	</section>
 </body>
 
 </html>
