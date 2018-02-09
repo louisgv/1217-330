@@ -1,5 +1,12 @@
+/*
+	Author: LAB
+	Styling for Vize
+
+    LICENSE: GPLv3
+*/
+
 body {
-    background: #f3f3f3;
+    background: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -11,9 +18,13 @@ body {
 }
 
 canvas {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
     cursor: pointer;
     /*box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.5);*/
     background: black;
+    z-index: -1;
 }
 
 #controls {

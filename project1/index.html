@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--
+/*
+	Author: LAB
+	Main HTML source for Vize
 
+    LICENSE: GPLv3
+*/
+-->
 <head>
 	<meta charset="utf-8" />
 	<title>
@@ -19,8 +26,10 @@
 	<script src="./src/components/Triangle.js"
 	        charset="utf-8"></script>
 
-	<script src="./src/utils.js"
-	        charset="utf-8"></script>
+	<script src="./src/utils/DropZone.js" charset="utf-8"></script>
+	<script src="./src/utils/File.js" charset="utf-8"></script>
+	<script src="./src/utils/Helper.js" charset="utf-8"></script>
+	<script src="./src/utils/Random.js" charset="utf-8"></script>
 
 	<script src="./src/statics/Filter.js"
 	        charset="utf-8"></script>
@@ -30,24 +39,18 @@
 </head>
 
 <body>
-	<canvas width="900"
-	        height="450"
-	        id="canvas"></canvas>
+	<canvas id="canvas"></canvas>
 	<div id="controls">
 		<audio controls
 		       loop></audio>
 
 		<label>Track:
-			<select id="trackSelect" >
+			<select id="trackSelect">
+				<option value="media/Joji.ogg">Joji</option>
 				<option value="media/Hazey.ogg">Hazey</option>
-
 				<option value="media/TubShop.mp3">Tubshop</option>
 			</select>
 		</label>
-
-		<button id="fsButton">Go Full Screen</button><br>
-
-		<hr>
 
 	</div>
 

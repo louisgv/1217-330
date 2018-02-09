@@ -1,19 +1,29 @@
+/*
+	Author: LAB
+	Main routine for vize
+
+    LICENSE: GPLv3
+*/
+
 // An IIFE ("Iffy") - see the notes in mycourses
+"use strict";
+var app = app || {};
 (function() {
-    "use strict";
 
-    let lookupIndex = 0;
+    const {
+        Random,
+        Circle,
+        Triangle,
+        Vector2,
+        DropZone,
+        File,
+        Filter,
+        FilterConfig,
+        Helper
+    } = app;
 
-    const lookupTable = Array.from({length: 1e6}, () => Math.random());
-
-    function lookup() {
-        return ++lookupIndex >= lookupTable.length
-            ? lookupTable[lookupIndex = 0]
-            : lookupTable[lookupIndex];
-    }
-
-    let NUM_SAMPLES = 256;
-    let SOUND_1 = 'media/Hazey.ogg';
+    let NUM_SAMPLES = 64;
+    let DEFAULT_SOUND = 'media/Joji.ogg';
 
     let audioElement;
     let analyserNode;
@@ -29,25 +39,27 @@
     const mdCentralCache = new Array(NUM_SAMPLES / 2);
     const lgCentralCache = new Array(NUM_SAMPLES / 2);
 
-    let filter = {
-        invert: false,
-        tintRed: false,
-        noise: false,
-        lines: false,
-        bonus: false,
-        redeye: false
+    async function handleFileDrop(fileBlob){
+        const {result} = await File.read(fileBlob);
+
+        playStream(audioElement, result, fileBlob.name);
     }
 
     function init() {
         // set up canvas stuff
         canvas = document.querySelector('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
         ctx = canvas.getContext("2d");
+
+        DropZone.apply(canvas, handleFileDrop)
 
         // get reference to <audio> element on page
         audioElement = document.querySelector('audio');
 
         // call our helper function and get an analyser node
-        analyserNode = createWebAudioContextWithAnalyserNode(audioElement, NUM_SAMPLES);
+        analyserNode = Helper.createWebAudioContextWithAnalyserNode(audioElement, NUM_SAMPLES);
 
         // get sound track <select> and Full Screen button working
         setupUI();
@@ -55,7 +67,7 @@
         setupCache();
 
         // load and play default sound into audio element
-        playStream(audioElement, SOUND_1);
+        playStream(audioElement, DEFAULT_SOUND, DEFAULT_SOUND);
 
         // start animation loop
         update();
@@ -63,11 +75,7 @@
 
     function setupUI() {
         document.querySelector("#trackSelect").onchange = function(e) {
-            playStream(audioElement, e.target.value);
-        };
-
-        document.querySelector("#fsButton").onclick = function() {
-            requestFullscreen(canvas);
+            playStream(audioElement, e.target.value, e.target.value);
         };
 
         canvas.onmousedown = (e) => {
@@ -84,9 +92,9 @@
             document.querySelector("#sliderResults").innerHTML = maxRadius;
         };
 
-        Object.keys(filter).map((f) => {
+        Object.keys(FilterConfig).map((f) => {
             document.getElementById(f).onchange = function(e) {
-                filter[f] = e.target.checked;
+                FilterConfig[f] = e.target.checked;
             };
         })
     }
@@ -101,11 +109,12 @@
         // const circle = new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1, 'white')
     }
 
-    function playStream(audioElement, path) {
+    function playStream(audioElement, path, name) {
+        audioElement.crossOrigin='anonymous';
         audioElement.src = path;
         audioElement.play();
-        audioElement.volume = 0.2;
-        document.querySelector('#status').innerHTML = "Now playing: " + path;
+        audioElement.volume = 0.9;
+        document.querySelector('#status').innerHTML = "Now playing: " + name;
     }
 
     function update() {
@@ -156,23 +165,17 @@
             //
             // drawCircle(i * (barWidth + barSpacing), topSpacing + 256 - data[i], ctx, makeColor(0, 255, 0, .34 - percent / 3.0), circleRadius * 0.1)
 
-            smCentralCache[i].setColor(makeColor(200, 200, 0, .5 - percent / 5.0));
+            smCentralCache[i].setColor(Helper.makeColor(200, 200, 0, .5 - percent / 5.0));
             smCentralCache[i].setSize(circleRadius * .50);
             smCentralCache[i].draw(ctx);
 
-            mdCentralCache[i].setColor(makeColor(255, 111, 111, .34 - percent / 3.0));
+            mdCentralCache[i].setColor(Helper.makeColor(255, 111, 111, .34 - percent / 3.0));
             mdCentralCache[i].setSize(circleRadius);
             mdCentralCache[i].draw(ctx);
 
-            lgCentralCache[i].setColor(makeColor(0, 0, 255, .10 - percent / 10.0));
+            lgCentralCache[i].setColor(Helper.makeColor(0, 0, 255, .10 - percent / 10.0));
             lgCentralCache[i].setSize(circleRadius * 1.5);
             lgCentralCache[i].draw(ctx);
-
-            // drawCentralCircle(ctx, makeColor(255, 111, 111, .34 - percent / 3.0), circleRadius)
-            //
-            // drawCentralCircle(ctx, makeColor(0, 0, 255, .10 - percent / 10.0), circleRadius * 1.5)
-            //
-            // drawCentralCircle(ctx, makeColor(200, 200, 0, .5 - percent / 5.0), circleRadius * .50)
         }
 
         manipulatePixels()
@@ -183,29 +186,35 @@
 
         for (let i = 0; i < imageData.data.length; i += 4) {
 
-            if (lookup() > 0.90) {
-                Filter.noise(imageData, i, 0);
+            if (Random.next() > 0.90) {
+                Filter.noise(imageData, i, 255);
             }
             //
-            // if (filter.invert) {
+            // if (FilterConfig.invert) {
             //     Filter.invert(imageData, i)
             // }
             //
-            // if (filter.lines) {
+            // if (FilterConfig.lines) {
             //     Filter.line(imageData, i)
             // }
             //
-            // if (filter.bonus) {
-            //     Filter.shiftRGB(imageData, i)
-            // }
+            if (FilterConfig.bonus) {
+                Filter.shiftRGB(imageData, i)
+            }
             //
-            // if (filter.redeye) {
-            //     Filter.redMirror(imageData, i)
-            // }
+            if (FilterConfig.redeye) {
+                Filter.redMirror(imageData, i)
+            }
         }
 
         ctx.putImageData(imageData, 0, 0)
     }
 
-    window.addEventListener("load", init);
+    window.addEventListener('load', init);
+
+    window.addEventListener('resize', (e) => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        setupCache()
+    }, false);
 }());

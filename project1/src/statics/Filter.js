@@ -1,4 +1,16 @@
-class Filter {
+"use strict";
+var app = app || {};
+
+app.FilterConfig = {
+    invert: false,
+    tintRed: false,
+    noise: false,
+    lines: false,
+    bonus: false,
+    redeye: false
+};
+
+app.Filter = class {
 
     static redMirror({
         data,
