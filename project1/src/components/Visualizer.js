@@ -57,6 +57,9 @@ var app = app || {};
             // *ctx.canvas.halfHeight
 
             for (let i = 0; i < data.length; i++) {
+                if (data[i] > 0 && data[i] < 128 && data[i]) {
+
+                }
                 const y = data[i] * waveHeightScale + ctx.canvas.halfHeight;
 
                 if (i === 0) {

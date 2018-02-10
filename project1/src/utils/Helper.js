@@ -27,16 +27,18 @@ app.Helper = {
         // http://webaudio.github.io/web-audio-api/#the-audiocontext-interface
         audioCtx = new(window.AudioContext || window.webkitAudioContext);
 
+        console.log(audioCtx);
+
         // create an analyser node
         analyserNode = audioCtx.createAnalyser();
 
         /*
-        We will request NUM_SAMPLES number of samples or "bins" spaced equally
-        across the sound spectrum.
+            We will request NUM_SAMPLES number of samples or "bins" spaced equally
+            across the sound spectrum.
 
-        If NUM_SAMPLES (fftSize) is 256, then the first bin is 0 Hz, the second is 172 Hz,
-        the third is 344Hz. Each bin contains a number between 0-255 representing
-        the amplitude of that frequency.
+            If NUM_SAMPLES (fftSize) is 256, then the first bin is 0 Hz, the second is 172 Hz,
+            the third is 344Hz. Each bin contains a number between 0-255 representing
+            the amplitude of that frequency.
         */
 
         // fft stands for Fast Fourier Transform
