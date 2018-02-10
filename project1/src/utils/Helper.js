@@ -9,6 +9,9 @@
 var app = app || {};
 
 app.Helper = {
+
+    // Get Mouse position relative to the element
+    getMouse : ({pageX, pageY, target}) => new Vector2(pageX - target.offsetLeft, pageY - target.offsetTop),
     // Clear the canvas
     clearCanvas(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
