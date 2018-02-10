@@ -47,43 +47,48 @@ var app = app || {};
 
         }
 
-        draw(ctx, data, i, color = Helper.makeColor(255, 255, 255, .6)) {
+        draw(ctx, data, color = Helper.makeColor(255, 255, 255, .6)) {
             ctx.save();
-            // TODO: Make this color tweakable
             ctx.fillStyle = color;
 
             const barConfig = this.config;
             // cache all multiplication, reduce calculation to add and sub
 
-            const scaledData = data[i] * barConfig.scale;
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] === 0) {
+                    continue;
+                }
+                
+                const scaledData = data[i] * barConfig.scale;
 
-            ctx.fillRect(
-                this.cachedPos[i].topBarPosition.x,
-                this.cachedPos[i].topBarPosition.y - scaledData,
-                barConfig.width,
-                barConfig.height
-            );
+                ctx.fillRect(
+                    this.cachedPos[i].topBarPosition.x,
+                    this.cachedPos[i].topBarPosition.y - scaledData,
+                    barConfig.width,
+                    barConfig.height
+                );
 
-            ctx.fillRect(
-                this.cachedPos[i].topBarPosition.x,
-                this.cachedPos[i].topBarPosition.y + scaledData,
-                barConfig.width,
-                barConfig.height
-            );
+                ctx.fillRect(
+                    this.cachedPos[i].topBarPosition.x,
+                    this.cachedPos[i].topBarPosition.y + scaledData,
+                    barConfig.width,
+                    barConfig.height
+                );
 
-            ctx.fillRect(
-                this.cachedPos[i].bottomBarPosition.x,
-                this.cachedPos[i].bottomBarPosition.y - scaledData,
-                barConfig.width,
-                barConfig.height
-            );
+                ctx.fillRect(
+                    this.cachedPos[i].bottomBarPosition.x,
+                    this.cachedPos[i].bottomBarPosition.y - scaledData,
+                    barConfig.width,
+                    barConfig.height
+                );
 
-            ctx.fillRect(
-                this.cachedPos[i].bottomBarPosition.x,
-                this.cachedPos[i].bottomBarPosition.y + scaledData,
-                barConfig.width,
-                barConfig.height
-            );
+                ctx.fillRect(
+                    this.cachedPos[i].bottomBarPosition.x,
+                    this.cachedPos[i].bottomBarPosition.y + scaledData,
+                    barConfig.width,
+                    barConfig.height
+                );
+            }
 
             ctx.restore();
         }

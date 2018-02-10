@@ -12,7 +12,6 @@ var app = app || {};
 
     const {
         Random,
-        Circle,
         Triangle,
         Vector2,
         DropZone,
@@ -22,7 +21,6 @@ var app = app || {};
 
         Visualizer,
         VisualizerConfig,
-        MirrorBarsConfig,
 
         Global,
         Helper
@@ -45,10 +43,6 @@ var app = app || {};
     // create a new array of 8-bit integers (0-255)
     const data = new Uint8Array(Global.DATA_SIZE);
 
-    const smCentralCache = new Array(Global.DATA_SIZE);
-    const mdCentralCache = new Array(Global.DATA_SIZE);
-    const lgCentralCache = new Array(Global.DATA_SIZE);
-
     const defaultConfig = {
         'Hazey.ogg': {
             scale: 0.45,
@@ -65,9 +59,6 @@ var app = app || {};
     function init() {
         // set up canvas stuff
         canvas = document.querySelector('canvas');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
         ctx = canvas.getContext("2d");
 
         DropZone.apply(canvas, handleFileDrop)
@@ -133,24 +124,12 @@ var app = app || {};
     }
 
     function setupCache() {
-        const {width, height} = canvas;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
         // NOTE: Storing the half-size of the canvas into itself for reuse later.
-        canvas.halfWidth = width / 2;
-        canvas.halfHeight = height / 2;
-
-        smCentralCache.fill(
-            new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
-        )
-        mdCentralCache.fill(
-            new Triangle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
-        )
-        lgCentralCache.fill(
-            new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
-        )
-
-        // const circle = new Circle(new Vector2(ctx.canvas.width / 2, ctx.canvas.height / 2), 1,
-        // 'white')
+        canvas.halfWidth = canvas.width / 2;
+        canvas.halfHeight = canvas.height / 2;
 
         visualizerInstance.updateConfig(canvas);
     }
@@ -179,46 +158,8 @@ var app = app || {};
 
         // OR analyserNode.getByteTimeDomainData(data);  waveform data DRAW! clearCanvas(ctx);
         // loop through the data and draw!
-        Visualizer.sineWave(ctx, data);
 
         visualizerInstance.draw(ctx, data);
-
-        for (let i = 0; i < data.length; i++) {
-
-            // the higher the amplitude of the sample (bin) the taller the bar remember we have to
-            // draw our bars left-to-right and top-down
-
-            if (data[i] === 0) {
-                continue;
-            }
-
-            // ctx.fillRect(ctx.canvas.width - i * (barWidth + barSpacing), topSpacing + 256 - data[i]
-            // - 20, barWidth, barHeight);
-
-            const percent = data[i] / 255;
-            const circleRadius = percent * maxRadius;
-            const dotSize = circleRadius * 0.1;
-
-            // drawCircle(i * (dotSize + barSpacing), topSpacing + 256 - data[i], ctx, makeColor(0,
-            // 255, 0, .34 - percent / 3.0), dotSize)
-            //
-            // drawCircle(ctx.canvas.width - i * (dotSize + barSpacing), topSpacing + 256 - data[i] -
-            // 20, ctx, makeColor(0, 255, 0, .34 - percent / 3.0), dotSize)
-            //
-            // drawCircle(i * (barWidth + barSpacing), topSpacing + 256 - data[i], ctx, makeColor(0,
-            // 255, 0, .34 - percent / 3.0), circleRadius * 0.1)
-
-            smCentralCache[i].setColor(Helper.makeColor(255, 255, 255, .5 - percent / 5.0));
-            smCentralCache[i].setSize(circleRadius * .50);
-            smCentralCache[i].draw(ctx);
-
-            // mdCentralCache[i].setColor(Helper.makeColor(255, 111, 111, .34 - percent / 3.0));
-            // mdCentralCache[i].setSize(circleRadius); mdCentralCache[i].draw(ctx);
-
-            lgCentralCache[i].setColor(Helper.makeColor(0, 0, 0, .10 - percent / 10.0));
-            lgCentralCache[i].setSize(circleRadius * 1.5);
-            lgCentralCache[i].draw(ctx);
-        }
 
         manipulatePixels();
     }
@@ -247,8 +188,6 @@ var app = app || {};
     window.addEventListener('load', init);
 
     window.addEventListener('resize', (e) => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
         setupCache()
     }, false);
 }());
