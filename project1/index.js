@@ -12,21 +12,17 @@ var app = app || {};
 
     const {
         Random,
-        Triangle,
-        Vector2,
+
         DropZone,
         File,
         Filter,
         FilterConfig,
 
         Visualizer,
-        VisualizerConfig,
 
         Global,
         Helper
     } = app;
-
-    const {DEFAULT_SOUND} = Global;
 
     let audioElement;
 
@@ -38,7 +34,6 @@ var app = app || {};
     let visualizerInstance;
 
     // TODO: have this a local variable for the circle class
-    let maxRadius = 200;
 
     // create a new array of 8-bit integers (0-255)
     const data = new Uint8Array(Global.DATA_SIZE);
@@ -146,11 +141,9 @@ var app = app || {};
         // this schedules a call to the update() method in 1/60 seconds
         requestAnimationFrame(update);
 
-        /*
-            Nyquist Theorem
-            http://whatis.techtarget.com/definition/Nyquist-Theorem
-            The array of data we get back is 1/2 the size of the sample rate
-        */
+        if (audioElement.paused) {
+            return;
+        }
 
         // populate the array with the frequency data notice these arrays can be passed "by
         // reference"
@@ -169,10 +162,10 @@ var app = app || {};
 
         for (let i = 0; i < imageData.data.length; i += 4) {
 
-            if (Random.next() > 0.90) {
+            if (FilterConfig.noiseFade && Random.next() > 0.90) {
                 Filter.noise(imageData, i, 255);
             }
-            //
+
             // if (FilterConfig.invert) {     Filter.invert(imageData, i) }
             //
             // if (FilterConfig.lines) { Filter.line(imageData, i) }

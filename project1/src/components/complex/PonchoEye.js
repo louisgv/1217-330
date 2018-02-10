@@ -3,13 +3,15 @@
 
 	Circle module.
     Used to model a circle
+
+    LICENSE: GPLv3
 */
 
 "use strict";
 var app = app || {};
 
 (function() {
-    const {Vector2, Circle, Global, Helper} = app;
+    const {Vector2, Triangle, Square, Diamond, Circle, Global, Helper} = app;
 
     app.PonchoEye = class {
         constructor(config = {
@@ -23,9 +25,10 @@ var app = app || {};
             this.lgCentralCache = new Array(Global.DATA_SIZE);
         }
 
+        // Update local cache
         updateConfig(canvas) {
             this.smCentralCache.fill(
-                new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
+                new Diamond(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
             )
 
             // mdCentralCache.fill(
@@ -33,7 +36,7 @@ var app = app || {};
             // )
 
             this.lgCentralCache.fill(
-                new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
+                new Diamond(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
             )
         }
 

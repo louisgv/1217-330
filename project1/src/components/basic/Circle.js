@@ -3,6 +3,8 @@
 
 	Circle module.
     Used to model a circle
+
+    LICENSE: GPLv3
 */
 
 "use strict";

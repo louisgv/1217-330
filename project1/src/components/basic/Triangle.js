@@ -3,6 +3,8 @@
 
 	Triangle module
     Used to handle drawing a equilateral triangle
+
+    LICENSE: GPLv3
 */
 
 "use strict";

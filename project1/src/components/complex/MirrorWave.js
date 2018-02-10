@@ -3,6 +3,8 @@
 
 	Circle module.
     Used to model a circle
+
+    LICENSE: GPLv3
 */
 
 "use strict";
@@ -13,6 +15,8 @@ var app = app || {};
 
     app.MirrorWave = class {
         constructor(config = {
+            blankCut: true,
+            fill: true,
             widthScale: 0,
             heightScale: 0
         }) {
@@ -20,11 +24,22 @@ var app = app || {};
             this.cachedPos = new Array(Global.DATA_SIZE);
         }
 
+        // Update the width and height scale of the wave
         updateConfig(canvas) {
             this.config.widthScale = canvas.halfWidth / Global.DATA_SIZE;
             this.config.heightScale = canvas.halfHeight / Global.NUM_SAMPLES;
         }
 
+        // Draw a segent of the mirror wave, checking if we should cut the blank part or not
+        drawSegment(ctx, freq, x, y) {
+            if (this.config.blankCut && freq <= 0) {
+                ctx.lineTo(ctx.canvas.halfWidth, ctx.canvas.halfHeight);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+
+        // Draw the Mirror Wave
         draw(ctx, data) {
             ctx.save();
             ctx.beginPath();
@@ -36,38 +51,26 @@ var app = app || {};
             let i = 0;
 
             for (; i < data.length; ++i) {
-                const y = data[i] * this.config.heightScale;
-
-                if (i === 0) {
-                    ctx.moveTo(x, y)
+                if (i==0) {
+                    ctx.moveTo(x, data[i] * this.config.heightScale)
                 } else {
-                    ctx.lineTo(x, y);
+                    this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
                 }
-
                 x += this.config.widthScale;
             }
 
             for (; i > 0; --i) {
-                const y = data[i] * this.config.heightScale;
-
-                ctx.lineTo(x, y);
-
+                this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
                 x += this.config.widthScale;
             }
 
             for (; i < data.length; ++i) {
-                const y = -data[i] * this.config.heightScale + ctx.canvas.height;
-
-                ctx.lineTo(x, y);
-
+                this.drawSegment(ctx, data[i], x, -data[i] * this.config.heightScale + ctx.canvas.height);
                 x -= this.config.widthScale;
             }
 
             for (; i >= 0; --i) {
-                const y = -data[i] * this.config.heightScale + ctx.canvas.height;
-
-                ctx.lineTo(x, y);
-
+                this.drawSegment(ctx, data[i], x, -data[i] * this.config.heightScale + ctx.canvas.height);
                 x -= this.config.widthScale;
             }
 
@@ -75,7 +78,9 @@ var app = app || {};
 
             ctx.stroke();
 
-            ctx.fill();
+            if (this.config.fill) {
+                ctx.fill();
+            }
 
             ctx.restore();
         }

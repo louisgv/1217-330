@@ -2,6 +2,7 @@
 var app = app || {};
 
 app.FilterConfig = {
+    noiseFade: true,
     invert: false,
     tintRed: false,
     noise: false,

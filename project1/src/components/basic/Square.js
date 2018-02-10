@@ -3,6 +3,8 @@
 
 	Square module.
 	Used to draw square into the canvas.
+
+    LICENSE: GPLv3
 */
 
 "use strict";
@@ -29,13 +31,16 @@ var app = app || {};
 
         draw(ctx) {
             ctx.save();
-            ctx.beginPath();
             ctx.fillStyle = this.color;
 
-            ctx.fillRect(this.pos.x - this.halfSize, this.pos.y - this.halfSize, size, size);
+            ctx.fillRect(
+                this.pos.x - this.halfSize,
+                this.pos.y - this.halfSize,
+                this.size,
+                this.size
+            );
 
             ctx.fill();
-            ctx.closePath();
             ctx.restore();
         }
     }

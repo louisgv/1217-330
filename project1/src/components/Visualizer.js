@@ -11,10 +11,6 @@ var app = app || {};
         Global
     } = app;
 
-    app.VisualizerConfig = {
-        mirrorBars: true
-    };
-
     app.Visualizer = class {
 
         constructor() {

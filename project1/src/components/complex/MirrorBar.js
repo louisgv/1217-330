@@ -2,7 +2,9 @@
 	Author: LAB
 
 	Circle module.
-    Used to model a circle
+    Used to draw mirror bars
+
+    LICENSE: GPLv3
 */
 
 "use strict";
@@ -58,7 +60,7 @@ var app = app || {};
                 if (data[i] === 0) {
                     continue;
                 }
-                
+
                 const scaledData = data[i] * barConfig.scale;
 
                 ctx.fillRect(
