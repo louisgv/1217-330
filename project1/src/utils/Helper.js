@@ -27,7 +27,7 @@ app.Helper = {
         // http://webaudio.github.io/web-audio-api/#the-audiocontext-interface
         audioCtx = new(window.AudioContext || window.webkitAudioContext);
 
-        console.log(audioCtx);
+        // console.log(audioCtx);
 
         // create an analyser node
         analyserNode = audioCtx.createAnalyser();

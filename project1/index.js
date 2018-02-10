@@ -179,6 +179,7 @@ var app = app || {};
 
         // OR analyserNode.getByteTimeDomainData(data);  waveform data DRAW! clearCanvas(ctx);
         // loop through the data and draw!
+        Visualizer.sineWave(ctx, data);
 
         visualizerInstance.draw(ctx, data);
 
@@ -218,8 +219,6 @@ var app = app || {};
             lgCentralCache[i].setSize(circleRadius * 1.5);
             lgCentralCache[i].draw(ctx);
         }
-
-        Visualizer.sineWave(ctx, data);
 
         manipulatePixels();
     }

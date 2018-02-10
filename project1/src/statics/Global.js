@@ -9,5 +9,5 @@ app.Global = {
 
     DATA_SIZE: 256/2, // Always half of NUM_SAMPLES
 
-    DEFAULT_SOUND: 'media/Hazey.ogg'
+    DEFAULT_SOUND: 'media/TubShop.mp3'
 };

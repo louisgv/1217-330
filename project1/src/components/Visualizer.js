@@ -48,31 +48,19 @@ var app = app || {};
             ctx.save();
             ctx.beginPath();
 
-            const sliceWidth = ctx.canvas.halfWidth / (Global.DATA_SIZE - 1);
+            const sliceWidth = ctx.canvas.halfWidth / (Global.DATA_SIZE + 1);
 
             const waveHeightScale = ctx.canvas.halfHeight / Global.NUM_SAMPLES;
 
-            let x = ctx.canvas.halfWidth;
+            let x = 0;
             // debugger; data runs from 0->Global.NUM_SAMPLES-1 scale: /NUM_SAMPLES
             // *ctx.canvas.halfHeight
 
-            for (let i = 0; i < data.length; i++) {
-                if (data[i] > 0 && data[i] < 128 && data[i]) {
+            ctx.moveTo(x, ctx.canvas.halfHeight);
 
-                }
-                const y = data[i] * waveHeightScale + ctx.canvas.halfHeight;
+            let i = 0;
 
-                if (i === 0) {
-                    ctx.moveTo(x, y);
-                } else {
-                    ctx.lineTo(x, y);
-                    ctx.lineTo(x, ctx.canvas.halfHeight);
-                }
-
-                x += sliceWidth;
-            }
-
-            for (let i = data.length - 1; i > 0; i--) {
+            for (; i < data.length; ++i) {
                 const y = data[i] * waveHeightScale;
 
                 ctx.lineTo(x, y);
@@ -80,9 +68,34 @@ var app = app || {};
                 x += sliceWidth;
             }
 
-            ctx.lineTo(ctx.canvas.width, ctx.canvas.halfHeight);
+            for (; i > 0; --i) {
+                const y = data[i] * waveHeightScale;
+
+                ctx.lineTo(x, y);
+
+                x += sliceWidth;
+            }
+
+            for (; i < data.length; ++i) {
+                const y = -data[i] * waveHeightScale + ctx.canvas.height;
+
+                ctx.lineTo(x, y);
+
+                x -= sliceWidth;
+            }
+
+            for (; i >= 0; --i) {
+                const y = -data[i] * waveHeightScale + ctx.canvas.height;
+
+                ctx.lineTo(x, y);
+
+                x -= sliceWidth;
+            }
+
+            ctx.closePath();
+
             ctx.stroke();
-            // ctx.fill();
+            ctx.fill();
             ctx.restore();
         }
 
