@@ -11,9 +11,16 @@
 
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport"
+	      content="width=device-width, initial-scale = 1.0, maximum-scale=1.0, 	user-scalable=no" />
+
 	<title>
 		Vize - Visualized Vibe
 	</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa:400,700"
+	      rel="stylesheet">
+
 	<link rel="stylesheet"
 	      href="./index.css">
 
@@ -61,10 +68,22 @@
 </head>
 
 <body>
-	<canvas></canvas>
-	<div id="controls">
-		<audio loop></audio>
+	<canvas title="Click to Pause"></canvas>
+	<audio></audio>
 
+	<h1 id="brand" class="toggle-target">
+		vize
+	</h1>
+	<div id="controls">
+		<button class="button"
+		        id="toggleui-button"
+		        title="Click to Toggle UI">x</button>
+
+		<button class="button toggle-target"
+		        id="shuffle-button"
+		        title="Click to Shuffle to a New Song">
+			Shuffle
+		</button>
 		<!-- <label>Track:
 			<select id="trackSelect">
 				<option value="media/Joji.ogg">Joji</option>
@@ -72,8 +91,28 @@
 				<option value="media/TubShop.mp3">Tubshop</option>
 			</select>
 		</label> -->
-
 	</div>
+
+	<div id="now-playing">
+		<div class="flex-end">
+			<h2>
+				Now playing
+			</h2>
+		</div>
+		<div class="flex-end">
+			<h3 id="song-name" title="Name of the song">xxx</h3>
+		</div>
+	</div>
+
+	<footer class="toggle-target">
+		<h5>
+			Hint: drag and drop your own audio file
+		</h5>
+		<h4>
+			COPYLEFT @L.A.B ALL RIGHT RELEASED
+		</h4>
+	</footer>
+
 </body>
 
 </html>

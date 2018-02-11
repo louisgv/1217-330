@@ -20,7 +20,7 @@ var app = app || {};
             height: 0,
             topSpacing: 0,
             scale: 0.45,
-            color: Helper.makeColor(255, 255, 255, .6)
+            color: Helper.makeColor(255, 0, 0, .6)
         }) {
             this.config = config
             this.cachedPos = new Array(Global.DATA_SIZE);

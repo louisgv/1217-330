@@ -31,11 +31,12 @@ var app = app || {};
     let canvas,
         ctx;
 
-    let visualizerInstance;
+    let frameCounter = 1;
 
-    // TODO: have this a local variable for the circle class
+    const visualizerInstance = new Visualizer();
 
-    // create a new array of 8-bit integers (0-255)
+    // TODO: have this a local variable for the circle class create a new array of 8-bit
+    // integers (0-255)
     const frequencyData = new Uint8Array(Global.DATA_SIZE);
     const waveformData = new Uint8Array(Global.DATA_SIZE);
 
@@ -54,71 +55,58 @@ var app = app || {};
 
     function init() {
         // set up canvas stuff
+        audioElement = document.querySelector('audio');
         canvas = document.querySelector('canvas');
         ctx = canvas.getContext("2d");
 
-        DropZone.apply(canvas, handleFileDrop)
-
-        canvas.onmousedown = (e) => {
-            if (audioElement.paused) {
-                audioElement.play();
-            } else {
-                audioElement.pause();
-            }
-        }
-
-        visualizerInstance = new Visualizer()
-
-        // get reference to <audio> element on page
-        audioElement = document.querySelector('audio');
-
         // call our helper function and get an analyser node
-        analyserNode = Helper.createWebAudioContextWithAnalyserNode(
-            audioElement,
-            Global.NUM_SAMPLES
-        );
+        const analyserData = Helper.getAnalyserNode(audioElement, Global.NUM_SAMPLES);
 
-        // get sound track <select> and Full Screen button working setupUI();
+        analyserNode = analyserData.analyserNode;
+
+        setupUI();
 
         setupCache();
 
-        // load and play default sound into audio element
-        playStream(audioElement, Global.DEFAULT_SOUND, Global.DEFAULT_SOUND);
+        playRandomLocalMedia();
 
         // start animation loop
         update();
     }
 
     function setupUI() {
-        document
-            .querySelector("#trackSelect")
-            .onchange = function(e) {
-                playStream(audioElement, e.target.value, e.target.value);
-            };
+        DropZone.apply(canvas, handleFileDrop)
+
+        canvas.addEventListener('pointerdown', (e) => {
+            if (audioElement.paused) {
+                audioElement.play();
+            } else {
+                audioElement.pause();
+            }
+        })
+
+        audioElement.addEventListener('ended', playRandomLocalMedia);
 
         document
-            .querySelector('#radiusSlider')
-            .oninput = function(e) {
-                maxRadius = e
-                    .target
-                    .value
+            .querySelector('#shuffle-button')
+            .addEventListener('click', playRandomLocalMedia);
 
-                    document
-                    .querySelector("#sliderResults")
-                    .innerHTML = maxRadius;
-            };
+        document
+            .querySelector('#toggleui-button')
+            .addEventListener('click', Helper.toggleUIElement);
 
-        Object
-            .keys(FilterConfig)
-            .map((f) => {
-                document
-                    .getElementById(f)
-                    .onchange = function(e) {
-                        FilterConfig[f] = e.target.checked;
-                    };
-            })
+        // document     .querySelector("#trackSelect")     .onchange = function(e) {
+        // playStream(audioElement, e.target.value, e.target.value);     }; document
+        // .querySelector('#radiusSlider')     .oninput = function(e) {         maxRadius = e
+        // .target             .value
+        //
+        // document             .querySelector("#sliderResults")             .innerHTML =
+        // maxRadius;     }; Object     .keys(FilterConfig)     .map((f) => {         document
+        // .getElementById(f)             .onchange = function(e) { FilterConfig[f] =
+        // e.target.checked;             };     })
     }
 
+    // Update config of viz and update canvas width/height cache
     function setupCache() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -135,7 +123,17 @@ var app = app || {};
         audioElement.src = path;
         audioElement.play();
         audioElement.volume = 0.9;
-        // document.querySelector('#status').innerHTML = "Now playing: " + name;
+        document
+            .querySelector('#song-name')
+            .innerHTML = name.split('.')[0];
+    }
+
+    function playRandomLocalMedia() {
+        playLocalMedia(audioElement, Global.SOUNDS[Helper.getRandomInt(0, Global.SOUNDS.length)]);
+    }
+
+    function playLocalMedia(audioElement, file) {
+        playStream(audioElement, 'media/' + file, file)
     }
 
     function update() {
@@ -146,16 +144,19 @@ var app = app || {};
             return;
         }
 
-        // waveform data DRAW!
-
-        // Helper.clearCanvas(ctx);
-
-        // loop through the data and draw!
+        // waveform data DRAW! Helper.clearCanvas(ctx); loop through the data and draw!
         analyserNode.getByteFrequencyData(frequencyData);
 
         analyserNode.getByteTimeDomainData(waveformData);
 
         visualizerInstance.draw(ctx, frequencyData, waveformData);
+
+        // Add a filter frame rate slider
+        // if ((frameCounter++) % 60 !== 0) {
+        //     return;
+        // }
+        //
+        // frameCounter = 1;
 
         manipulatePixels();
     }
@@ -183,7 +184,5 @@ var app = app || {};
 
     window.addEventListener('load', init);
 
-    window.addEventListener('resize', (e) => {
-        setupCache()
-    }, false);
+    window.addEventListener('resize', setupCache, false);
 }());
