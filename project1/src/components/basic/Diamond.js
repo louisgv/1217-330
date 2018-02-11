@@ -16,14 +16,12 @@ var app = app || {};
         constructor(pos = new Vector2(), size = 10, color = 'white') {
             this.pos = pos;
             this.size = size;
-            this.halfSize = size / 2;
             this.color = color;
         }
 
         // Set the size of the diamond
         setSize(size) {
             this.size = size;
-            this.halfSize = size / 2;
         }
 
         // Set the desired color of the diamond
@@ -32,15 +30,28 @@ var app = app || {};
         }
 
         // Draw the diamond
-        draw(ctx) {
+        draw(ctx, fill = true, stroke = false) {
             ctx.save();
 
             ctx.fillStyle = this.color;
-            //
+            ctx.strokeStyle = this.color;
 
-            ctx.translate(this.pos.x, this.pos.y)
-            ctx.rotate(45 * Math.PI / 180)
-            ctx.fillRect(0, 0, this.size, this.size);
+            ctx.beginPath();
+
+            ctx.moveTo(this.pos.x, this.pos.y - this.size);
+            ctx.lineTo(this.pos.x + this.size, this.pos.y);
+            ctx.lineTo(this.pos.x, this.pos.y + this.size);
+            ctx.lineTo(this.pos.x - this.size, this.pos.y);
+
+            ctx.closePath();
+
+            if (fill) {
+                ctx.fill();
+            }
+
+            if (stroke) {
+                ctx.stroke();
+            }
 
             ctx.restore();
         }

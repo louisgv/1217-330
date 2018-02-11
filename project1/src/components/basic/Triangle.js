@@ -34,12 +34,12 @@ var app = app || {};
 
             ctx.beginPath();
 
-            ctx.moveTo(this.pos.x, this.pos.y + this.size);
-            ctx.lineTo(this.pos.x - this.size, this.pos.y - this.size);
-            ctx.lineTo(this.pos.x + this.size, this.pos.y - this.size);
+            ctx.moveTo(this.pos.x, this.pos.y - this.size);
+            ctx.lineTo(this.pos.x - this.size, this.pos.y + this.size);
+            ctx.lineTo(this.pos.x + this.size, this.pos.y + this.size);
 
-            ctx.fill();
             ctx.closePath();
+            ctx.fill();
 
             ctx.restore();
         }

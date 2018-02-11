@@ -21,7 +21,6 @@ var app = app || {};
             heightScale: 0
         }) {
             this.config = config
-            this.cachedPos = new Array(Global.DATA_SIZE);
         }
 
         // Update the width and height scale of the wave
@@ -45,17 +44,15 @@ var app = app || {};
             ctx.beginPath();
 
             let x = 0;
-            // debugger; data runs from 0->Global.NUM_SAMPLES-1 scale: /NUM_SAMPLES
             // *ctx.canvas.halfHeight
 
             let i = 0;
 
+            ctx.moveTo(x, ctx.canvas.halfHeight)
+
             for (; i < data.length; ++i) {
-                if (i==0) {
-                    ctx.moveTo(x, data[i] * this.config.heightScale)
-                } else {
-                    this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
-                }
+                this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
+
                 x += this.config.widthScale;
             }
 

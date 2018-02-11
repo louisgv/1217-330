@@ -28,15 +28,15 @@ var app = app || {};
         // Update local cache
         updateConfig(canvas) {
             this.smCentralCache.fill(
+                new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
+            )
+
+            this.mdCentralCache.fill(
                 new Diamond(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
             )
 
-            // mdCentralCache.fill(
-            //     new Triangle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
-            // )
-
             this.lgCentralCache.fill(
-                new Diamond(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
+                new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
             )
         }
 
@@ -57,8 +57,8 @@ var app = app || {};
                 this.smCentralCache[i].setSize(circleRadius * .50);
                 this.smCentralCache[i].draw(ctx);
 
-                // mdCentralCache[i].setColor(Helper.makeColor(255, 111, 111, .34 - percent / 3.0));
-                // mdCentralCache[i].setSize(circleRadius); mdCentralCache[i].draw(ctx);
+                this.mdCentralCache[i].setSize(circleRadius);
+                this.mdCentralCache[i].draw(ctx, false, true);
 
                 this.lgCentralCache[i].setColor(Helper.makeColor(0, 0, 0, .10 - percent / 10.0));
                 this.lgCentralCache[i].setSize(circleRadius * 1.5);

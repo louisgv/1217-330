@@ -3,10 +3,10 @@ var app = app || {};
 
 (function() {
     const {
-        Vector2,
         MirrorBar,
         PonchoEye,
         MirrorWave,
+        Wave,
         Helper,
         Global
     } = app;
@@ -17,11 +17,13 @@ var app = app || {};
             this.mirrorBar = new MirrorBar();
             this.mirrorWave = new MirrorWave();
             this.ponchoEye = new PonchoEye();
+            this.wave = new Wave();
 
             // Render from bottom-up
             this.vizList = [
                 this.mirrorWave,
                 this.mirrorBar,
+                this.wave,
                 this.ponchoEye,
             ]
         }
@@ -34,11 +36,11 @@ var app = app || {};
             }
         }
 
-        draw(ctx, data) {
+        draw(ctx, frequencyData, waveformData) {
             for (let i = 0; i < this.vizList.length; i++) {
                 this
                     .vizList[i]
-                    .draw(ctx, data)
+                    .draw(ctx, frequencyData, waveformData)
             }
         }
     }

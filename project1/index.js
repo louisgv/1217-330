@@ -36,7 +36,8 @@ var app = app || {};
     // TODO: have this a local variable for the circle class
 
     // create a new array of 8-bit integers (0-255)
-    const data = new Uint8Array(Global.DATA_SIZE);
+    const frequencyData = new Uint8Array(Global.DATA_SIZE);
+    const waveformData = new Uint8Array(Global.DATA_SIZE);
 
     const defaultConfig = {
         'Hazey.ogg': {
@@ -145,14 +146,16 @@ var app = app || {};
             return;
         }
 
-        // populate the array with the frequency data notice these arrays can be passed "by
-        // reference"
-        analyserNode.getByteFrequencyData(data);
+        // waveform data DRAW!
 
-        // OR analyserNode.getByteTimeDomainData(data);  waveform data DRAW! clearCanvas(ctx);
+        // Helper.clearCanvas(ctx);
+
         // loop through the data and draw!
+        analyserNode.getByteFrequencyData(frequencyData);
 
-        visualizerInstance.draw(ctx, data);
+        analyserNode.getByteTimeDomainData(waveformData);
+
+        visualizerInstance.draw(ctx, frequencyData, waveformData);
 
         manipulatePixels();
     }

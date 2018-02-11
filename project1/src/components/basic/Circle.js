@@ -28,16 +28,25 @@ var app = app || {};
             this.radius = radius;
         }
 
-        draw(ctx) {
+        draw(ctx, fill = true, stroke = false) {
             ctx.save();
 
             ctx.beginPath();
             ctx.fillStyle = this.color;
+            ctx.strokeStyle = this.color;
 
             ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI, false);
 
-            ctx.fill();
             ctx.closePath();
+
+            if (fill) {
+                ctx.fill();
+            }
+
+            if (stroke) {
+                ctx.stroke();
+            }
+            
             ctx.restore();
         }
     }
