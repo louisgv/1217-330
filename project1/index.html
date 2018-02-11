@@ -27,6 +27,8 @@
 	      href="./stylesheets/checkbox.css">
 	<link rel="stylesheet"
 	      href="./stylesheets/button.css">
+	<link rel="stylesheet"
+	      href="./stylesheets/select.css">
 
 	<link rel="stylesheet"
 	      href="./index.css">
@@ -68,6 +70,8 @@
 
 	<script src="./src/components/Visualizer.js"
 	        charset="utf-8"></script>
+	<script src="./src/components/VisualizerUI.js"
+	        charset="utf-8"></script>
 
 
 	<script src="./index.js"
@@ -87,32 +91,13 @@
 		        id="toggleui-button"
 		        title="Click to Toggle UI">x</button>
 
-		<div class="toggle-target">
+		<div class="toggle-target" id="visualizer-ui">
 			<button class="button"
 			        id="shuffle-button"
 			        title="Click to Shuffle to a New Song">
 				Shuffle
 			</button>
 
-			<label class="container">Mirror Bar
-				<input type="checkbox" id="mirrorBar" checked/>
-				<span class="checkmark"></span>
-			</label>
-
-			<label class="container">Mirror Wave
-				<input type="checkbox" id="mirrorWave" checked/>
-				<span class="checkmark"></span>
-			</label>
-
-			<label class="container">Wave
-				<input type="checkbox" id="wave" checked/>
-				<span class="checkmark"></span>
-			</label>
-
-			<label class="container">Poncho Eye
-				<input type="checkbox" id="ponchoEye" checked/>
-				<span class="checkmark"></span>
-			</label>
 		</div>
 
 		<!-- <label>Track:

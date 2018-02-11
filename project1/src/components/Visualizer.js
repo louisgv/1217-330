@@ -36,20 +36,6 @@ var app = app || {};
                 .map(viz => this[viz]);
         }
 
-        bindCheckbox() {
-            this
-                .vizList
-                .forEach(viz => {
-                    const vizInstance = this[viz];
-
-                    document
-                        .getElementById(viz)
-                        .onchange = function(e) {
-                            vizInstance.disabled = !e.target.checked;
-                        };
-                })
-        }
-
         updateConfig(canvas) {
             for (let i = 0; i < this.vizInstances.length; i++) {
                 this

@@ -18,7 +18,7 @@ var app = app || {};
             widthScale: 0,
             heightScale: 0,
             lineWidth: 9,
-            color: Helper.makeColor(0, 0, 0, 0.81)
+            color: [0,0,0],
         }) {
             this.config = config
         }
@@ -34,8 +34,12 @@ var app = app || {};
             ctx.save();
             ctx.beginPath();
 
+            const [r,g,b] = this.config.color;
+
+            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
+
             ctx.lineWidth = this.config.lineWidth;
-            ctx.strokeStyle = this.config.color;
 
             let x = 0;
 

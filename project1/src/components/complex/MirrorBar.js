@@ -20,7 +20,7 @@ var app = app || {};
             height: 0,
             topSpacing: 0,
             scale: 0.45,
-            color: Helper.makeColor(255, 0, 0, .6)
+            color: [255, 0, 0],
         }) {
             this.config = config
             this.cachedPos = new Array(Global.DATA_SIZE);
@@ -52,7 +52,11 @@ var app = app || {};
 
         draw(ctx, data) {
             ctx.save();
-            ctx.fillStyle = this.config.color;
+
+            const [r,g,b] = this.config.color;
+
+            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
 
             const barConfig = this.config;
             // cache all multiplication, reduce calculation to add and sub

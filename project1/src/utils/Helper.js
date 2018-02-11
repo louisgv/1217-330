@@ -9,6 +9,15 @@
 var app = app || {};
 
 app.Helper = {
+    // Create html element. Code adapted from
+    // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+    createElement(html) {
+        const template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    },
+
     // Toggle all toggle target based on the menu button state
     toggleUIElement(e) {
 

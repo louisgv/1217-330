@@ -19,6 +19,7 @@ var app = app || {};
         FilterConfig,
 
         Visualizer,
+        VisualizerUI,
 
         Global,
         Helper
@@ -34,6 +35,8 @@ var app = app || {};
     let frameCounter = 1;
 
     const visualizerInstance = new Visualizer();
+
+    const visualizerUIInstance = new VisualizerUI(visualizerInstance);
 
     // TODO: have this a local variable for the circle class create a new array of 8-bit
     // integers (0-255)
@@ -75,7 +78,8 @@ var app = app || {};
     }
 
     function setupUI() {
-        visualizerInstance.bindCheckbox();
+
+        visualizerUIInstance.mount(document.querySelector('#visualizer-ui'))
 
         DropZone.apply(canvas, handleFileDrop);
 

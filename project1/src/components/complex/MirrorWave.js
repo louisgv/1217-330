@@ -16,9 +16,11 @@ var app = app || {};
     app.MirrorWave = class {
         constructor(config = {
             blankCut: true,
+            stroke: true,
             fill: true,
             widthScale: 0,
-            heightScale: 0
+            heightScale: 0,
+            color: [0,0,0],
         }) {
             this.config = config
         }
@@ -42,6 +44,10 @@ var app = app || {};
         draw(ctx, data) {
             ctx.save();
             ctx.beginPath();
+            const [r,g,b] = this.config.color;
+
+            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
 
             let x = 0;
             // *ctx.canvas.halfHeight
@@ -73,7 +79,9 @@ var app = app || {};
 
             ctx.closePath();
 
-            ctx.stroke();
+            if (this.config.stroke) {
+                ctx.stroke();
+            }
 
             if (this.config.fill) {
                 ctx.fill();
