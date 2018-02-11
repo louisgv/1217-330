@@ -4,7 +4,7 @@
 	Vector2 class
 	Used to model basic vector, together with basic vector arithmetic
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

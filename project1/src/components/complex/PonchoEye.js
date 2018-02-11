@@ -4,7 +4,7 @@
 	Circle module.
     Used to model a circle
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";
@@ -27,6 +27,13 @@ var app = app || {};
 
         // Update local cache
         updateConfig(canvas) {
+            if (this.config.maxRadius > canvas.halfHeight) {
+                this.config.maxRadius = canvas.halfHeight;
+            }
+            if (this.config.maxRadius > canvas.halfWidth) {
+                this.config.maxRadius = canvas.halfWidth;
+            }
+
             this.smCentralCache.fill(
                 new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white')
             )

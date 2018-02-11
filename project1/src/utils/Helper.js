@@ -1,15 +1,15 @@
 /*
 	Author: LAB
-	Helper methods.
+	Helper methods singleton.
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";
 var app = app || {};
 
 app.Helper = {
-
+    // Toggle all toggle target based on the menu button state
     toggleUIElement(e) {
 
         const shouldDisable = e.target.innerText === 'x';

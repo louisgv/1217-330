@@ -1,3 +1,12 @@
+/*
+	Author: LAB
+
+	Visualizer class
+	Used to manage instances of all visualizer
+
+    LICENSE: MIT
+*/
+
 "use strict";
 var app = app || {};
 
@@ -19,27 +28,43 @@ var app = app || {};
             this.ponchoEye = new PonchoEye();
             this.wave = new Wave();
 
+            this.vizList = ['mirrorWave', 'mirrorBar', 'wave', 'ponchoEye'];
+
             // Render from bottom-up
-            this.vizList = [
-                this.mirrorWave,
-                this.mirrorBar,
-                this.wave,
-                this.ponchoEye,
-            ]
+            this.vizInstances = this
+                .vizList
+                .map(viz => this[viz]);
+        }
+
+        bindCheckbox() {
+            this
+                .vizList
+                .forEach(viz => {
+                    const vizInstance = this[viz];
+
+                    document
+                        .getElementById(viz)
+                        .onchange = function(e) {
+                            vizInstance.disabled = !e.target.checked;
+                        };
+                })
         }
 
         updateConfig(canvas) {
-            for (let i = 0; i < this.vizList.length; i++) {
+            for (let i = 0; i < this.vizInstances.length; i++) {
                 this
-                    .vizList[i]
+                    .vizInstances[i]
                     .updateConfig(canvas)
             }
         }
 
         draw(ctx, frequencyData, waveformData) {
-            for (let i = 0; i < this.vizList.length; i++) {
+            for (let i = 0; i < this.vizInstances.length; i++) {
+                if (this.vizInstances[i].disabled) {
+                    continue;
+                }
                 this
-                    .vizList[i]
+                    .vizInstances[i]
                     .draw(ctx, frequencyData, waveformData)
             }
         }

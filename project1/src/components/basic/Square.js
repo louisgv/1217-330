@@ -4,7 +4,7 @@
 	Square module.
 	Used to draw square into the canvas.
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

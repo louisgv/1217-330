@@ -4,7 +4,7 @@
 	Square module.
 	Used to draw a diamond into the canvas.
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

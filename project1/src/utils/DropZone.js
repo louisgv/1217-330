@@ -4,6 +4,8 @@
 	Dropzone module.
 	When applying to an element, allowing files to be drag and dropped.
 	Can filter out file type if necessary.
+
+    LICENSE: MIT
 */
 "use strict";
 var app = app || {};

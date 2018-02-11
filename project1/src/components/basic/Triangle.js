@@ -4,7 +4,7 @@
 	Triangle module
     Used to handle drawing a equilateral triangle
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

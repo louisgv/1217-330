@@ -4,7 +4,7 @@
 	Circle module.
     Used to model a circle
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

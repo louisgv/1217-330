@@ -4,7 +4,7 @@
 	Circle module.
     Used to draw mirror bars
 
-    LICENSE: GPLv3
+    LICENSE: MIT
 */
 
 "use strict";

@@ -75,7 +75,9 @@ var app = app || {};
     }
 
     function setupUI() {
-        DropZone.apply(canvas, handleFileDrop)
+        visualizerInstance.bindCheckbox();
+
+        DropZone.apply(canvas, handleFileDrop);
 
         canvas.addEventListener('pointerdown', (e) => {
             if (audioElement.paused) {
@@ -83,7 +85,7 @@ var app = app || {};
             } else {
                 audioElement.pause();
             }
-        })
+        });
 
         audioElement.addEventListener('ended', playRandomLocalMedia);
 

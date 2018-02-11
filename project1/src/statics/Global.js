@@ -1,7 +1,16 @@
+/*
+	Author: LAB
+
+	Global singleton
+	Used to share global config
+
+    LICENSE: MIT
+*/
+
 "use strict";
 var app = app || {};
 
-app.Global = {
+app.Global = Object.freeze({
     SAMPLE_RATE: 44100,
     NUM_SAMPLES: 256,
 
@@ -17,4 +26,4 @@ app.Global = {
         'Cold.mp3',
         'Lullaby.mp3'
     ]
-};
+});

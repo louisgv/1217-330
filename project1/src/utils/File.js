@@ -2,7 +2,7 @@
 	Author: LAB
 	File reader handle
 
-	LICENSE: GPLv3
+	LICENSE: MIT
 */
 
 "use strict";

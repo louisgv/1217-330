@@ -1,3 +1,12 @@
+/*
+	Author: LAB
+
+	Filter class
+	Used to manage static filter
+
+    LICENSE: MIT
+*/
+
 "use strict";
 var app = app || {};
 
