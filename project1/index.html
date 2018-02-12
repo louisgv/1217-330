@@ -29,6 +29,8 @@
 	      href="./stylesheets/button.css">
 	<link rel="stylesheet"
 	      href="./stylesheets/select.css">
+	<link rel="stylesheet"
+	      href="./stylesheets/slider.css">
 
 	<link rel="stylesheet"
 	      href="./index.css">
@@ -87,18 +89,42 @@
 		vize
 	</h1>
 	<div id="controls">
-		<button class="button"
-		        id="toggleui-button"
+		<button id="toggleui-button"
+		        class="button"
 		        title="Click to Toggle UI">x</button>
 
-		<div class="toggle-target" id="visualizer-ui">
-			<button class="button"
-			        id="shuffle-button"
+		<div class="toggle-target">
+			<button id="shuffle-button"
+			        class="button"
 			        title="Click to Shuffle to a New Song">
 				Shuffle
 			</button>
 
+			<button id="fullscreen-button"
+			        class="button"
+			        title="Click to go Fullscreen">
+				Full Screen
+			</button>
 		</div>
+
+		<div class="toggle-target margin-bottom">
+			<div class="slider-container">
+				<label class="slider-label margin-right">
+					<span>Bass</span>
+				</label>
+				<input id="bass-slider"
+				       class="slider"
+				       type="range"
+				       min="0"
+				       max="100"
+				       value="50">
+			</div>
+
+		</div>
+
+		<div id="visualizer-ui"
+		     class="toggle-target"></div>
+
 
 		<!-- <label>Track:
 			<select id="trackSelect">

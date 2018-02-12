@@ -15,6 +15,7 @@ var app = app || {};
 
     app.MirrorBar = class {
         constructor(config = {
+            cut: true,
             spacing: 1,
             width: 0,
             height: 0,
@@ -22,7 +23,7 @@ var app = app || {};
             scale: 0.45,
             color: [255, 0, 0],
         }) {
-            this.config = config
+            this.config = config;
             this.cachedPos = new Array(Global.DATA_SIZE);
         }
 
@@ -62,7 +63,7 @@ var app = app || {};
             // cache all multiplication, reduce calculation to add and sub
 
             for (let i = 0; i < data.length; i++) {
-                if (data[i] === 0) {
+                if (barConfig.cut && data[i] === 0) {
                     continue;
                 }
 

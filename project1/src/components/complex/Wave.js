@@ -18,7 +18,7 @@ var app = app || {};
             widthScale: 0,
             heightScale: 0,
             lineWidth: 9,
-            color: [0,0,0],
+            color: [0, 0, 0]
         }) {
             this.config = config
         }
@@ -34,7 +34,7 @@ var app = app || {};
             ctx.save();
             ctx.beginPath();
 
-            const [r,g,b] = this.config.color;
+            const [r, g, b] = this.config.color;
 
             ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
             ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
@@ -45,7 +45,7 @@ var app = app || {};
 
             let i = 0;
 
-            ctx.lineTo(x, ctx.canvas.halfHeight);
+            ctx.moveTo(x, ctx.canvas.halfHeight);
 
             for (; i < data.length; i++) {
                 ctx.lineTo(x, data[i] * this.config.heightScale);

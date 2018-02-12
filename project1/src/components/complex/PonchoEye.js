@@ -23,6 +23,7 @@ var app = app || {};
 
     app.PonchoEye = class {
         constructor(config = {
+            pos: new Vector2(),
             maxRadius: 180,
             color: [0, 0, 0]
         }) {
@@ -43,17 +44,24 @@ var app = app || {};
                 this.config.maxRadius = canvas.halfWidth;
             }
 
+            this.config.pos = new Vector2(canvas.halfWidth, canvas.halfHeight);
+
+            this.updateShapeCache();
+        }
+
+        // Update the shape cache
+        updateShapeCache(smShape = 'Circle', mdShape = 'Diamond', lgShape = 'Circle') {
             this
                 .smCentralCache
-                .fill(new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white'))
+                .fill(new app[smShape](this.config.pos.copy(), 1, 'white'))
 
             this
                 .mdCentralCache
-                .fill(new Diamond(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white'))
+                .fill(new app[mdShape](this.config.pos.copy(), 1, 'white'))
 
             this
                 .lgCentralCache
-                .fill(new Circle(new Vector2(canvas.halfWidth, canvas.halfHeight), 1, 'white'))
+                .fill(new app[lgShape](this.config.pos.copy(), 1, 'white'))
         }
 
         draw(ctx, data) {
@@ -83,7 +91,7 @@ var app = app || {};
 
                 this
                     .mdCentralCache[i]
-                    .setColor(Helper.makeColor(r, g, b, 1.0));
+                    .setColor(Helper.makeColor(255 - r, 255 - g, 255 - b, 1.0));
                 this
                     .mdCentralCache[i]
                     .setSize(circleRadius);

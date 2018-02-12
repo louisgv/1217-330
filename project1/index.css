@@ -108,10 +108,12 @@ footer h4, footer h5 {
     flex-direction: row;
 }
 
-.tool-row {
+.tool-row,
+.margin-bottom {
     margin-bottom: 0.2em;
 }
 
-.tool-col {
+.tool-col,
+.margin-right {
     margin-right: 0.2em;
 }

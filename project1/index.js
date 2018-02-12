@@ -29,6 +29,8 @@ var app = app || {};
 
     let analyserNode;
 
+    let biquadFilter;
+
     let canvas,
         ctx;
 
@@ -50,12 +52,14 @@ var app = app || {};
         }
     }
 
+    // Handle on file drop
     async function handleFileDrop(fileBlob) {
         const {result} = await File.read(fileBlob);
 
         playStream(audioElement, result, fileBlob.name);
     }
 
+    // Handle on initialization
     function init() {
         // set up canvas stuff
         audioElement = document.querySelector('audio');
@@ -63,9 +67,10 @@ var app = app || {};
         ctx = canvas.getContext("2d");
 
         // call our helper function and get an analyser node
-        const analyserData = Helper.getAnalyserNode(audioElement, Global.NUM_SAMPLES);
+        const analyserData = Helper.getAnalyserData(audioElement, Global.NUM_SAMPLES);
 
         analyserNode = analyserData.analyserNode;
+        biquadFilter = analyserData.biquadFilter;
 
         setupUI();
 
@@ -77,6 +82,7 @@ var app = app || {};
         update();
     }
 
+    // Handle Setup UI event
     function setupUI() {
 
         visualizerUIInstance.mount(document.querySelector('#visualizer-ui'))
@@ -94,6 +100,10 @@ var app = app || {};
         audioElement.addEventListener('ended', playRandomLocalMedia);
 
         document
+            .querySelector('#fullscreen-button')
+            .addEventListener('click', () => Helper.requestFullscreen(canvas));
+
+        document
             .querySelector('#shuffle-button')
             .addEventListener('click', playRandomLocalMedia);
 
@@ -101,15 +111,19 @@ var app = app || {};
             .querySelector('#toggleui-button')
             .addEventListener('click', Helper.toggleUIElement);
 
+        document
+            .querySelector('#bass-slider')
+            .addEventListener('input', (e) => {
+
+                biquadFilter.type = "lowshelf";
+                // biquadFilter.frequency.value = 1000;
+                // biquadFilter.gain.value = e.target.value;
+            });
+
         // document     .querySelector("#trackSelect")     .onchange = function(e) {
-        // playStream(audioElement, e.target.value, e.target.value);     }; document
-        // .querySelector('#radiusSlider')     .oninput = function(e) {         maxRadius = e
-        // .target             .value
-        //
-        // document             .querySelector("#sliderResults")             .innerHTML =
-        // maxRadius;     }; Object     .keys(FilterConfig)     .map((f) => {         document
-        // .getElementById(f)             .onchange = function(e) { FilterConfig[f] =
-        // e.target.checked;             };     })
+        // playStream(audioElement, e.target.value, e.target.value);     };  Object
+        // .keys(FilterConfig)     .map((f) => { document .getElementById(f)             .onchange
+        // = function(e) { FilterConfig[f] = e.target.checked;             };     })
     }
 
     // Update config of viz and update canvas width/height cache
@@ -157,10 +171,7 @@ var app = app || {};
 
         visualizerInstance.draw(ctx, frequencyData, waveformData);
 
-        // Add a filter frame rate slider
-        // if ((frameCounter++) % 60 !== 0) {
-        //     return;
-        // }
+        // Add a filter frame rate slider if ((frameCounter++) % 60 !== 0) {     return; }
         //
         // frameCounter = 1;
 

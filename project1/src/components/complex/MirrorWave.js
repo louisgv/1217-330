@@ -15,7 +15,7 @@ var app = app || {};
 
     app.MirrorWave = class {
         constructor(config = {
-            blankCut: true,
+            cut: true,
             stroke: true,
             fill: true,
             widthScale: 0,
@@ -33,7 +33,7 @@ var app = app || {};
 
         // Draw a segent of the mirror wave, checking if we should cut the blank part or not
         drawSegment(ctx, freq, x, y) {
-            if (this.config.blankCut && freq <= 0) {
+            if (this.config.cut && freq <= 0) {
                 ctx.lineTo(ctx.canvas.halfWidth, ctx.canvas.halfHeight);
             } else {
                 ctx.lineTo(x, y);

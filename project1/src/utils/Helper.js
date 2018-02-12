@@ -64,7 +64,7 @@ app.Helper = {
     },
 
     // Return analyser node from audio element
-    getAnalyserNode(audioElement, numberOfSamples) {
+    getAnalyserData(audioElement, numberOfSamples) {
         let audioCtx,
             analyserNode,
             biquadFilter,
@@ -107,6 +107,7 @@ app.Helper = {
         return `rgba(${r},${g},${b},${a})`;
     },
 
+    // Request the user to fullscreen the visualization
     requestFullscreen(element) {
         if (element.requestFullscreen) {
             element.requestFullscreen();

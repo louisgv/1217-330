@@ -16,6 +16,10 @@ var app = app || {};
             this.y = y;
         }
 
+        copy() {
+            return new this.constructor(this.x, this.y);
+        }
+
         // Mutable add
         mAdd({x, y}) {
             this.x += x;
@@ -27,12 +31,12 @@ var app = app || {};
         }
 
         iSub({x, y}) {
-            return new Vector2(this.x - x, this.y - y);
+            return new this.constructor(this.x - x, this.y - y);
         }
 
         // Immutable add
         iAdd({x, y}) {
-            return new Vector2(this.x + x, this.y + y);
+            return new this.constructor(this.x + x, this.y + y);
         }
 
         mScale(x, y) {
@@ -42,7 +46,7 @@ var app = app || {};
 
         // Immutable mul
         iMul(scalar) {
-            return new Vector2(this.x * scalar, this.y * scalar);
+            return new this.constructor(this.x * scalar, this.y * scalar);
         }
     }
 }());

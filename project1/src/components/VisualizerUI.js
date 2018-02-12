@@ -15,40 +15,43 @@ var app = app || {};
 
     // Label - Color -
     app.VisualizerUIValues = {
-        'wave': ['Wave', 'Black'],
+        'wave': [
+            'Wave', 'Black'
+        ],
         'mirrorBar': [
             'Mirror Bar', 'Red'
         ],
         'ponchoEye': [
-            'Poncho Eye', 'White'
+            'Poncho Eye', 'Black'
         ],
-        'mirrorWave': [
-            'Mirror Wave', 'Black'
-        ],
+        'mirrorWave': ['Mirror Wave', 'Black']
     }
 
     // Fill - Stroke - Fillblank
-    app.VisualizerUIDrawConfig = {
+    app.VisualizerUIDrawCheckBox = {
         'wave': [],
-        'mirrorBar': [],
+        'mirrorBar': ['Cut'],
         'ponchoEye': [],
-        'mirrorWave': [true, true, true],
+        'mirrorWave': ['Cut', 'Fill', 'Stroke']
     }
 
     app.VisualizerUIColors = {
         'Black': [
             0, 0, 0
         ],
-        'White': [
-            255, 255, 255
-        ],
         'Red': [
-            255, 0, 0
+            255, 63, 52
         ],
         'Green': [
-            0, 255, 0
+            11, 232, 129
         ],
-        'Blue': [0, 0, 255]
+        'Blue': [
+            75, 207, 250
+        ],
+        'Yellow': [
+            255, 168, 1
+        ],
+        'White': [255, 255, 255]
     }
 
     app.VisualizerUI = class {
@@ -60,7 +63,6 @@ var app = app || {};
         // Generate a column of a viz UI
         generateCol(viz) {
             const [label, defaultColor, fsConfig] = app.VisualizerUIValues[viz];
-            const [strokeConfig, fillConfig, cutConfig] = app.VisualizerUIDrawConfig[viz];
 
             const bodyEl = Helper.createElement(`<div class="flex-row tool-row"></div>`);
 
@@ -103,29 +105,22 @@ var app = app || {};
 
             bodyEl.appendChild(optionLabelEl);
 
-            if (fillConfig) {
-                const checkBoxEl = this.generateCheckBox('Fill', `${viz}-fill`, (e) => {
-                    vizConfig.fill = e.target.checked;
-                }, vizConfig.fill);
+            app
+                .VisualizerUIDrawCheckBox[viz]
+                .forEach((checkBoxLabel) => {
+                    const checkBoxConfig = checkBoxLabel.toLowerCase();
 
-                bodyEl.appendChild(checkBoxEl);
-            }
+                    const checkBoxEl = this.generateCheckBox(
+                        checkBoxLabel,
+                        `${viz}-${checkBoxConfig}`,
+                        (e) => {
+                            vizConfig[checkBoxConfig] = e.target.checked;
+                        },
+                        vizConfig[checkBoxConfig]
+                    );
 
-            if (strokeConfig) {
-                const checkBoxEl = this.generateCheckBox('Stroke', `${viz}-stroke`, (e) => {
-                    vizConfig.stroke = e.target.checked;
-                }, vizConfig.stroke);
-
-                bodyEl.appendChild(checkBoxEl);
-            }
-
-            if (cutConfig) {
-                const checkBoxEl = this.generateCheckBox('Cut', `${viz}-blank-cut`, (e) => {
-                    vizConfig.blankCut = e.target.checked;
-                }, vizConfig.blankCut);
-
-                bodyEl.appendChild(checkBoxEl);
-            }
+                    bodyEl.appendChild(checkBoxEl);
+                })
 
             return bodyEl;
         }
