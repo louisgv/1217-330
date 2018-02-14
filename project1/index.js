@@ -31,10 +31,25 @@ var app = app || {};
 
     let biquadFilter;
 
+    let audioCtx;
+
     let canvas,
         ctx;
 
     let frameCounter = 1;
+
+    // type - freq - label (opt)
+    const biquadFilterList = [
+        [
+            'lowshelf', 45, 'a', 1.0
+        ],
+        [
+            'lowshelf', 450, 'b', 1.0
+        ],
+        [
+            'lowshelf', 4500, 'c', -1.0
+        ]
+    ]
 
     const visualizerInstance = new Visualizer();
 
@@ -67,8 +82,13 @@ var app = app || {};
         ctx = canvas.getContext("2d");
 
         // call our helper function and get an analyser node
-        const analyserData = Helper.getAnalyserData(audioElement, Global.NUM_SAMPLES);
+        const analyserData = Helper.getAnalyserData(
+            audioElement,
+            Global.NUM_SAMPLES,
+            biquadFilterList
+        );
 
+        audioCtx = analyserData.audioCtx;
         analyserNode = analyserData.analyserNode;
         biquadFilter = analyserData.biquadFilter;
 
@@ -111,19 +131,26 @@ var app = app || {};
             .querySelector('#toggleui-button')
             .addEventListener('click', Helper.toggleUIElement);
 
-        document
-            .querySelector('#bass-slider')
-            .addEventListener('input', (e) => {
+        const bassSlider = document.querySelector('#bass-slider');
 
-                biquadFilter.type = "lowshelf";
-                // biquadFilter.frequency.value = 1000;
-                // biquadFilter.gain.value = e.target.value;
+        bassSlider.addEventListener('change', (e) => {
+            const audioCtxNewTime = audioCtx.currentTime + 1;
+
+            const newGainValue = e.target.value * (72) - 36;
+
+            biquadFilterList.map(([,, label, scale]) => {
+                biquadFilter[label]
+                    .gain
+                    .setValueAtTime(newGainValue * scale, audioCtxNewTime);
             });
+        });
 
-        // document     .querySelector("#trackSelect")     .onchange = function(e) {
-        // playStream(audioElement, e.target.value, e.target.value);     };  Object
-        // .keys(FilterConfig)     .map((f) => { document .getElementById(f)             .onchange
-        // = function(e) { FilterConfig[f] = e.target.checked;             };     })
+        document
+            .querySelector('#bass-reset')
+            .addEventListener('click', (e) => {
+                bassSlider.value = 0.5;
+                bassSlider.dispatchEvent(new Event('change'))
+            });
     }
 
     // Update config of viz and update canvas width/height cache

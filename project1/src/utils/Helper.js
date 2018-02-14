@@ -64,7 +64,18 @@ app.Helper = {
     },
 
     // Return analyser node from audio element
-    getAnalyserData(audioElement, numberOfSamples) {
+    getAnalyserData(audioElement, numberOfSamples, biquadFilterList = [
+        // type - freq - label (opt)
+        [
+            'lowshelf', 90, 'ls90'
+        ],
+        [
+            'lowshelf', 450, 'ls450'
+        ],
+        [
+            'lowpass', 4500, 'lp4500'
+        ]
+    ]) {
         let audioCtx,
             analyserNode,
             biquadFilter,
@@ -76,7 +87,6 @@ app.Helper = {
         // console.log(audioCtx); create an analyser node
         analyserNode = audioCtx.createAnalyser();
 
-        biquadFilter = audioCtx.createBiquadFilter();
         /*
             We will request NUM_SAMPLES number of samples or "bins" spaced equally
             across the sound spectrum.
@@ -89,17 +99,50 @@ app.Helper = {
         // fft stands for Fast Fourier Transform
         analyserNode.fftSize = numberOfSamples;
 
-        audioCtx.createBiquadFilter();
+        const audioCtxNewTime = audioCtx.currentTime + 1;
+
+        // normalize and immute the biquad list for ease of use
+        biquadFilterList = biquadFilterList.map((item) => {
+            if (!item[2]) { // if there is no label
+                item[2] = `${item[0]}-${item[1]}`
+            }
+            return item;
+        })
+
+        biquadFilter = biquadFilterList.reduce((p, [type, freq, label]) => {
+            p[label] = audioCtx.createBiquadFilter();
+
+            p[label].type = type;
+
+            p[label]
+                .frequency
+                .setValueAtTime(freq, audioCtxNewTime);
+
+            return p;
+        }, {});
 
         // this is where we hook up the <audio> element to the analyserNode
         sourceNode = audioCtx.createMediaElementSource(audioElement);
-        sourceNode.connect(analyserNode);
 
-        analyserNode.connect(biquadFilter);
+        let i = 0;
+
+        const [,, label] = biquadFilterList[i];
+        sourceNode.connect(biquadFilter[label]);
+
+        for (; i < biquadFilterList.length - 1; i++) {
+            const [,, labelA] = biquadFilterList[i];
+            const [,, labelB] = biquadFilterList[i + 1];
+
+            biquadFilter[labelA].connect(biquadFilter[labelB])
+        }
+
+        const [,, labelEnd] = biquadFilterList[i];
+        biquadFilter[labelEnd].connect(analyserNode);
+
         // here we connect to the destination i.e. speakers
-        biquadFilter.connect(audioCtx.destination);
+        analyserNode.connect(audioCtx.destination);
 
-        return {analyserNode, biquadFilter};
+        return {audioCtx, analyserNode, biquadFilter};
     },
 
     // Create rgba color
