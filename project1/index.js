@@ -21,6 +21,7 @@ var app = app || {};
         Visualizer,
         VisualizerUI,
 
+        Interface,
         Global,
         Helper
     } = app;
@@ -131,9 +132,29 @@ var app = app || {};
             .querySelector('#toggleui-button')
             .addEventListener('click', Helper.toggleUIElement);
 
-        const bassSlider = document.querySelector('#bass-slider');
+        const playbackSlider = Interface.generateSlider('Playback', 'playback-slider', (e) => {
+            audioElement.currentTime = e.target.value * audioElement.duration;
+        }, 0);
 
-        bassSlider.addEventListener('change', (e) => {
+        document
+            .querySelector('#playback-slider-container')
+            .appendChild(playbackSlider);
+
+        audioElement.addEventListener('timeupdate', (e) => {
+            playbackSlider.sliderEl.value = audioElement.currentTime / audioElement.duration;
+        })
+
+        audioElement.volume = 0.5;
+
+        const volumeSlider = Interface.generateSlider('Volume', 'volume-slider', (e) => {
+            audioElement.volume = e.target.value;
+        }, audioElement.volume);
+
+        document
+            .querySelector('#volume-slider-container')
+            .appendChild(volumeSlider);
+
+        const bassSlider = Interface.generateSlider('Bass', 'bass-slider', (e) => {
             const audioCtxNewTime = audioCtx.currentTime + 1;
 
             const newGainValue = e.target.value * (72) - 36;
@@ -146,11 +167,8 @@ var app = app || {};
         });
 
         document
-            .querySelector('#bass-reset')
-            .addEventListener('click', (e) => {
-                bassSlider.value = 0.5;
-                bassSlider.dispatchEvent(new Event('change'))
-            });
+            .querySelector('#bass-slider-container')
+            .appendChild(bassSlider);
     }
 
     // Update config of viz and update canvas width/height cache
@@ -169,7 +187,6 @@ var app = app || {};
         audioElement.crossOrigin = 'anonymous';
         audioElement.src = path;
         audioElement.play();
-        audioElement.volume = 0.9;
         document
             .querySelector('#song-name')
             .innerHTML = name.split('.')[0];

@@ -38,11 +38,6 @@
 	<script src="./src/components/primitives/Vector2.js"
 	        charset="utf-8"></script>
 
-	<script src="./src/statics/Global.js"
-	        charset="utf-8"></script>
-	<script src="./src/statics/Filter.js"
-	        charset="utf-8"></script>
-
 	<script src="./src/utils/DropZone.js"
 	        charset="utf-8"></script>
 	<script src="./src/utils/File.js"
@@ -50,6 +45,13 @@
 	<script src="./src/utils/Helper.js"
 	        charset="utf-8"></script>
 	<script src="./src/utils/Random.js"
+	        charset="utf-8"></script>
+
+	<script src="./src/statics/Global.js"
+	        charset="utf-8"></script>
+	<script src="./src/statics/Filter.js"
+	        charset="utf-8"></script>
+	<script src="./src/statics/Interface.js"
 	        charset="utf-8"></script>
 
 	<script src="./src/components/basic/Square.js"
@@ -89,6 +91,7 @@
 		vize
 	</h1>
 	<div id="controls">
+
 		<button id="toggleui-button"
 		        class="button"
 		        title="Click to Toggle UI">x</button>
@@ -107,27 +110,20 @@
 			</button>
 		</div>
 
-		<div class="toggle-target margin-bottom">
-			<div class="slider-container">
-				<label class="slider-label margin-right">
-					<span>Bass</span>
-				</label>
-				<input id="bass-slider"
-				       title="Change bass value"
-				       class="slider margin-right"
-				       type="range"
-				       min="0"
-				       max="1"
-				       step="0.01"
-				       value="0.5">
-				<button id="bass-reset"
-				        class="button slider-reset-button">Reset</button>
-			</div>
-
+		<div id="playback-slider-container"
+			class="toggle-target margin-bottom">
 		</div>
 
+		<div id="volume-slider-container"
+			class="toggle-target margin-bottom">
+		</div>
+		<div id="bass-slider-container"
+		     class="toggle-target margin-bottom">
+		</div>
+
+
 		<div id="visualizer-ui"
-		     class="toggle-target"></div>
+		     class="toggle-target flex-column"></div>
 
 
 		<!-- <label>Track:

@@ -108,12 +108,20 @@ footer h4, footer h5 {
     flex-direction: row;
 }
 
-.tool-row,
-.margin-bottom {
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-inline-row {
+    display: inline-flex;
+    flex-direction: row;
+}
+
+.tool-row, .margin-bottom {
     margin-bottom: 0.2em;
 }
 
-.tool-col,
-.margin-right {
+.tool-col, .margin-right {
     margin-right: 0.2em;
 }

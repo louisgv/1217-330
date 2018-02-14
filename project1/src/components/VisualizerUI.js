@@ -11,7 +11,7 @@
 var app = app || {};
 
 (function() {
-    const {Helper, Global} = app;
+    const {Interface, Helper, Global} = app;
 
     // Label - Color -
     app.VisualizerUIValues = {
@@ -51,6 +51,9 @@ var app = app || {};
         'Yellow': [
             255, 168, 1
         ],
+        'Pink': [
+            239, 87, 119
+        ],
         'White': [255, 255, 255]
     }
 
@@ -64,13 +67,13 @@ var app = app || {};
         generateCol(viz) {
             const [label, defaultColor, fsConfig] = app.VisualizerUIValues[viz];
 
-            const bodyEl = Helper.createElement(`<div class="flex-row tool-row"></div>`);
+            const bodyEl = Helper.createElement(`<div class="flex-inline-row tool-row"></div>`);
 
-            const vizToggleEl = this.generateCheckBox(label, viz, (e) => {
+            const vizToggleEl = Interface.generateCheckBox(label, viz, (e) => {
                 this
                     .visualizerInstance[viz]
                     .disabled = !e.target.checked;
-            });
+            }, true, 'tool-col');
 
             bodyEl.appendChild(vizToggleEl);
 
@@ -110,42 +113,20 @@ var app = app || {};
                 .forEach((checkBoxLabel) => {
                     const checkBoxConfig = checkBoxLabel.toLowerCase();
 
-                    const checkBoxEl = this.generateCheckBox(
+                    const checkBoxEl = Interface.generateCheckBox(
                         checkBoxLabel,
                         `${viz}-${checkBoxConfig}`,
                         (e) => {
                             vizConfig[checkBoxConfig] = e.target.checked;
                         },
-                        vizConfig[checkBoxConfig]
+                        vizConfig[checkBoxConfig],
+                        'tool-col'
                     );
 
                     bodyEl.appendChild(checkBoxEl);
                 })
 
             return bodyEl;
-        }
-
-        // Generate a checkbox element
-        generateCheckBox(label, id, callback, checked = true) {
-            const checkBoxEl = Helper.createElement(
-                `
-                <div class="checkbox-container tool-col">
-                    <label class="checkbox">
-                        ${label}
-                        <input type="checkbox" id="${id}" ${checked
-                    ? 'checked'
-                    : ''}/>
-                        <span class="checkmark"></span>
-                    </label>
-                </div>
-                `
-            );
-
-            checkBoxEl
-                .querySelector(`#${id}`)
-                .addEventListener('change', callback);
-
-            return checkBoxEl;
         }
 
         // Generate and mount the viz UI onto the parentEl

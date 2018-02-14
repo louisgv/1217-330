@@ -25,7 +25,7 @@ var app = app || {};
 
         // Update the width and height scale of the wave
         updateConfig(canvas) {
-            this.config.widthScale = canvas.width / Global.DATA_SIZE;
+            this.config.widthScale = canvas.width / (Global.DATA_SIZE - 1);
             this.config.heightScale = canvas.halfHeight / Global.DATA_SIZE;
         }
 
@@ -45,14 +45,14 @@ var app = app || {};
 
             let i = 0;
 
-            ctx.moveTo(x, ctx.canvas.halfHeight);
-
             for (; i < data.length; i++) {
-                ctx.lineTo(x, data[i] * this.config.heightScale);
+                if (i == 0) {
+                    ctx.moveTo(x, data[i] * this.config.heightScale);
+                } else {
+                    ctx.lineTo(x, data[i] * this.config.heightScale);
+                }
                 x += this.config.widthScale;
             }
-
-            ctx.lineTo(ctx.canvas.width, ctx.canvas.halfHeight);
 
             ctx.stroke();
 

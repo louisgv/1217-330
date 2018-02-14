@@ -1,6 +1,6 @@
 /*
 	Author: LAB
-	Helper methods singleton.
+	Helper methods singleton. Generic and not opinionated
 
     LICENSE: MIT
 */
