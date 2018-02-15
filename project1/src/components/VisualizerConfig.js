@@ -52,7 +52,9 @@ var app = app || {};
     const colors = Object.keys(color);
 
     const gradient = {
-        CrimsonThought : {}
+        CrimsonThought : {},
+        InnocentTeal: {},
+        SombreGreen: {}
     };
 
     let gradients = [];
@@ -67,6 +69,18 @@ var app = app || {};
         gradient.CrimsonThought.value = (new Gradient(ctx, [
             color.Black,
             color.Red,
+            color.White
+        ])).value;
+
+        gradient.InnocentTeal.value = (new Gradient(ctx, [
+            color.White,
+            color.Blue,
+            color.Pink
+        ])).value;
+
+        gradient.SombreGreen.value = (new Gradient(ctx, [
+            color.Green,
+            color.Yellow,
             color.White
         ])).value;
 
