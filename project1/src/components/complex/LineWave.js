@@ -13,10 +13,9 @@ var app = app || {};
 (function() {
     const {Vector2, Global, Helper} = app;
 
-    app.Wave = class {
+    app.LineWave = class {
         constructor(config = {
             fill: false,
-            step: 18,
             widthScale: 0,
             heightScale: 0,
             lineWidth: 9,
@@ -27,7 +26,7 @@ var app = app || {};
 
         // Update the width and height scale of the wave
         updateConfig(canvas) {
-            this.config.widthScale = canvas.width / (Global.DATA_SIZE - 2) * this.config.step;
+            this.config.widthScale = (canvas.width / Global.DATA_SIZE + 1);
             this.config.heightScale = canvas.halfHeight / Global.DATA_SIZE;
         }
 
@@ -44,28 +43,16 @@ var app = app || {};
             ctx.lineWidth = this.config.lineWidth;
 
             let x = 0;
-            let xTemp = 0;
             let i = 0;
-            ctx.moveTo(x, ctx.canvas.halfHeight);
 
-            for (; i < data.length; i+= this.config.step) {
+            for (; i < data.length; i++) {
                 if (i == 0) {
+                    ctx.moveTo(x, data[i] * this.config.heightScale);
                 } else {
-                    ctx.quadraticCurveTo(
-                        (x - xTemp)/2 + xTemp,
-                        data[i] * this.config.heightScale,
-                        x,
-                        ctx.canvas.halfHeight
-                    );
-
-                    xTemp = x;
+                    ctx.lineTo(x, data[i] * this.config.heightScale);
                 }
                 x += this.config.widthScale;
             }
-
-            ctx.lineTo(x, ctx.canvas.halfHeight);
-
-            ctx.closePath();
 
             ctx.stroke();
 

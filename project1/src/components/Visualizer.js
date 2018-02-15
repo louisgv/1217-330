@@ -16,6 +16,8 @@ var app = app || {};
         PonchoEye,
         MirrorWave,
         Wave,
+        LineWave,
+        BezierWave,
         Helper,
         Global
     } = app;
@@ -26,9 +28,16 @@ var app = app || {};
             this.mirrorBar = new MirrorBar();
             this.mirrorWave = new MirrorWave();
             this.ponchoEye = new PonchoEye();
-            this.wave = new Wave();
+            this.lineWave = new LineWave();
+            this.bezierWave = new BezierWave();
 
-            this.vizList = ['mirrorWave', 'mirrorBar', 'wave', 'ponchoEye'];
+            this.vizList = [
+                'mirrorWave',
+                'mirrorBar',
+                'ponchoEye',
+                'lineWave',
+                'bezierWave'
+            ];
 
             // Render from bottom-up
             this.vizInstances = this

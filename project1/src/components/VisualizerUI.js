@@ -21,15 +21,15 @@ var app = app || {};
         'mirrorBar': [
             'Mirror Bar', 'Red'
         ],
-        'wave': [
-            'Wave', 'Black'
+        'lineWave': [
+            'Line Wave', 'Black'
         ],
         'ponchoEye': ['Poncho Eye', 'Black']
     }
 
     // Fill - Stroke - Fillblank
     app.VisualizerUIDrawCheckBox = {
-        'wave': ['Fill'],
+        'lineWave': ['Fill'],
         'mirrorBar': ['Cut'],
         'ponchoEye': [],
         'mirrorWave': ['Cut', 'Fill', 'Stroke']
