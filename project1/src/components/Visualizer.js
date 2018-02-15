@@ -34,9 +34,9 @@ var app = app || {};
             this.vizList = [
                 'mirrorWave',
                 'mirrorBar',
-                'ponchoEye',
                 'lineWave',
-                'bezierWave'
+                'bezierWave',
+                'ponchoEye',
             ];
 
             // Render from bottom-up

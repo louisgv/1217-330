@@ -20,6 +20,7 @@ var app = app || {};
 
         Visualizer,
         VisualizerUI,
+        VisualizerConfig,
 
         Interface,
         Global,
@@ -61,13 +62,6 @@ var app = app || {};
     const frequencyData = new Uint8Array(Global.DATA_SIZE);
     const waveformData = new Uint8Array(Global.DATA_SIZE);
 
-    const defaultConfig = {
-        'Hazey.ogg': {
-            scale: 0.45,
-            barColor: Helper.makeColor(255, 255, 255, .6)
-        }
-    }
-
     // Handle on file drop
     async function handleFileDrop(fileBlob) {
         const {result} = await File.read(fileBlob);
@@ -92,6 +86,8 @@ var app = app || {};
         audioCtx = analyserData.audioCtx;
         analyserNode = analyserData.analyserNode;
         biquadFilter = analyserData.biquadFilter;
+
+        VisualizerConfig.initializeGradient(ctx);
 
         setupUI();
 
@@ -253,13 +249,13 @@ var app = app || {};
                 Filter.noise(imageData, i, 255);
             }
 
-            // if (FilterConfig.invert) {     Filter.invert(imageData, i) }
+            // if (FilterConfig.invert) { Filter.invert(imageData, i) }
             //
             // if (FilterConfig.lines) { Filter.line(imageData, i) }
             //
             // if (FilterConfig.bonus) { Filter.shiftRGB(imageData, i) }
             //
-            // if (FilterConfig.redeye) {     Filter.redMirror(imageData, i) }
+            // if (FilterConfig.redeye) { Filter.redMirror(imageData, i) }
         }
 
         ctx.putImageData(imageData, 0, 0)

@@ -22,11 +22,13 @@ var app = app || {};
         // Set the size of the diamond
         setSize(size) {
             this.size = size;
+            return this;
         }
 
         // Set the desired color of the diamond
         setColor(color) {
             this.color = color;
+            return this;
         }
 
         // Draw the diamond

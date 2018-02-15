@@ -11,18 +11,18 @@
 var app = app || {};
 
 (function() {
-    const {Vector2, Global, Helper} = app;
+    const {Vector2, Color, Global, Helper} = app;
 
     app.BezierWave = class {
         constructor(config = {
-            fill: false,
+            fill: true,
             step: 18,
             widthScale: 0,
             heightScale: 0,
             lineWidth: 9,
-            color: [0, 0, 0]
+            color: new Color()
         }) {
-            this.config = config
+            this.config = config;
         }
 
         // Update the width and height scale of the wave
@@ -36,10 +36,7 @@ var app = app || {};
             ctx.save();
             ctx.beginPath();
 
-            const [r, g, b] = this.config.color;
-
-            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
-            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.fillStyle = ctx.strokeStyle = this.config.color.value;
 
             ctx.lineWidth = this.config.lineWidth;
 

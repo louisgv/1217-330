@@ -145,6 +145,18 @@ app.Helper = {
         return {audioCtx, analyserNode, biquadFilter};
     },
 
+    makeGradient(ctx, stopColors) {
+        const gradient = ctx.createLinearGradient(0, 0, window.innerWidth, window.innerHeight);
+
+        const stepSize = 1 / (stopColors.length - 1)
+
+        stopColors.forEach((c, i) => {
+            gradient.addColorStop(i * stepSize, c);
+        })
+
+        return gradient;
+    },
+
     // Create rgba color
     makeColor(r, g, b, a) {
         return `rgba(${r},${g},${b},${a})`;

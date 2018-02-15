@@ -21,10 +21,12 @@ var app = app || {};
 
         setSize(size) {
             this.size = size;
+            return this;
         }
 
         setColor(color) {
             this.color = color;
+            return this;
         }
 
         draw(ctx) {

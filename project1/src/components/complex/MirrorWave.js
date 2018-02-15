@@ -11,7 +11,7 @@
 var app = app || {};
 
 (function() {
-    const {Vector2, Global, Helper} = app;
+    const {Vector2, VisualizerConfig, Color, Global, Helper} = app;
 
     app.MirrorWave = class {
         constructor(config = {
@@ -20,9 +20,10 @@ var app = app || {};
             fill: true,
             widthScale: 0,
             heightScale: 0,
-            color: [0,0,0],
+            // Hack to show the gradient color up-front
+            color: VisualizerConfig.gradient.CrimsonThought,
         }) {
-            this.config = config
+            this.config = config;
         }
 
         // Update the width and height scale of the wave
@@ -44,10 +45,8 @@ var app = app || {};
         draw(ctx, data) {
             ctx.save();
             ctx.beginPath();
-            const [r,g,b] = this.config.color;
 
-            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
-            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.fillStyle = ctx.strokeStyle = this.config.color.value;
 
             let x = 0;
             // *ctx.canvas.halfHeight

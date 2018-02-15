@@ -1,8 +1,8 @@
 /*
 	Author: LAB
 
-	Filter class
-	Used to manage static filter
+	Visualizer UI
+	Used to Generate the UI to control each visualizer
 
     LICENSE: MIT
 */
@@ -11,51 +11,7 @@
 var app = app || {};
 
 (function() {
-    const {Interface, Helper, Global} = app;
-
-    // Label - Color -
-    app.VisualizerUIValues = {
-        'mirrorWave': [
-            'Mirror Wave', 'Black'
-        ],
-        'mirrorBar': [
-            'Mirror Bar', 'Red'
-        ],
-        'lineWave': [
-            'Line Wave', 'Black'
-        ],
-        'ponchoEye': ['Poncho Eye', 'Black']
-    }
-
-    // Fill - Stroke - Fillblank
-    app.VisualizerUIDrawCheckBox = {
-        'lineWave': ['Fill'],
-        'mirrorBar': ['Cut'],
-        'ponchoEye': [],
-        'mirrorWave': ['Cut', 'Fill', 'Stroke']
-    }
-
-    app.VisualizerUIColors = {
-        'Black': [
-            0, 0, 0
-        ],
-        'Red': [
-            255, 63, 52
-        ],
-        'Green': [
-            11, 232, 129
-        ],
-        'Blue': [
-            75, 207, 250
-        ],
-        'Yellow': [
-            255, 168, 1
-        ],
-        'Pink': [
-            239, 87, 119
-        ],
-        'White': [255, 255, 255]
-    }
+    const {VisualizerConfig, Interface, Helper, Global} = app;
 
     app.VisualizerUI = class {
 
@@ -65,7 +21,7 @@ var app = app || {};
 
         // Generate a column of a viz UI
         generateCol(viz) {
-            const [label, defaultColor, fsConfig] = app.VisualizerUIValues[viz];
+            const [label, defaultColor, noGradient] = VisualizerConfig.values[viz];
 
             const bodyEl = Helper.createElement(`<div class="flex-inline-row tool-row"></div>`);
 
@@ -73,7 +29,7 @@ var app = app || {};
                 this
                     .visualizerInstance[viz]
                     .disabled = !e.target.checked;
-            }, true, 'tool-col');
+            }, this.visualizerInstance[viz].disabled, 'tool-col');
 
             bodyEl.appendChild(vizToggleEl);
 
@@ -81,20 +37,19 @@ var app = app || {};
                 .visualizerInstance[viz]
                 .config;
 
-            const colorSelect = Interface.generateSelect(
-                Object.keys(app.VisualizerUIColors),
-                defaultColor,
-                (e) => {
-                    // TODO: make alpha tweakable
-                    vizConfig.color = app.VisualizerUIColors[e.target.value];
-                },
-                'tool-col'
-            )
+            const colorOptions = noGradient
+                ? VisualizerConfig.colors
+                : VisualizerConfig.getColorsAndGradients();
+
+            const colorSelect = Interface.generateSelect(colorOptions, defaultColor, (e) => {
+                // TODO: make alpha tweakable
+                vizConfig.color = VisualizerConfig.color[e.target.value] || VisualizerConfig.gradient[e.target.value];
+            }, 'tool-col')
 
             bodyEl.appendChild(colorSelect);
 
-            app
-                .VisualizerUIDrawCheckBox[viz]
+            VisualizerConfig
+                .checkbox[viz]
                 .forEach((checkBoxLabel) => {
                     const checkBoxConfig = checkBoxLabel.toLowerCase();
 
@@ -117,7 +72,7 @@ var app = app || {};
         // Generate and mount the viz UI onto the parentEl
         mount(parentEl) {
             Object
-                .keys(app.VisualizerUIValues)
+                .keys(VisualizerConfig.values)
                 .map((viz) => {
                     parentEl.appendChild(this.generateCol(viz));
                 });

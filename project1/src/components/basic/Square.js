@@ -23,10 +23,12 @@ var app = app || {};
         setSize(size) {
             this.size = size;
             this.halfSize = size / 2;
+            return this;
         }
 
         setColor(color) {
             this.color = color;
+            return this;
         }
 
         draw(ctx) {

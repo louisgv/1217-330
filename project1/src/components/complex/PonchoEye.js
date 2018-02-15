@@ -11,23 +11,13 @@
 var app = app || {};
 
 (function() {
-    const {
-        Vector2,
-        Triangle,
-        Square,
-        Diamond,
-        Circle,
-        Global,
-        Helper
-    } = app;
+    const {Color, Vector2, Global, Helper} = app;
 
     app.PonchoEye = class {
         constructor(config = {
             pos: new Vector2(),
             maxRadius: 180,
-            color: [
-                0, 0, 0
-            ],
+            color: new Color(),
             smShape: 'Diamond',
             mdShape: 'Diamond',
             lgShape: 'Diamond'
@@ -88,7 +78,8 @@ var app = app || {};
 
         draw(ctx, data) {
             ctx.save();
-            const [r, g, b] = this.config.color;
+            const color = this.config.color || new Color();
+            const invertedColor = color.iInvert();
 
             for (let i = 0; i < data.length; i++) {
                 if (data[i] === 0) {
@@ -99,36 +90,22 @@ var app = app || {};
 
                 const circleRadius = percent * this.config.maxRadius;
 
-                const dotSize = circleRadius * 0.1;
-
                 this
                     .smCentralCache[i]
-                    .setColor(Helper.makeColor(255 - r, 255 - g, 255 - b, .5 - percent / 5.0));
-                this
-                    .smCentralCache[i]
-                    .setSize(circleRadius * .50);
-                this
-                    .smCentralCache[i]
+                    .setColor(invertedColor.customAlpha(.5 - percent / 5.0))
+                    .setSize(circleRadius * .50)
                     .draw(ctx);
 
                 this
                     .mdCentralCache[i]
-                    .setColor(Helper.makeColor(255 - r, 255 - g, 255 - b, 1.0));
-                this
-                    .mdCentralCache[i]
-                    .setSize(circleRadius);
-                this
-                    .mdCentralCache[i]
+                    .setColor(invertedColor.customAlpha(1.0))
+                    .setSize(circleRadius)
                     .draw(ctx, false, true);
 
                 this
                     .lgCentralCache[i]
-                    .setColor(Helper.makeColor(r, g, b, .10 - percent / 10.0));
-                this
-                    .lgCentralCache[i]
-                    .setSize(circleRadius * 1.5);
-                this
-                    .lgCentralCache[i]
+                    .setColor(color.customAlpha(.10 - percent / 10.0))
+                    .setSize(circleRadius * 1.5)
                     .draw(ctx);
             }
 

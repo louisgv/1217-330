@@ -22,10 +22,12 @@ var app = app || {};
 
         setColor(color) {
             this.color = color;
+            return this;
         }
 
         setSize(radius) {
             this.radius = radius;
+            return this;
         }
 
         draw(ctx, fill = true, stroke = false) {

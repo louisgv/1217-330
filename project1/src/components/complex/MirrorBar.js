@@ -11,7 +11,7 @@
 var app = app || {};
 
 (function() {
-    const {Vector2, Global, Helper} = app;
+    const {Vector2, Color, Global, Helper} = app;
 
     app.MirrorBar = class {
         constructor(config = {
@@ -21,7 +21,7 @@ var app = app || {};
             height: 0,
             topSpacing: 0,
             scale: 0.45,
-            color: [255, 0, 0],
+            color: new Color(255, 0, 0),
         }) {
             this.config = config;
             this.cachedPos = new Array(Global.DATA_SIZE);
@@ -54,10 +54,7 @@ var app = app || {};
         draw(ctx, data) {
             ctx.save();
 
-            const [r,g,b] = this.config.color;
-
-            ctx.fillStyle = Helper.makeColor(r, g, b, 0.6);
-            ctx.strokeStyle = Helper.makeColor(r, g, b, 0.6);
+            ctx.fillStyle = ctx.strokeStyle = this.config.color.value;
 
             const barConfig = this.config;
             // cache all multiplication, reduce calculation to add and sub
