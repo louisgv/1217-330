@@ -15,6 +15,31 @@ var app = app || {};
 
     app.Interface = class {
 
+        // Generate a select element
+        static generateSelect(options, defaultValue, callback) {
+            const optionLabelEl = Helper.createElement(
+                `<label class="select-container tool-col"></label>`
+            );
+
+            const optionsEl = Helper.createElement(`<select name='options'></select>`);
+
+            options.map((o) => {
+                    const optionEl = Helper.createElement(
+                        `<option ${o === defaultValue
+                            ? 'selected'
+                            : ''} value='${o}'>${o}</option>`
+                    );
+
+                    optionsEl.appendChild(optionEl);
+                });
+
+            optionsEl.addEventListener('change', callback);
+
+            optionLabelEl.appendChild(optionsEl);
+
+            return optionLabelEl;
+        }
+
         // Generate a checkbox element
         static generateCheckBox(label, id, callback, checked = true, addonClasses = '') {
             const checkBoxEl = Helper.createElement(

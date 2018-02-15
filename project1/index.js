@@ -121,12 +121,11 @@ var app = app || {};
         audioElement.addEventListener('ended', playRandomLocalMedia);
 
         document
-            .querySelector('#fullscreen-button')
-            .addEventListener('click', () => Helper.requestFullscreen(canvas));
-
-        document
             .querySelector('#shuffle-button')
             .addEventListener('click', playRandomLocalMedia);
+        document
+            .querySelector('#fullscreen-button')
+            .addEventListener('click', () => Helper.requestFullscreen(canvas));
 
         document
             .querySelector('#toggleui-button')
@@ -169,6 +168,29 @@ var app = app || {};
         document
             .querySelector('#bass-slider-container')
             .appendChild(bassSlider);
+
+        const availableShapes = ['Diamond', 'Circle', 'Square', 'Triangle']
+
+        const availablePonchoSizes = ['Small', 'Medium', 'Large'];
+
+        const ponchoEyeShapeUI = document.querySelector('#poncho-eye-shape-ui');
+
+        availablePonchoSizes.forEach((size) => {
+            const shapeSelect = Interface.generateSelect(availableShapes, 'Diamond', (e) => {
+                visualizerInstance.ponchoEye[`update${size}ShapeCache`](e.target.value);
+            });
+            ponchoEyeShapeUI.appendChild(
+                Helper.createElement(`
+                <label class="generic-label margin-right">
+                    <span>
+                        ${size}
+                    </span>
+                </label>
+            `)
+            );
+            ponchoEyeShapeUI.appendChild(shapeSelect);
+        })
+
     }
 
     // Update config of viz and update canvas width/height cache

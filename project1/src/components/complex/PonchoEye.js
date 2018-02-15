@@ -49,19 +49,32 @@ var app = app || {};
             this.updateShapeCache();
         }
 
-        // Update the shape cache
-        updateShapeCache(smShape = 'Circle', mdShape = 'Diamond', lgShape = 'Circle') {
+        // Update the small shape cache
+        updateSmallShapeCache(shape = 'Diamond') {
             this
                 .smCentralCache
-                .fill(new app[smShape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+        }
 
+        // Update the medium shape cache
+        updateMediumShapeCache(shape = 'Diamond') {
             this
                 .mdCentralCache
-                .fill(new app[mdShape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+        }
 
+        // Update the large shape cache
+        updateLargeShapeCache(shape = 'Diamond') {
             this
                 .lgCentralCache
-                .fill(new app[lgShape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+        }
+
+        // Update the shape cache
+        updateShapeCache(smShape = 'Diamond', mdShape = 'Diamond', lgShape = 'Diamond') {
+            this.updateSmallShapeCache(smShape);
+            this.updateMediumShapeCache(mdShape);
+            this.updateLargeShapeCache(lgShape);
         }
 
         draw(ctx, data) {

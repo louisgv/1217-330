@@ -15,16 +15,16 @@ var app = app || {};
 
     // Label - Color -
     app.VisualizerUIValues = {
-        'wave': [
-            'Wave', 'Black'
+        'mirrorWave': [
+            'Mirror Wave', 'Black'
         ],
         'mirrorBar': [
             'Mirror Bar', 'Red'
         ],
-        'ponchoEye': [
-            'Poncho Eye', 'Black'
+        'wave': [
+            'Wave', 'Black'
         ],
-        'mirrorWave': ['Mirror Wave', 'Black']
+        'ponchoEye': ['Poncho Eye', 'Black']
     }
 
     // Fill - Stroke - Fillblank
@@ -77,36 +77,20 @@ var app = app || {};
 
             bodyEl.appendChild(vizToggleEl);
 
-            const optionLabelEl = Helper.createElement(
-                `<label class="select-container tool-col"></label>`
-            );
-
-            const optionsEl = Helper.createElement(`<select name='options'></select>`);
-
-            Object
-                .keys(app.VisualizerUIColors)
-                .map((color) => {
-                    const optionEl = Helper.createElement(
-                        `<option ${color === defaultColor
-                            ? 'selected'
-                            : ''} value='${color}'>${color}</option>`
-                    );
-
-                    optionsEl.appendChild(optionEl);
-                });
-
             const vizConfig = this
                 .visualizerInstance[viz]
                 .config;
 
-            optionsEl.addEventListener('change', (e) => {
-                // TODO: make alpha tweakable
-                vizConfig.color = app.VisualizerUIColors[e.target.value];
-            });
+            const colorSelect = Interface.generateSelect(
+                Object.keys(app.VisualizerUIColors),
+                defaultColor,
+                (e) => {
+                    // TODO: make alpha tweakable
+                    vizConfig.color = app.VisualizerUIColors[e.target.value];
+                }
+            )
 
-            optionLabelEl.appendChild(optionsEl);
-
-            bodyEl.appendChild(optionLabelEl);
+            bodyEl.appendChild(colorSelect);
 
             app
                 .VisualizerUIDrawCheckBox[viz]

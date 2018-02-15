@@ -94,6 +94,10 @@ footer h4, footer h5 {
     color: white;
 }
 
+#brand, #now-playing, footer {
+    pointer-events: none;
+}
+
 .toggle-target {
     transition: 0.2s;
 }
@@ -124,4 +128,16 @@ footer h4, footer h5 {
 
 .tool-col, .margin-right {
     margin-right: 0.2em;
+}
+
+.generic-label {
+    background: black;
+    color: white;
+    display: flex;
+    justify-content: center;
+    height: 25px;
+}
+
+.generic-label span {
+    padding: 3px 1em;
 }
