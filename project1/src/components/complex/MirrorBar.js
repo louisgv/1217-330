@@ -1,8 +1,8 @@
 /*
 	Author: LAB
 
-	Circle module.
-    Used to draw mirror bars
+	MirrorBar.
+    Draw mirrored bars
 
     LICENSE: MIT
 */
@@ -21,12 +21,13 @@ var app = app || {};
             height: 0,
             topSpacing: 0,
             scale: 0.45,
-            color: new Color(255, 0, 0),
+            color: new Color(255, 0, 0)
         }) {
             this.config = config;
             this.cachedPos = new Array(Global.DATA_SIZE);
         }
 
+        // Update cached width, height and spacing config
         updateConfig(canvas) {
 
             this.config.width = (canvas.halfWidth) / Global.DATA_SIZE;
@@ -51,6 +52,7 @@ var app = app || {};
 
         }
 
+        // Draw the mirror bar
         draw(ctx, data) {
             ctx.save();
 
@@ -65,7 +67,7 @@ var app = app || {};
                 }
 
                 const scaledData = data[i] * barConfig.scale;
-
+                // Draw top left segment
                 ctx.fillRect(
                     this.cachedPos[i].topBarPosition.x,
                     this.cachedPos[i].topBarPosition.y - scaledData,
@@ -73,6 +75,7 @@ var app = app || {};
                     barConfig.height
                 );
 
+                // Draw top right segment
                 ctx.fillRect(
                     this.cachedPos[i].topBarPosition.x,
                     this.cachedPos[i].topBarPosition.y + scaledData,
@@ -80,6 +83,7 @@ var app = app || {};
                     barConfig.height
                 );
 
+                // Draw bottom right segment
                 ctx.fillRect(
                     this.cachedPos[i].bottomBarPosition.x,
                     this.cachedPos[i].bottomBarPosition.y - scaledData,
@@ -87,6 +91,7 @@ var app = app || {};
                     barConfig.height
                 );
 
+                // Draw bottom left segment
                 ctx.fillRect(
                     this.cachedPos[i].bottomBarPosition.x,
                     this.cachedPos[i].bottomBarPosition.y + scaledData,

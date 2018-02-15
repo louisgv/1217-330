@@ -1,8 +1,8 @@
 /*
 	Author: LAB
 
-	Circle module.
-    Used to model a circle
+	Mirror Wave.
+    Draw a mirrored wave onto the canvas
 
     LICENSE: MIT
 */
@@ -55,22 +55,25 @@ var app = app || {};
 
             ctx.moveTo(x, ctx.canvas.halfHeight)
 
+            // Draw top left segment
             for (; i < data.length; ++i) {
                 this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
-
                 x += this.config.widthScale;
             }
 
+            // Draw top right segment
             for (; i > 0; --i) {
                 this.drawSegment(ctx, data[i], x, data[i] * this.config.heightScale);
                 x += this.config.widthScale;
             }
 
+            // Draw bottom right segment
             for (; i < data.length; ++i) {
                 this.drawSegment(ctx, data[i], x, -data[i] * this.config.heightScale + ctx.canvas.height);
                 x -= this.config.widthScale;
             }
 
+            // Draw bottom left segment
             for (; i >= 0; --i) {
                 this.drawSegment(ctx, data[i], x, -data[i] * this.config.heightScale + ctx.canvas.height);
                 x -= this.config.widthScale;

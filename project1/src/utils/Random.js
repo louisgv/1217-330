@@ -11,11 +11,12 @@ var app = app || {};
 
 app.Random = (function() {
     let lookupIndex = 0;
-    
+
     const lookupTable = Array.from({
         length: 1e6
     }, () => Math.random());
 
+    // Return the next random color from the lookup table
     return {
         next() {
             return lookupIndex++ >= lookupTable.length

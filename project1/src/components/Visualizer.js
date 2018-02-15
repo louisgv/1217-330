@@ -49,7 +49,7 @@ var app = app || {};
             for (let i = 0; i < this.vizInstances.length; i++) {
                 this
                     .vizInstances[i]
-                    .updateConfig(canvas)
+                    .updateConfig(canvas);
             }
         }
 
@@ -60,7 +60,7 @@ var app = app || {};
                 }
                 this
                     .vizInstances[i]
-                    .draw(ctx, frequencyData, waveformData)
+                    .draw(ctx, frequencyData, waveformData);
             }
         }
     }

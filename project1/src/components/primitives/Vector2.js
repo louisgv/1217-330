@@ -16,6 +16,7 @@ var app = app || {};
             this.y = y;
         }
 
+        // Return a copy of this vector
         copy() {
             return new this.constructor(this.x, this.y);
         }

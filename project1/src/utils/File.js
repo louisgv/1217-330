@@ -9,6 +9,7 @@
 var app = app || {};
 
 app.File = {
+    // read in the file and parse it as dataURL
     read(fileBlob, progressCallback) {
 		const reader = new FileReader();
 

@@ -12,9 +12,10 @@
 var app = app || {};
 (function() {
     app.Gradient = class {
-        // stopColors is an array of Color
-        constructor(ctx, stopColors) {
+        constructor() {}
 
+        // stopColors is an array of Color
+        init(ctx, stopColors) {
             this.value = ctx.createLinearGradient(0, 0, 0, window.innerHeight);
 
             const stepSize = 1 / (stopColors.length - 1)

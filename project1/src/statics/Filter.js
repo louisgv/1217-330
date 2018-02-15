@@ -22,6 +22,7 @@ app.FilterConfig = {
 
 app.Filter = class {
 
+    // Cemter B and G into R
     static redMirror({
         data,
         width
@@ -30,6 +31,7 @@ app.Filter = class {
         data[i] *= data[i];
     }
 
+    // Shift RGB's coordinate using its data.
     static shiftRGB({
         data,
         width
@@ -39,6 +41,7 @@ app.Filter = class {
         data[i + 2] = data[i - width] * data[i - width]
     }
 
+    // Increase color intesity
     static tint({
         data
     }, i, r = 100, g = 0, b = 0) {
@@ -53,6 +56,7 @@ app.Filter = class {
         }
     }
 
+    // Noise filter, throw in noise
     static noise({
         data
     }, i, value = 0) {
@@ -60,6 +64,7 @@ app.Filter = class {
         data[i + 3] = 255;
     }
 
+    // Line filter, draw line
     static line({
         data,
         width
@@ -73,6 +78,7 @@ app.Filter = class {
         }
     }
 
+    // Invert filter, invert the color
     static invert({
         data
     }, i) {

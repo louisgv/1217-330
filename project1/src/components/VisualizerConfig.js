@@ -52,9 +52,9 @@ var app = app || {};
     const colors = Object.keys(color);
 
     const gradient = {
-        CrimsonThought : {},
-        InnocentTeal: {},
-        SombreGreen: {}
+        CrimsonThought : new Gradient(),
+        InnocentTeal: new Gradient(),
+        SombreGreen: new Gradient()
     };
 
     let gradients = [];
@@ -62,27 +62,28 @@ var app = app || {};
     const getColorsAndGradients = () => [
         ...colors,
         ...gradients
-    ]
+    ];
 
+    // Initialize all the gradient color.
     function initializeGradient(ctx) {
         // Hack to bind the value of BRW with the value of new instance
-        gradient.CrimsonThought.value = (new Gradient(ctx, [
+        gradient.CrimsonThought.init(ctx, [
             color.Black,
             color.Red,
             color.White
-        ])).value;
+        ]);
 
-        gradient.InnocentTeal.value = (new Gradient(ctx, [
+        gradient.InnocentTeal.init(ctx, [
             color.White,
             color.Blue,
             color.Pink
-        ])).value;
+        ]);
 
-        gradient.SombreGreen.value = (new Gradient(ctx, [
+        gradient.SombreGreen.init(ctx, [
             color.Green,
             color.Yellow,
             color.White
-        ])).value;
+        ]);
 
         gradients = Object.keys(gradient);
         Object.seal(gradients);
@@ -97,5 +98,5 @@ var app = app || {};
         gradients,
         initializeGradient,
         getColorsAndGradients
-    }
+    };
 }());

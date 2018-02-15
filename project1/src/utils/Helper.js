@@ -145,6 +145,7 @@ app.Helper = {
         return {audioCtx, analyserNode, biquadFilter};
     },
 
+    // Make gradient on ctx from stops colors
     makeGradient(ctx, stopColors) {
         const gradient = ctx.createLinearGradient(0, 0, window.innerWidth, window.innerHeight);
 

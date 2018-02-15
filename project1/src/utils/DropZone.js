@@ -11,6 +11,8 @@
 var app = app || {};
 
 app.DropZone = {
+    // Apply drag/drop event to an element and ire callback whenever
+    // a file is dropped
     apply(el, callback) {
         el.addEventListener('dragover', (e) => {
             e.stopPropagation();

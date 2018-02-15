@@ -1,8 +1,8 @@
 /*
 	Author: LAB
 
-	Circle module.
-    Used to model a circle
+	Line Wave.
+    Used to draw linear line segment based on waveform data
 
     LICENSE: MIT
 */

@@ -1,8 +1,9 @@
 /*
 	Author: LAB
 
-	Circle module.
-    Used to model a circle
+	PonchoEye module.
+    Used to draw an eye-like form consists
+    of 3 shapes of variety size and type.
 
     LICENSE: MIT
 */
@@ -76,6 +77,7 @@ var app = app || {};
             this.updateLargeShapeCache(lgShape);
         }
 
+        // Draw the eye
         draw(ctx, data) {
             ctx.save();
             const color = this.config.color || new Color();

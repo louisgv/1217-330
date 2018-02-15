@@ -1,8 +1,8 @@
 /*
 	Author: LAB
 
-	Circle module.
-    Used to model a circle
+	Bezier Wave module.
+    Used to draw Wave form using the Bezier curve
 
     LICENSE: MIT
 */
@@ -41,8 +41,10 @@ var app = app || {};
             ctx.lineWidth = this.config.lineWidth;
 
             let x = 0;
+            // Used to calculate the middle point
             let xTemp = 0;
 
+            // TODO: switch to Bezier curve
             let yMaxTemp = 0;
             let yMinTemp = 0;
 
