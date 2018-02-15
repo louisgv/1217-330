@@ -132,21 +132,21 @@ var app = app || {};
             .addEventListener('click', Helper.toggleUIElement);
 
         const playbackSlider = Interface.generateSlider('Playback', 'playback-slider', (e) => {
-            audioElement.currentTime = e.target.value * audioElement.duration;
+            audioElement.currentTime = parseFloat(e.target.value) * audioElement.duration;
         }, 0);
 
         document
             .querySelector('#playback-slider-container')
             .appendChild(playbackSlider);
 
-        audioElement.addEventListener('timeupdate', (e) => {
+        audioElement.addEventListener('timeupdate', () => {
             playbackSlider.sliderEl.value = audioElement.currentTime / audioElement.duration;
-        })
+        });
 
         audioElement.volume = 0.5;
 
         const volumeSlider = Interface.generateSlider('Volume', 'volume-slider', (e) => {
-            audioElement.volume = e.target.value;
+            audioElement.volume = parseFloat(e.target.value);
         }, audioElement.volume);
 
         document
@@ -169,7 +169,7 @@ var app = app || {};
             .querySelector('#bass-slider-container')
             .appendChild(bassSlider);
 
-        const availableShapes = ['Diamond', 'Circle', 'Square', 'Triangle']
+        const availableShapes = ['Diamond', 'Circle', 'Square', 'Triangle'];
 
         const availablePonchoSizes = ['Small', 'Medium', 'Large'];
 
@@ -178,7 +178,8 @@ var app = app || {};
         availablePonchoSizes.forEach((size) => {
             const shapeSelect = Interface.generateSelect(availableShapes, 'Diamond', (e) => {
                 visualizerInstance.ponchoEye[`update${size}ShapeCache`](e.target.value);
-            });
+            },'margin-right');
+
             ponchoEyeShapeUI.appendChild(
                 Helper.createElement(`
                 <label class="generic-label margin-right">
@@ -190,7 +191,6 @@ var app = app || {};
             );
             ponchoEyeShapeUI.appendChild(shapeSelect);
         })
-
     }
 
     // Update config of viz and update canvas width/height cache

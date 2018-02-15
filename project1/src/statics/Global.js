@@ -17,6 +17,7 @@ app.Global = Object.freeze({
     SAMPLE_SIZE: 44100/256,
 
     DATA_SIZE: 256/2, // Always half of NUM_SAMPLES
+    HALF_DATA_SIZE: 256/2/2,
 
     SOUNDS: [
         'Burner.mp3',

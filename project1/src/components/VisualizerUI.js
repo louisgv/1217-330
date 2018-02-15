@@ -29,7 +29,7 @@ var app = app || {};
 
     // Fill - Stroke - Fillblank
     app.VisualizerUIDrawCheckBox = {
-        'wave': [],
+        'wave': ['Fill'],
         'mirrorBar': ['Cut'],
         'ponchoEye': [],
         'mirrorWave': ['Cut', 'Fill', 'Stroke']
@@ -87,7 +87,8 @@ var app = app || {};
                 (e) => {
                     // TODO: make alpha tweakable
                     vizConfig.color = app.VisualizerUIColors[e.target.value];
-                }
+                },
+                'tool-col'
             )
 
             bodyEl.appendChild(colorSelect);

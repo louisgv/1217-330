@@ -16,9 +16,9 @@ var app = app || {};
     app.Interface = class {
 
         // Generate a select element
-        static generateSelect(options, defaultValue, callback) {
+        static generateSelect(options, defaultValue, callback, addonClasses = '') {
             const optionLabelEl = Helper.createElement(
-                `<label class="select-container tool-col"></label>`
+                `<label class="select-container ${addonClasses}"></label>`
             );
 
             const optionsEl = Helper.createElement(`<select name='options'></select>`);

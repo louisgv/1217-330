@@ -25,9 +25,14 @@ var app = app || {};
         constructor(config = {
             pos: new Vector2(),
             maxRadius: 180,
-            color: [0, 0, 0]
+            color: [
+                0, 0, 0
+            ],
+            smShape: 'Diamond',
+            mdShape: 'Diamond',
+            lgShape: 'Diamond'
         }) {
-            this.config = config
+            this.config = config;
             this.smCentralCache = new Array(Global.DATA_SIZE);
 
             this.mdCentralCache = new Array(Global.DATA_SIZE);
@@ -51,27 +56,31 @@ var app = app || {};
 
         // Update the small shape cache
         updateSmallShapeCache(shape = 'Diamond') {
+            this.config.smShape = shape;
             this
                 .smCentralCache
-                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy()));
         }
 
         // Update the medium shape cache
         updateMediumShapeCache(shape = 'Diamond') {
+            this.config.mdShape = shape;
             this
                 .mdCentralCache
-                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy()));
         }
 
         // Update the large shape cache
         updateLargeShapeCache(shape = 'Diamond') {
+            this.config.lgShape = shape;
             this
                 .lgCentralCache
-                .fill(new app[shape](this.config.pos.copy(), 1, 'white'))
+                .fill(new app[shape](this.config.pos.copy()));
         }
 
         // Update the shape cache
-        updateShapeCache(smShape = 'Diamond', mdShape = 'Diamond', lgShape = 'Diamond') {
+        updateShapeCache() {
+            const {smShape, mdShape, lgShape} = this.config;
             this.updateSmallShapeCache(smShape);
             this.updateMediumShapeCache(mdShape);
             this.updateLargeShapeCache(lgShape);
