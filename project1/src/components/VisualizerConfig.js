@@ -28,7 +28,7 @@ var app = app || {};
             'Quadratic Wave', 'Black', false
         ],
         'bezierWave': [
-            'Bezier Wave', 'Black', true
+            'Bezier Wave', 'White', true
         ],
         'ponchoEye': [
             'Poncho Eye', 'Black', true, true

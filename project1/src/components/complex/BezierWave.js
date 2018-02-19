@@ -18,15 +18,15 @@ var app = app || {};
             fill: false,
             widthScale: 0,
             heightScale: 0,
-            lineWidth: 1,
-            color: new Color()
+            lineWidth: 2,
+            color: new Color(255,255,255)
         }) {
             this.config = config;
         }
 
         // Update the width and height scale of the wave
         updateConfig(canvas) {
-            this.config.widthScale = canvas.width / (Global.DATA_SIZE + 1);
+            this.config.widthScale = canvas.width / Global.DATA_SIZE;
             this.config.heightScale = canvas.halfHeight / Global.DATA_SIZE;
         }
 
@@ -39,12 +39,12 @@ var app = app || {};
 
             ctx.lineWidth = this.config.lineWidth;
 
+            let xMax = 0;
+            let xMin = 0;
+
             // TODO: switch to Bezier curve
             let yMax = 0;
             let yMin = Number.MAX_SAFE_INTEGER;
-
-            let xMax = 0;
-            let xMin = 0;
 
             let i = 0;
 
