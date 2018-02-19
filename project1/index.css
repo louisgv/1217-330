@@ -53,10 +53,15 @@ footer h4, footer h5 {
     display: flex;
     flex-direction: column;
     align-items: baseline;
+    pointer-events: none;
 }
 
 #controls button, #now-playing div {
     margin-bottom: 0.1em;
+}
+
+.interactive {
+    pointer-events: auto;
 }
 
 #now-playing {
@@ -100,6 +105,12 @@ footer h4, footer h5 {
 
 .toggle-target {
     transition: 0.2s;
+}
+
+.toggle-disabled {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(0);
 }
 
 .flex-end {

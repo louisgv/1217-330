@@ -20,11 +20,11 @@ app.Global = Object.freeze({
     HALF_DATA_SIZE: 256/2/2,
 
     SOUNDS: [
-        'Burner.mp3',
-        'Celery.mp3',
-        'LetLinger.mp3',
-        'TubShop.mp3',
-        'Cold.mp3',
-        'Lullaby.mp3'
+        'Cold-by-Cage-the-Elephant.mp3',
+        'Celery-by-Birocratic.mp3',
+        'Burner-by-Birocratic.mp3',
+        'LetLinger-by-Birocratic.mp3',
+        'TubShop-by-Birocratic.mp3',
+        'Lullaby-by-Birocratic.mp3',
     ]
 });

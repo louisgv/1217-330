@@ -22,6 +22,7 @@ var app = app || {};
         VisualizerUI,
         VisualizerConfig,
 
+        FilterUI,
         Interface,
         Global,
         Helper
@@ -40,7 +41,7 @@ var app = app || {};
 
     let frameCounter = 1;
 
-    // type - freq - label (opt)
+    // type - freq - label (opt) - scale
     const biquadFilterList = [
         [
             'lowshelf', 45, 'a', 1.0
@@ -51,11 +52,13 @@ var app = app || {};
         [
             'lowshelf', 4500, 'c', -1.0
         ]
-    ]
+    ];
 
     const visualizerInstance = new Visualizer();
 
     const visualizerUIInstance = new VisualizerUI(visualizerInstance);
+
+    const filterUIInstance = new FilterUI();
 
     // TODO: have this a local variable for the circle class create a new array of 8-bit
     // integers (0-255)
@@ -77,11 +80,7 @@ var app = app || {};
         ctx = canvas.getContext("2d");
 
         // call our helper function and get an analyser node
-        const analyserData = Helper.getAnalyserData(
-            audioElement,
-            Global.NUM_SAMPLES,
-            biquadFilterList
-        );
+        const analyserData = Helper.getAnalyserData(audioElement, Global.NUM_SAMPLES, biquadFilterList);
 
         audioCtx = analyserData.audioCtx;
         analyserNode = analyserData.analyserNode;
@@ -102,7 +101,9 @@ var app = app || {};
     // Handle Setup UI event
     function setupUI() {
 
-        visualizerUIInstance.mount(document.querySelector('#visualizer-ui'))
+        visualizerUIInstance.mount(document.querySelector('#visualizer-ui'));
+
+        filterUIInstance.mount(document.querySelector('#filter-ui'))
 
         DropZone.apply(canvas, handleFileDrop);
 
@@ -116,24 +117,21 @@ var app = app || {};
 
         audioElement.addEventListener('ended', playRandomLocalMedia);
 
-        document
-            .querySelector('#shuffle-button')
-            .addEventListener('click', playRandomLocalMedia);
-        document
-            .querySelector('#fullscreen-button')
-            .addEventListener('click', () => Helper.requestFullscreen(canvas));
+        const toggleUIButton = document.querySelector('#toggleui-button');
+        toggleUIButton.addEventListener('click', Helper.toggleUIElement);
 
-        document
-            .querySelector('#toggleui-button')
-            .addEventListener('click', Helper.toggleUIElement);
+        setTimeout(() => {
+            toggleUIButton.dispatchEvent(new Event('click'))
+        }, 900);
+
+        document.querySelector('#shuffle-button').addEventListener('click', playRandomLocalMedia);
+        document.querySelector('#fullscreen-button').addEventListener('click', () => Helper.requestFullscreen(canvas));
 
         const playbackSlider = Interface.generateSlider('Playback', 'playback-slider', (e) => {
             audioElement.currentTime = parseFloat(e.target.value) * audioElement.duration;
         }, 0);
 
-        document
-            .querySelector('#playback-slider-container')
-            .appendChild(playbackSlider);
+        document.querySelector('#playback-slider-container').appendChild(playbackSlider);
 
         audioElement.addEventListener('timeupdate', () => {
             playbackSlider.sliderEl.value = audioElement.currentTime / audioElement.duration;
@@ -145,9 +143,7 @@ var app = app || {};
             audioElement.volume = parseFloat(e.target.value);
         }, audioElement.volume);
 
-        document
-            .querySelector('#volume-slider-container')
-            .appendChild(volumeSlider);
+        document.querySelector('#volume-slider-container').appendChild(volumeSlider);
 
         const bassSlider = Interface.generateSlider('Bass', 'bass-slider', (e) => {
             const audioCtxNewTime = audioCtx.currentTime + 1;
@@ -155,15 +151,11 @@ var app = app || {};
             const newGainValue = e.target.value * (72) - 36;
 
             biquadFilterList.map(([,, label, scale]) => {
-                biquadFilter[label]
-                    .gain
-                    .setValueAtTime(newGainValue * scale, audioCtxNewTime);
+                biquadFilter[label].gain.setValueAtTime(newGainValue * scale, audioCtxNewTime);
             });
         });
 
-        document
-            .querySelector('#bass-slider-container')
-            .appendChild(bassSlider);
+        document.querySelector('#bass-slider-container').appendChild(bassSlider);
 
         const availableShapes = ['Diamond', 'Circle', 'Square', 'Triangle'];
 
@@ -172,19 +164,17 @@ var app = app || {};
         const ponchoEyeShapeUI = document.querySelector('#poncho-eye-shape-ui');
 
         availablePonchoSizes.forEach((size) => {
-            const shapeSelect = Interface.generateSelect(availableShapes, 'Diamond', (e) => {
+            const shapeSelect = Interface.generateSelect(`Select shape for ${size} Poncho`, availableShapes, 'Diamond', (e) => {
                 visualizerInstance.ponchoEye[`update${size}ShapeCache`](e.target.value);
-            },'margin-right');
+            }, 'margin-right');
 
-            ponchoEyeShapeUI.appendChild(
-                Helper.createElement(`
-                <label class="generic-label margin-right">
+            ponchoEyeShapeUI.appendChild(Helper.createElement(`
+                <label class="generic-label">
                     <span>
                         ${size}
                     </span>
                 </label>
-            `)
-            );
+            `));
             ponchoEyeShapeUI.appendChild(shapeSelect);
         })
     }
@@ -201,23 +191,25 @@ var app = app || {};
         visualizerInstance.updateConfig(canvas);
     }
 
+    // Play from the passed in stream
     function playStream(audioElement, path, name) {
         audioElement.crossOrigin = 'anonymous';
         audioElement.src = path;
         audioElement.play();
-        document
-            .querySelector('#song-name')
-            .innerHTML = name.split('.')[0];
+        document.querySelector('#song-name').innerHTML = name.split('.')[0].split('-').join(' ');
     }
 
+    // Play a random local song
     function playRandomLocalMedia() {
         playLocalMedia(audioElement, Global.SOUNDS[Helper.getRandomInt(0, Global.SOUNDS.length)]);
     }
 
+    // Play the specified local song
     function playLocalMedia(audioElement, file) {
         playStream(audioElement, 'media/' + file, file)
     }
 
+    // Update loop
     function update() {
         // this schedules a call to the update() method in 1/60 seconds
         requestAnimationFrame(update);
@@ -233,7 +225,11 @@ var app = app || {};
 
         visualizerInstance.draw(ctx, frequencyData, waveformData);
 
-        // Add a filter frame rate slider if ((frameCounter++) % 60 !== 0) {     return; }
+        // Add a filter frame rate slider
+
+        // if ((frameCounter++) % 60 !== 0) {
+        //     return;
+        // }
         //
         // frameCounter = 1;
 
@@ -249,13 +245,25 @@ var app = app || {};
                 Filter.noise(imageData, i, 255);
             }
 
-            // if (FilterConfig.invert) { Filter.invert(imageData, i) }
-            //
-            // if (FilterConfig.lines) { Filter.line(imageData, i) }
-            //
-            // if (FilterConfig.bonus) { Filter.shiftRGB(imageData, i) }
-            //
-            // if (FilterConfig.redeye) { Filter.redMirror(imageData, i) }
+            if (FilterConfig.wickedRGB) {
+                Filter.wickedRGB(imageData, i);
+            }
+
+            if (FilterConfig.invert) {
+                Filter.invert(imageData, i);
+            }
+
+            if (FilterConfig.redTint) {
+                Filter.tint(imageData, i);
+            }
+
+            if (FilterConfig.lines) {
+                Filter.line(imageData, i);
+            }
+
+            if (FilterConfig.shiftRGB) {
+                Filter.shiftRGB(imageData, i);
+            }
         }
 
         ctx.putImageData(imageData, 0, 0)

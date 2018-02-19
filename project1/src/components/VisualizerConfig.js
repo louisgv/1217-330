@@ -14,7 +14,7 @@ var app = app || {};
     const {Color, Gradient, Helper} = app;
 
     // Label - Color - Disable Gradient
-    const values = Object.seal({
+    const value = Object.seal({
         'mirrorWave': [
             'Mirror Wave', 'CrimsonThought'
         ],
@@ -24,19 +24,27 @@ var app = app || {};
         'lineWave': [
             'Line Wave', 'Black'
         ],
-        'bezierWave': [
-            'Bezier Wave', 'white'
+        'quadraticWave': [
+            'Quadratic Wave', 'Black'
         ],
-        'ponchoEye': ['Poncho Eye', 'Black', true]
+        'ponchoEye': [
+            'Poncho Eye', 'Black', true
+        ],
+        // 'bezierWave': [
+        //     'Bezier Wave', 'Black'
+        // ],
     });
+
+    const values = Object.keys(value);
 
     // Fill - Stroke - Fillblank
     const checkbox = Object.seal({
         'lineWave': [],
         'mirrorBar': ['Cut'],
         'ponchoEye': [],
-        'bezierWave': ['Fill'],
-        'mirrorWave': ['Cut', 'Fill', 'Stroke']
+        // 'bezierWave': ['Fill'],
+        'quadraticWave': ['Fill'],
+        'mirrorWave': ['Cut', 'Fill', 'Stroke'],
     })
 
     const color = Object.seal({
@@ -47,12 +55,12 @@ var app = app || {};
         'Yellow': new Color(255, 168, 1),
         'Pink': new Color(239, 87, 119),
         'White': new Color(255, 255, 255)
-    })
+    });
 
     const colors = Object.keys(color);
 
     const gradient = {
-        CrimsonThought : new Gradient(),
+        CrimsonThought: new Gradient(),
         InnocentTeal: new Gradient(),
         SombreGreen: new Gradient()
     };
@@ -67,29 +75,18 @@ var app = app || {};
     // Initialize all the gradient color.
     function initializeGradient(ctx) {
         // Hack to bind the value of BRW with the value of new instance
-        gradient.CrimsonThought.init(ctx, [
-            color.Black,
-            color.Red,
-            color.White
-        ]);
+        gradient.CrimsonThought.init(ctx, [color.Black, color.Red, color.White]);
 
-        gradient.InnocentTeal.init(ctx, [
-            color.White,
-            color.Blue,
-            color.Pink
-        ]);
+        gradient.InnocentTeal.init(ctx, [color.White, color.Blue, color.Pink]);
 
-        gradient.SombreGreen.init(ctx, [
-            color.Green,
-            color.Yellow,
-            color.White
-        ]);
+        gradient.SombreGreen.init(ctx, [color.Green, color.Yellow, color.White]);
 
         gradients = Object.keys(gradient);
         Object.seal(gradients);
     }
 
     app.VisualizerConfig = {
+        value,
         values,
         checkbox,
         color,

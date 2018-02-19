@@ -10,25 +10,49 @@
 "use strict";
 var app = app || {};
 
-app.FilterConfig = {
-    noiseFade: true,
-    invert: false,
-    tintRed: false,
-    noise: false,
-    lines: false,
-    bonus: false,
-    redeye: false
-};
+// label - key - value
+app.FilterConfigs = [
+    [
+        'Noise Fade', 'noiseFade', true
+    ],
+    [
+        'Invert', 'invert', false
+    ],
+    // [
+    //     'Red Tint', 'redTint', false
+    // ],
+    // [
+    //     'Lines', 'lines', false
+    // ],
+    [
+        'Shift RGB', 'shiftRGB', false
+    ],
+    [
+        'Wicked RGB', 'wickedRGB', false
+    ]
+];
+
+app.FilterConfig = Object.seal(app.FilterConfigs.reduce((p, [, k, v]) => {
+    p[k] = v;
+    return p;
+}, {}));
 
 app.Filter = class {
 
-    // Cemter B and G into R
-    static redMirror({
+    // Reassign r-g-b channel to b-r-g,
+    // cause a slightly shift effect on bright color.
+    static wickedRGB({
         data,
         width
-    }, i, factor = 1.0) {
-        data[i + 1] = data[i + 2] = data[i + width] * data[i - width] * factor;
-        data[i] *= data[i];
+    }, i) {
+
+        const red = data[i];
+        const green = data[i + 1];
+        const blue = data[i + 2];
+
+        data[i] = blue;
+        data[i + 1] = red;
+        data[i + 2] = green;
     }
 
     // Shift RGB's coordinate using its data.
@@ -37,8 +61,8 @@ app.Filter = class {
         width
     }, i) {
         data[i] *= data[i];
-        data[i + 1] = data[i + width] * data[i + width]
-        data[i + 2] = data[i - width] * data[i - width]
+        data[i + 1] = data[i + width] * data[i + width];
+        data[i + 2] = data[i - width] * data[i - width];
     }
 
     // Increase color intesity
@@ -69,7 +93,7 @@ app.Filter = class {
         data,
         width
     }, i) {
-        const row = Math.floor(i / 4 / width)
+        const row = Math.floor(i / 4 / width);
 
         if (row % 50 == 0) {
             data[i] = data[i + 1] = data[i + 2] = data[i + 3] = 255;
@@ -82,9 +106,9 @@ app.Filter = class {
     static invert({
         data
     }, i) {
-        const red = data[i]
-        const green = data[i + 1]
-        const blue = data[i + 2]
+        const red = data[i];
+        const green = data[i + 1];
+        const blue = data[i + 2];
 
         data[i] = 255 - red;
         data[i + 1] = 255 - green;

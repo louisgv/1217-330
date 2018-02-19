@@ -17,6 +17,7 @@ var app = app || {};
         MirrorWave,
         Wave,
         LineWave,
+        QuadraticWave,
         BezierWave,
         Helper,
         Global
@@ -29,13 +30,13 @@ var app = app || {};
             this.mirrorWave = new MirrorWave();
             this.ponchoEye = new PonchoEye();
             this.lineWave = new LineWave();
-            this.bezierWave = new BezierWave();
+            this.quadraticWave = new QuadraticWave();
 
             this.vizList = [
                 'mirrorWave',
                 'mirrorBar',
+                'quadraticWave',
                 'lineWave',
-                'bezierWave',
                 'ponchoEye',
             ];
 

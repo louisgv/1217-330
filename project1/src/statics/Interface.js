@@ -16,9 +16,9 @@ var app = app || {};
     app.Interface = class {
 
         // Generate a select element
-        static generateSelect(options, defaultValue, callback, addonClasses = '') {
+        static generateSelect(title, options, defaultValue, callback, addonClasses = '') {
             const optionLabelEl = Helper.createElement(
-                `<label class="select-container ${addonClasses}"></label>`
+                `<label title="${title}" class="select-container ${addonClasses}"></label>`
             );
 
             const optionsEl = Helper.createElement(`<select name='options'></select>`);
@@ -44,7 +44,7 @@ var app = app || {};
         static generateCheckBox(label, id, callback, checked = true, addonClasses = '') {
             const checkBoxEl = Helper.createElement(
                 `
-            <div class="checkbox-container ${addonClasses}">
+            <div title="Toggle ${label}" class="checkbox-container ${addonClasses}">
                 <label class="checkbox">
                     ${label}
                     <input type="checkbox" id="${id}" ${checked

@@ -72,6 +72,8 @@
 
 	<script src="./src/components/complex/LineWave.js"
 	        charset="utf-8"></script>
+	<script src="./src/components/complex/QuadraticWave.js"
+	        charset="utf-8"></script>
 	<script src="./src/components/complex/BezierWave.js"
 	        charset="utf-8"></script>
 	<script src="./src/components/complex/MirrorBar.js"
@@ -84,6 +86,9 @@
 	<script src="./src/components/Visualizer.js"
 	        charset="utf-8"></script>
 	<script src="./src/components/VisualizerUI.js"
+	        charset="utf-8"></script>
+
+	<script src="./src/components/FilterUI.js"
 	        charset="utf-8"></script>
 
 	<script src="./index.js"
@@ -101,10 +106,10 @@
 	<div id="controls">
 
 		<button id="toggleui-button"
-		        class="button"
+		        class="button interactive"
 		        title="Click to Toggle UI">x</button>
 
-		<div class="toggle-target">
+		<div class="toggle-target interactive">
 			<button id="shuffle-button"
 			        class="button"
 			        title="Click to Shuffle to a New Song">
@@ -117,28 +122,38 @@
 				Full Screen
 			</button>
 		</div>
+		<div class="toggle-target interactive">
+			<div id="playback-slider-container"
+			     class="margin-bottom">
+			</div>
 
-		<div id="playback-slider-container"
-		     class="toggle-target margin-bottom">
-		</div>
+			<div id="volume-slider-container"
+			     class="margin-bottom">
+			</div>
+			<div id="bass-slider-container"
+			     class="margin-bottom">
+			</div>
 
-		<div id="volume-slider-container"
-		     class="toggle-target margin-bottom">
-		</div>
-		<div id="bass-slider-container"
-		     class="toggle-target margin-bottom">
-		</div>
+			<div id="visualizer-ui"
+			     class="flex-column"></div>
 
-		<div id="visualizer-ui"
-		     class="toggle-target flex-column"></div>
+			<div id="poncho-eye-shape-ui"
+			     class="flex-row margin-bottom">
+				<label class="generic-label margin-right">
+					<span>
+						Poncho Eye Shape
+					</span>
+				</label>
+			</div>
 
-		<div id="poncho-eye-shape-ui"
-		     class="toggle-target flex-row">
-			<label class="generic-label margin-right">
-				 <span>
-					 Poncho Eye Shape
-				 </span>
-			 </label>
+			<div id="filter-ui"
+			     class="flex-row">
+				 <label class="generic-label margin-right">
+				 	<span>
+						Filters
+				 	</span>
+				 </label>
+			 </div>
 		</div>
 
 	</div>

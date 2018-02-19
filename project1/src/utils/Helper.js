@@ -22,25 +22,14 @@ app.Helper = {
     toggleUIElement(e) {
 
         const shouldDisable = e.target.innerText === 'x';
-        if (shouldDisable) {
-            e.target.innerHTML = '='
-        } else {
-            e.target.innerHTML = 'x'
-        }
 
-        const visibility = shouldDisable
-            ? 'hidden'
-            : 'visible';
-        const opacity = shouldDisable
-            ? 0
-            : 1;
+        e.target.innerHTML = shouldDisable
+            ? '='
+            : 'x';
 
-        Array
-            .from(document.querySelectorAll('.toggle-target'))
-            .map((target) => {
-                target.style.visibility = visibility
-                target.style.opacity = opacity
-            })
+        Array.from(document.querySelectorAll('.toggle-target')).map((target) => {
+            target.classList.toggle('toggle-disabled');
+        })
     },
 
     // Return a random between min and max
@@ -54,10 +43,7 @@ app.Helper = {
     }),
 
     // Get Mouse position relative to the element
-    getMouse: ({pageX, pageY, target}) => new Vector2(
-        pageX - target.offsetLeft,
-        pageY - target.offsetTop
-    ),
+    getMouse: ({pageX, pageY, target}) => new Vector2(pageX - target.offsetLeft, pageY - target.offsetTop),
     // Clear the canvas
     clearCanvas(ctx) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
@@ -114,9 +100,7 @@ app.Helper = {
 
             p[label].type = type;
 
-            p[label]
-                .frequency
-                .setValueAtTime(freq, audioCtxNewTime);
+            p[label].frequency.setValueAtTime(freq, audioCtxNewTime);
 
             return p;
         }, {});
