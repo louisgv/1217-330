@@ -31,12 +31,14 @@ var app = app || {};
             this.ponchoEye = new PonchoEye();
             this.lineWave = new LineWave();
             this.quadraticWave = new QuadraticWave();
+            this.bezierWave = new BezierWave();
 
             this.vizList = [
                 'mirrorWave',
                 'mirrorBar',
                 'quadraticWave',
                 'lineWave',
+                'bezierWave',
                 'ponchoEye',
             ];
 

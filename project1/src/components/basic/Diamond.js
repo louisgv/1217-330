@@ -40,9 +40,13 @@ var app = app || {};
 
             ctx.beginPath();
 
+            // Top
             ctx.moveTo(this.pos.x, this.pos.y - this.size);
+            // Right
             ctx.lineTo(this.pos.x + this.size, this.pos.y);
+            // Bottom
             ctx.lineTo(this.pos.x, this.pos.y + this.size);
+            // Left
             ctx.lineTo(this.pos.x - this.size, this.pos.y);
 
             ctx.closePath();

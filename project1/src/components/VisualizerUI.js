@@ -21,13 +21,15 @@ var app = app || {};
 
         // Generate a column of a viz UI
         generateCol(viz) {
-            const [label, defaultColor, noGradient] = VisualizerConfig.value[viz];
+            const [label, defaultColor, isEnabled, noGradient] = VisualizerConfig.value[viz];
+
+            this.visualizerInstance[viz].disabled = !isEnabled;
 
             const bodyEl = Helper.createElement(`<div class="flex-inline-row tool-row"></div>`);
 
             const vizToggleEl = Interface.generateCheckBox(label, viz, (e) => {
                 this.visualizerInstance[viz].disabled = !e.target.checked;
-            }, this.visualizerInstance[viz].disabled, 'tool-col');
+            }, isEnabled, 'tool-col');
 
             bodyEl.appendChild(vizToggleEl);
 

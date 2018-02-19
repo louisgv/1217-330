@@ -20,16 +20,18 @@ var app = app || {};
             this.color = color;
         }
 
+        // Set the desired color of the circle
         setColor(color) {
             this.color = color;
             return this;
         }
-
+        // Set the desired size of the circle
         setSize(radius) {
             this.radius = radius;
             return this;
         }
 
+        // Draw the circle
         draw(ctx, fill = true, stroke = false) {
             ctx.save();
 

@@ -20,7 +20,7 @@ var app = app || {};
             step: 18,
             widthScale: 0,
             heightScale: 0,
-            lineWidth: 9,
+            lineWidth: 2,
             color: new Color()
         }) {
             this.config = config;

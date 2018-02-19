@@ -16,23 +16,23 @@ var app = app || {};
     // Label - Color - Disable Gradient
     const value = Object.seal({
         'mirrorWave': [
-            'Mirror Wave', 'CrimsonThought'
+            'Mirror Wave', 'CrimsonThought', true
         ],
         'mirrorBar': [
-            'Mirror Bar', 'Red'
+            'Mirror Bar', 'Red', true
         ],
         'lineWave': [
-            'Line Wave', 'Black'
+            'Line Wave', 'Black', false
         ],
         'quadraticWave': [
-            'Quadratic Wave', 'Black'
+            'Quadratic Wave', 'Black', false
+        ],
+        'bezierWave': [
+            'Bezier Wave', 'Black', true
         ],
         'ponchoEye': [
-            'Poncho Eye', 'Black', true
+            'Poncho Eye', 'Black', true, true
         ],
-        // 'bezierWave': [
-        //     'Bezier Wave', 'Black'
-        // ],
     });
 
     const values = Object.keys(value);
@@ -42,8 +42,8 @@ var app = app || {};
         'lineWave': [],
         'mirrorBar': ['Cut'],
         'ponchoEye': [],
-        // 'bezierWave': ['Fill'],
         'quadraticWave': ['Fill'],
+        'bezierWave': ['Fill'],
         'mirrorWave': ['Cut', 'Fill', 'Stroke'],
     })
 

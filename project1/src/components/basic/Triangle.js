@@ -18,17 +18,17 @@ var app = app || {};
             this.size = size;
             this.color = color;
         }
-
+        // Set the size of the trangle
         setSize(size) {
             this.size = size;
             return this;
         }
-
+        // Set the color of the triangle
         setColor(color) {
             this.color = color;
             return this;
         }
-
+        // Draw the triangle to the context
         draw(ctx) {
             ctx.save();
 

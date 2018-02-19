@@ -15,11 +15,10 @@ var app = app || {};
 
     app.BezierWave = class {
         constructor(config = {
-            fill: true,
-            step: 18,
+            fill: false,
             widthScale: 0,
             heightScale: 0,
-            lineWidth: 9,
+            lineWidth: 1,
             color: new Color()
         }) {
             this.config = config;
@@ -27,7 +26,7 @@ var app = app || {};
 
         // Update the width and height scale of the wave
         updateConfig(canvas) {
-            this.config.widthScale = canvas.width / (Global.DATA_SIZE - 2) * this.config.step;
+            this.config.widthScale = canvas.width / (Global.DATA_SIZE + 1);
             this.config.heightScale = canvas.halfHeight / Global.DATA_SIZE;
         }
 
@@ -40,35 +39,40 @@ var app = app || {};
 
             ctx.lineWidth = this.config.lineWidth;
 
-            let x = 0;
-            // Used to calculate the middle point
-            let xTemp = 0;
-
             // TODO: switch to Bezier curve
-            let yMaxTemp = 0;
-            let yMinTemp = 0;
+            let yMax = 0;
+            let yMin = Number.MAX_SAFE_INTEGER;
+
+            let xMax = 0;
+            let xMin = 0;
 
             let i = 0;
 
-            ctx.moveTo(x, ctx.canvas.halfHeight);
-
-            for (; i < data.length; i += this.config.step) {
-
-                ctx.quadraticCurveTo(
-                    (x - xTemp) / 2 + xTemp,
-                    data[i] * this.config.heightScale,
-                    x,
-                    ctx.canvas.halfHeight
-                );
-
-                xTemp = x;
-
-                x += this.config.widthScale;
+            // Find the two control points which are the min and max data
+            for (; i < data.length; i++) {
+                if (yMax < data[i]) {
+                    yMax = data[i];
+                    xMax = i;
+                }
+                if (yMin > data[i]) {
+                    yMin = data[i];
+                    xMin = i;
+                }
             }
 
-            ctx.lineTo(x, ctx.canvas.halfHeight);
-
-            ctx.closePath();
+            ctx.moveTo(0, ctx.canvas.halfHeight);
+            // draw them based on their order:
+            if (xMin < xMax) {
+                ctx.bezierCurveTo(
+                    xMin * this.config.widthScale, yMin * this.config.heightScale,
+                    xMax * this.config.widthScale, yMax * this.config.heightScale,
+                    ctx.canvas.width, ctx.canvas.halfHeight);
+            } else {
+                ctx.bezierCurveTo(
+                    xMax * this.config.widthScale, yMax * this.config.heightScale,
+                    xMin * this.config.widthScale, yMin * this.config.heightScale,
+                    ctx.canvas.width, ctx.canvas.halfHeight);
+            }
 
             ctx.stroke();
 

@@ -20,12 +20,14 @@ var app = app || {};
             this.color = color;
         }
 
+        // Set the desired size of the square, together with its hafl-size
         setSize(size) {
             this.size = size;
             this.halfSize = size / 2;
             return this;
         }
 
+        // Set the color of the square
         setColor(color) {
             this.color = color;
             return this;
