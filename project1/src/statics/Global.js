@@ -20,7 +20,7 @@ app.Global = Object.freeze({
     HALF_DATA_SIZE: 256/2/2,
 
     SOUNDS: [
-        'Cold-by-Cage-the-Elephant.mp3',
+        'Cold-Cold-Cold-by-Cage-the-Elephant.mp3',
         'Celery-by-Birocratic.mp3',
         'Burner-by-Birocratic.mp3',
         'LetLinger-by-Birocratic.mp3',
