@@ -2,6 +2,11 @@
 
 "use strict";
 
+// Compare two string without its case
+function compareCaseInsensitive(a, b) {
+    return a.toUpperCase() === b.toUpperCase();
+}
+
 // returns mouse position in local coordinate system of element
 function getMouse(e) {
     const x = e.pageX - e.target.offsetLeft;
@@ -10,10 +15,12 @@ function getMouse(e) {
     return new Vector2(x, y)
 }
 
+// Get random between max and min
 function getRandom(min, max) {
     return Math.random() * (max - min) + min;
 }
 
+// Create a color from given info
 function makeColor(red, green, blue, alpha) {
     var color = 'rgba(' + red + ',' + green + ',' + blue + ', ' + alpha + ')';
     return color;

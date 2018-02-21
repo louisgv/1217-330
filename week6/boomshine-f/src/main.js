@@ -11,20 +11,23 @@
 var app = app || {};
 
 const Game = Object.freeze({
+    STORE_KEY: 'LAB_BOOMSHINE_LS',
     //  properties
     WIDTH: 640,
     HEIGHT: 480,
 
     CIRCLE: Object.freeze({
         NUM_CIRCLES_START: 5,
-        NUM_CIRCLES_END: 20,
+        NUM_CIRCLES_END: 60,
         START_RADIUS: 18,
         MAX_RADIUS: 45,
         MIN_RADIUS: 2,
         MAX_LIFETIME: 2.5,
         MAX_SPEED: 80,
         EXPLOSION_SPEED: 60,
-        IMPLOSION_SPEED: 84
+        IMPLOSION_SPEED: 84,
+        NUM_LEVEL_INCREASE: 5,
+        PERCENT_CIRCLES_TO_ADVANCE: .3
     }),
 
     CIRCLE_STATE: Object.freeze({ // Circle enum
@@ -54,7 +57,7 @@ const Game = Object.freeze({
         "#FF6EFF",
         "#EE34D2"
     ]
-})
+});
 
 /*
  .main is an object literal that is a property of the app global
@@ -74,6 +77,7 @@ app.main = {
     gameState: undefined,
     roundScore: 0,
     totalScore: 0,
+    highScore: 0,
 
     sound: undefined,
     myKeys: undefined,
@@ -98,20 +102,39 @@ app.main = {
         this.canvas.height = Game.HEIGHT;
         this.ctx = this.canvas.getContext('2d');
 
-        this.numCircles = Game.CIRCLE.NUM_CIRCLES_START;
-        this.circles = this.makeCircles(this.numCircles);
-
-        this.gameState = Game.GAME_STATE.BEGIN;
-
         this.canvas.addEventListener('mousedown', (e) => this.doMousedown(e));
 
         this.initExhaust();
         this.initPulsar();
 
+        this.start();
         this.reset();
 
         // start the game loop
         this.update();
+    },
+
+    start() {
+        if (this.totalScore > localStorage.getItem(Game.STORE_KEY)) {
+            localStorage.setItem(Game.STORE_KEY, this.totalScore);
+        }
+
+        this.highScore = localStorage.getItem(Game.STORE_KEY) || 0;
+
+        this.totalScore = 0;
+        this.numCircles = Game.CIRCLE.NUM_CIRCLES_START;
+        this.gameState = Game.GAME_STATE.BEGIN;
+    },
+
+    reset() {
+        document.querySelector('#button1').style.display = 'none';
+        this.roundScore = 0;
+        this.circles = this.makeCircles(this.numCircles);
+    },
+
+    nextLevel() {
+        this.numCircles += 5;
+        this.reset();
     },
 
     initPulsar() {
@@ -140,7 +163,7 @@ app.main = {
     },
 
     stopBGAudio() {
-        this.sound.stopBGAudio()
+        this.sound.stopBGAudio();
     },
 
     pauseGame() {
@@ -158,14 +181,6 @@ app.main = {
         this.sound.playBGAudio();
     },
 
-    reset() {
-        document.querySelector('#button1').style.display = 'none';
-
-        this.numCircles += 5;
-        this.roundScore = 0;
-        this.circles = this.makeCircles(this.numCircles);
-    },
-
     doMousedown(e) {
         this.sound.playBGAudio();
 
@@ -179,12 +194,21 @@ app.main = {
             return;
         }
 
+        if (this.gameState === Game.GAME_STATE.END) {
+            this.start();
+            this.reset();
+        }
+
+        if (this.gameState === Game.GAME_STATE.REPEAT_LEVEL) {
+            this.gameState = Game.GAME_STATE.DEFAULT;
+            this.reset();
+        }
+
         const mouse = getMouse(e);
 
         if (this.gameState === Game.GAME_STATE.ROUND_OVER && isPointInRectangle(mouse, this.advanceLevelButton)) {
-
             this.gameState = Game.GAME_STATE.DEFAULT;
-            this.reset();
+            this.nextLevel();
         }
 
         this.checkCircleClicked(mouse);
@@ -241,11 +265,25 @@ app.main = {
         }
 
         if (explodingCircles.length === 0) {
-            this.gameState = Game.GAME_STATE.ROUND_OVER;
-            this.totalScore += this.roundScore
-            this.sound.stopBGAudio();
+            this.roundOver();
         }
+    },
 
+    getRoundRequirement() {
+        return Math.floor(this.numCircles * Game.CIRCLE.PERCENT_CIRCLES_TO_ADVANCE);
+    },
+
+    roundOver() {
+        if (this.roundScore < this.getRoundRequirement()) {
+            this.gameState = Game.GAME_STATE.REPEAT_LEVEL;
+        } else {
+            this.gameState = this.numCircles < Game.CIRCLE.NUM_CIRCLES_END
+                ? Game.GAME_STATE.ROUND_OVER
+                : Game.GAME_STATE.END;
+
+            this.totalScore += this.roundScore
+        }
+        this.sound.stopBGAudio();
     },
 
     update() {
@@ -294,6 +332,10 @@ app.main = {
             // draw dt in bottom right corner
             this.fillText(this.ctx, "dt: " + dt.toFixed(3), Game.WIDTH - 150, Game.HEIGHT - 10, "18pt courier", "white");
         }
+    },
+
+    toggleDebug() {
+        this.debug = !this.debug;
     },
 
     moveCircles(dt) {
@@ -348,7 +390,7 @@ app.main = {
     drawHUD(ctx) {
         ctx.save();
 
-        this.fillText(this.ctx, `This Round: ${this.roundScore} of ${this.numCircles}`, 20, 20, '14pt courier', '#ddd');
+        this.fillText(this.ctx, `This Round: ${this.roundScore} of ${this.numCircles}. Requirement: ${this.getRoundRequirement()}`, 20, 20, '14pt courier', '#ddd');
 
         this.fillText(this.ctx, `Total Score: ${this.totalScore}`, Game.WIDTH - 200, 20, '14pt courier', '#ddd');
 
@@ -359,6 +401,8 @@ app.main = {
             case Game.GAME_STATE.BEGIN:
                 {
                     this.fillText(this.ctx, `To begin, click a circle`, Game.WIDTH / 2, Game.HEIGHT / 2, '30pt courier', 'white');
+
+                    this.fillText(this.ctx, `Current highscore: ${this.highScore}`, Game.WIDTH / 2, Game.HEIGHT / 2 + 40, '14pt courier', 'red');
 
                     this.exhaust.updateAndDraw(this.ctx, new Vector2(100, 100))
 
@@ -380,6 +424,24 @@ app.main = {
 
                     break;
                 }
+            case Game.GAME_STATE.END:
+                {
+                    this.fillText(this.ctx, `Game Over`, Game.WIDTH / 2, Game.HEIGHT / 2 - 40, '45pt courier', 'white');
+                    this.fillText(this.ctx, `Your final score is ${this.totalScore}`, Game.WIDTH / 2, Game.HEIGHT / 2, '30pt courier', 'red');
+
+                    this.fillText(this.ctx, `Click to play again`, Game.WIDTH / 2, Game.HEIGHT / 2 + 40, '14pt courier', 'white');
+
+                    break;
+                }
+            case Game.GAME_STATE.REPEAT_LEVEL:
+                {
+                    this.fillText(this.ctx, `Round Failed`, Game.WIDTH / 2, Game.HEIGHT / 2 - 40, '30pt courier', 'white');
+                    this.fillText(this.ctx, `You need ${this.getRoundRequirement()} to pass...`, Game.WIDTH / 2, Game.HEIGHT / 2, '30pt courier', 'red');
+
+                    this.fillText(this.ctx, `Click to restart level`, Game.WIDTH / 2, Game.HEIGHT / 2 + 40, '14pt courier', 'white');
+
+                    break;
+                }
             default:
         }
 
@@ -387,7 +449,7 @@ app.main = {
     },
 
     drawCircles(ctx) {
-        if (this.gameState === Game.GAME_STATE.ROUND_OVER) {
+        if (this.gameState === Game.GAME_STATE.ROUND_OVER || this.gameState === Game.GAME_STATE.END || this.gameState === Game.GAME_STATE.REPEAT_LEVEL) {
             ctx.globalAlpha = 0.25;
         }
 
