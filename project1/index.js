@@ -39,6 +39,8 @@ var app = app || {};
     let canvas,
         ctx;
 
+    let audioPlayPromise;
+
     let frameCounter = 1;
 
     // type - freq - label (opt) - scale
@@ -109,9 +111,13 @@ var app = app || {};
 
         canvas.addEventListener('pointerdown', (e) => {
             if (audioElement.paused) {
-                audioElement.play();
+                audioPlayPromise = audioElement.play();
             } else {
-                audioElement.pause();
+                if (audioPlayPromise !== undefined) {
+                    audioPlayPromise.then(()=> {
+                        audioElement.pause();
+                    });
+                }
             }
         });
 
@@ -195,7 +201,7 @@ var app = app || {};
     function playStream(audioElement, path, name) {
         audioElement.crossOrigin = 'anonymous';
         audioElement.src = path;
-        audioElement.play();
+        audioPlayPromise = audioElement.play();
         document.querySelector('#song-name').innerHTML = name.split('.')[0].split('-').join(' ');
     }
 
