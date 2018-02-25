@@ -23,5 +23,5 @@ app.Random = (function() {
                 ? lookupTable[lookupIndex = 0]
                 : lookupTable[lookupIndex];
         }
-    }
+    };
 }());

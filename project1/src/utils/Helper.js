@@ -29,7 +29,7 @@ app.Helper = {
 
         Array.from(document.querySelectorAll('.toggle-target')).map((target) => {
             target.classList.toggle('toggle-disabled');
-        })
+        });
     },
 
     // Return a random between min and max
@@ -46,7 +46,7 @@ app.Helper = {
     getMouse: ({pageX, pageY, target}) => new Vector2(pageX - target.offsetLeft, pageY - target.offsetTop),
     // Clear the canvas
     clearCanvas(ctx) {
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     },
 
     // Return analyser node from audio element
@@ -90,10 +90,10 @@ app.Helper = {
         // normalize and immute the biquad list for ease of use
         biquadFilterList = biquadFilterList.map((item) => {
             if (!item[2]) { // if there is no label
-                item[2] = `${item[0]}-${item[1]}`
+                item[2] = `${item[0]}-${item[1]}`;
             }
             return item;
-        })
+        });
 
         biquadFilter = biquadFilterList.reduce((p, [type, freq, label]) => {
             p[label] = audioCtx.createBiquadFilter();
@@ -117,7 +117,7 @@ app.Helper = {
             const [,, labelA] = biquadFilterList[i];
             const [,, labelB] = biquadFilterList[i + 1];
 
-            biquadFilter[labelA].connect(biquadFilter[labelB])
+            biquadFilter[labelA].connect(biquadFilter[labelB]);
         }
 
         const [,, labelEnd] = biquadFilterList[i];
@@ -133,11 +133,11 @@ app.Helper = {
     makeGradient(ctx, stopColors) {
         const gradient = ctx.createLinearGradient(0, 0, window.innerWidth, window.innerHeight);
 
-        const stepSize = 1 / (stopColors.length - 1)
+        const stepSize = 1 / (stopColors.length - 1);
 
         stopColors.forEach((c, i) => {
             gradient.addColorStop(i * stepSize, c);
-        })
+        });
 
         return gradient;
     },
@@ -160,4 +160,4 @@ app.Helper = {
         }
         // .. and do nothing if the method is not supported
     }
-}
+};

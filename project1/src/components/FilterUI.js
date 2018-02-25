@@ -33,5 +33,5 @@ var app = app || {};
                 parentEl.appendChild(this.generateCol(config));
             });
         }
-    }
+    };
 }());

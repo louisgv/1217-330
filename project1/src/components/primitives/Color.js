@@ -36,7 +36,7 @@ var app = app || {};
 
         // Invert the color and return a new instance
         iInvert() {
-            return new this.constructor(255 - this.r, 255 - this.g, 255 - this.b, this.a)
+            return new this.constructor(255 - this.r, 255 - this.g, 255 - this.b, this.a);
         }
-    }
+    };
 }());

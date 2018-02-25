@@ -103,7 +103,7 @@ var app = app || {};
 
         visualizerUIInstance.mount(document.querySelector('#visualizer-ui'));
 
-        filterUIInstance.mount(document.querySelector('#filter-ui'))
+        filterUIInstance.mount(document.querySelector('#filter-ui'));
 
         DropZone.apply(canvas, handleFileDrop);
 
@@ -121,7 +121,7 @@ var app = app || {};
         toggleUIButton.addEventListener('click', Helper.toggleUIElement);
 
         setTimeout(() => {
-            toggleUIButton.dispatchEvent(new Event('click'))
+            toggleUIButton.dispatchEvent(new Event('click'));
         }, 900);
 
         document.querySelector('#shuffle-button').addEventListener('click', playRandomLocalMedia);
@@ -176,7 +176,7 @@ var app = app || {};
                 </label>
             `));
             ponchoEyeShapeUI.appendChild(shapeSelect);
-        })
+        });
     }
 
     // Update config of viz and update canvas width/height cache
@@ -206,7 +206,7 @@ var app = app || {};
 
     // Play the specified local song
     function playLocalMedia(audioElement, file) {
-        playStream(audioElement, 'media/' + file, file)
+        playStream(audioElement, 'media/' + file, file);
     }
 
     // Update loop
@@ -266,7 +266,7 @@ var app = app || {};
             }
         }
 
-        ctx.putImageData(imageData, 0, 0)
+        ctx.putImageData(imageData, 0, 0);
     }
 
     window.addEventListener('load', init);

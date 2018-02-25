@@ -45,7 +45,7 @@ var app = app || {};
         'quadraticWave': ['Fill'],
         'bezierWave': ['Fill'],
         'mirrorWave': ['Cut', 'Fill', 'Stroke'],
-    })
+    });
 
     const color = Object.seal({
         'Black': new Color(0, 0, 0),

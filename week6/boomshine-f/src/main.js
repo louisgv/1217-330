@@ -159,7 +159,7 @@ app.main = {
         this.exhaust.numParticles = 100;
         this.exhaust.red = 255;
         this.exhaust.green = 150;
-        this.exhaust.createParticles(new Vector2(100, 100))
+        this.exhaust.createParticles(new Vector2(100, 100));
     },
 
     stopBGAudio() {

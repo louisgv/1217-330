@@ -49,5 +49,5 @@ var app = app || {};
         iMul(scalar) {
             return new this.constructor(this.x * scalar, this.y * scalar);
         }
-    }
+    };
 }());

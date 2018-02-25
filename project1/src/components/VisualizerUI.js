@@ -42,7 +42,7 @@ var app = app || {};
             const colorSelect = Interface.generateSelect(`Select color for ${label}`, colorOptions, defaultColor, (e) => {
                 // TODO: make alpha tweakable
                 vizConfig.color = VisualizerConfig.color[e.target.value] || VisualizerConfig.gradient[e.target.value];
-            }, 'tool-col')
+            }, 'tool-col');
 
             bodyEl.appendChild(colorSelect);
 
@@ -54,7 +54,7 @@ var app = app || {};
                 }, vizConfig[checkBoxConfig], 'tool-col');
 
                 bodyEl.appendChild(checkBoxEl);
-            })
+            });
 
             return bodyEl;
         }
@@ -65,7 +65,7 @@ var app = app || {};
                 parentEl.appendChild(this.generateCol(viz));
             });
         }
-    }
+    };
 }());
 
 /*

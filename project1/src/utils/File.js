@@ -27,4 +27,4 @@ app.File = {
 			reader.readAsDataURL(fileBlob);
 		});
 	}
-}
+};

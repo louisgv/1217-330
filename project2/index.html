@@ -53,8 +53,6 @@
 
 	<script src="./src/statics/Global.js"
 	        charset="utf-8"></script>
-	<script src="./src/statics/Filter.js"
-	        charset="utf-8"></script>
 	<script src="./src/statics/Interface.js"
 	        charset="utf-8"></script>
 
@@ -81,12 +79,11 @@
 	<script src="./src/components/complex/PonchoEye.js"
 	        charset="utf-8"></script>
 
-	<script src="./src/components/Visualizer.js"
+	<script src="./src/components/Main.js"
 	        charset="utf-8"></script>
-	<script src="./src/components/VisualizerUI.js"
+	<script src="./src/components/Keyboard.js"
 	        charset="utf-8"></script>
-
-	<script src="./src/components/FilterUI.js"
+	<script src="./src/components/Sound.js"
 	        charset="utf-8"></script>
 
 	<script src="./index.js"
@@ -94,12 +91,14 @@
 </head>
 
 <body>
-	<canvas title="Click to Pause"></canvas>
-	
+	<canvas id="main-canvas"></canvas>
+	<canvas id="draft-canvas"></canvas>
+
 	<h1 id="brand"
 	    class="toggle-target">
 		pattar
 	</h1>
+
 	<div id="controls">
 
 		<button id="toggleui-button"

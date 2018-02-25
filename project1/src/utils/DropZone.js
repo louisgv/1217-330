@@ -37,7 +37,7 @@ app.DropZone = {
 			// }
 
             // If not image ignore
-            callback(fileBlob, {x, y})
-        }, false)
+            callback(fileBlob, {x, y});
+        }, false);
     }
-}
+};

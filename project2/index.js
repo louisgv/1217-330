@@ -1,71 +1,47 @@
 /*
 	Author: LAB
-	Main routine for vize
+	Loader module for pattar
 
     LICENSE: GPLv3
 */
 
-// An IIFE ("Iffy") - see the notes in mycourses
 "use strict";
 var app = app || {};
 (function() {
 
-    const {
-        Random,
+    const {Main, Keyboard, Sound} = app;
 
-        Interface,
-        Global,
-        Helper
-    } = app;
+    const main = new Main();
 
-    let canvas,
-        ctx;
+    window.addEventListener('load', () => {
+        main.sound = new Sound();
+        main.keyboard = new Keyboard();
 
-    let frameCounter = 1;
+        main.init();
+    });
 
-    // Handle on initialization
-    function init() {
-        // set up canvas stuff
-        canvas = document.querySelector('canvas');
-        ctx = canvas.getContext("2d");
+    window.addEventListener('resize', main.setupCache, false);
 
-        setupUI();
+    window.addEventListener('blur', main.halt, false);
 
-        // start animation loop
-        update();
-    }
+    window.addEventListener('focus', main.resume, false);
 
-    // Handle Setup UI event
-    function setupUI() {
+    window.addEventListener('keyup', (e) => {
+        switch (main.keyboard.onKeyUp(e)) {
+            case 'P':
+                {
+                    if (main.paused) {
+                        main.resume();
+                    } else {
+                        main.halt();
+                    }
+                    break;
+                }
+            default:
+        }
+    });
 
-        const toggleUIButton = document.querySelector('#toggleui-button');
-        toggleUIButton.addEventListener('click', Helper.toggleUIElement);
-
-        setTimeout(() => {
-            toggleUIButton.dispatchEvent(new Event('click'))
-        }, 900);
-
-    }
-
-    // Update config of viz and update canvas width/height cache
-    function setupCache() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // NOTE: Storing the half-size of the canvas into itself for reuse later.
-        canvas.halfWidth = canvas.width / 2;
-        canvas.halfHeight = canvas.height / 2;
-
-    }
-
-    // Update loop
-    function update() {
-        // this schedules a call to the update() method in 1/60 seconds
-        requestAnimationFrame(update);
-
-    }
-
-    window.addEventListener('load', init);
-
-    window.addEventListener('resize', setupCache, false);
+    window.addEventListener('keydown', (e)=> {
+        main.keyboard.onKeyDown(e);
+    });
 }());

@@ -62,6 +62,21 @@ footer h4, footer h5 {
     pointer-events: none;
 }
 
+#controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+    pointer-events: none;
+}
+
+#controls button, #now-playing div {
+    margin-bottom: 0.1em;
+}
+
 .toggle-target {
     transition: 0.2s;
 }

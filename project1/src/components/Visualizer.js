@@ -66,5 +66,5 @@ var app = app || {};
                     .draw(ctx, frequencyData, waveformData);
             }
         }
-    }
+    };
 }());
