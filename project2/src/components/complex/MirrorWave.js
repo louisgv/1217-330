@@ -53,7 +53,7 @@ var app = app || {};
 
             let i = 0;
 
-            ctx.moveTo(x, ctx.canvas.halfHeight)
+            ctx.moveTo(x, ctx.canvas.halfHeight);
 
             // Draw top left segment
             for (; i < data.length; ++i) {
@@ -91,5 +91,5 @@ var app = app || {};
 
             ctx.restore();
         }
-    }
+    };
 }());

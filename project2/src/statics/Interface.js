@@ -94,13 +94,13 @@ var app = app || {};
                 .querySelector(`#${id}-reset`)
                 .addEventListener('click', (e) => {
                     sliderEl.value = value;
-                    sliderEl.dispatchEvent(new Event('input'))
+                    sliderEl.dispatchEvent(new Event('input'));
                 });
 
             sliderContainerEl.sliderEl = sliderEl;
 
             return sliderContainerEl;
         }
-    }
+    };
 
 }());

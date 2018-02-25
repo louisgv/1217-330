@@ -33,7 +33,7 @@ var app = app || {};
 
             Array.from(document.querySelectorAll('.toggle-target')).map((target) => {
                 target.classList.toggle('toggle-disabled');
-            })
+            });
         },
 
         // Return a random between min and max
@@ -48,7 +48,7 @@ var app = app || {};
         getMouse: ({pageX, pageY, target}) => new Vector2(pageX - target.offsetLeft, pageY - target.offsetTop),
         // Clear the canvas
         clearCanvas(ctx) {
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         },
 
         // Request the user to fullscreen the visualization
@@ -64,5 +64,5 @@ var app = app || {};
             }
             // .. and do nothing if the method is not supported
         }
-    }
+    };
 }());

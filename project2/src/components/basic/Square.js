@@ -47,5 +47,5 @@ var app = app || {};
             ctx.fill();
             ctx.restore();
         }
-    }
+    };
 }());

@@ -20,11 +20,13 @@ var app = app || {};
         main.init();
     });
 
-    window.addEventListener('resize', main.setupCache, false);
+    window.addEventListener('resize', () => main.setupCache());
 
-    window.addEventListener('blur', main.halt, false);
+    window.addEventListener('blur', () => main.halt());
 
-    window.addEventListener('focus', main.resume, false);
+    window.addEventListener('focus', () => main.resume());
+
+    window.addEventListener('keydown', (e) => main.keyboard.onKeyDown(e));
 
     window.addEventListener('keyup', (e) => {
         switch (main.keyboard.onKeyUp(e)) {
@@ -39,9 +41,5 @@ var app = app || {};
                 }
             default:
         }
-    });
-
-    window.addEventListener('keydown', (e)=> {
-        main.keyboard.onKeyDown(e);
     });
 }());

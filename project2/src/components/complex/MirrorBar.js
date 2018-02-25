@@ -47,7 +47,7 @@ var app = app || {};
                     canvas.halfHeight + this.config.topSpacing
                 );
 
-                this.cachedPos[i] = Object.freeze({topBarPosition, bottomBarPosition})
+                this.cachedPos[i] = Object.freeze({topBarPosition, bottomBarPosition});
             }
 
         }
@@ -102,5 +102,5 @@ var app = app || {};
 
             ctx.restore();
         }
-    }
+    };
 }());

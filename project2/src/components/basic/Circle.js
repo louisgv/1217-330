@@ -53,5 +53,5 @@ var app = app || {};
 
             ctx.restore();
         }
-    }
+    };
 }());
