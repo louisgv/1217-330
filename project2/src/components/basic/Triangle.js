@@ -13,35 +13,46 @@ var app = app || {};
 (function() {
     const {Vector2} = app;
     app.Triangle = class {
-        constructor(pos = new Vector2(), size = 1, color = 'white') {
+        constructor(pos = new Vector2(), size = 1, rotation = 0) {
             this.pos = pos;
             this.size = size;
-            this.color = color;
+            this.rotation = rotation;
         }
         // Set the size of the trangle
         setSize(size) {
             this.size = size;
             return this;
         }
-        // Set the color of the triangle
-        setColor(color) {
-            this.color = color;
+
+        setRotation(rotation) {
+            this.rotation = rotation;
             return this;
         }
+
         // Draw the triangle to the context
-        draw(ctx) {
+        draw(ctx, fillStyle = 'black', strokeStyle = null) {
             ctx.save();
 
-            ctx.fillStyle = this.color;
+            ctx.fillStyle = fillStyle;
+            ctx.strokeStyle = strokeStyle;
+
+            ctx.translate(this.pos.x, this.pos.y);
+
+            ctx.rotate(this.rotation);
 
             ctx.beginPath();
-
-            ctx.moveTo(this.pos.x, this.pos.y - this.size);
-            ctx.lineTo(this.pos.x - this.size, this.pos.y + this.size);
-            ctx.lineTo(this.pos.x + this.size, this.pos.y + this.size);
-
+            ctx.moveTo(0, -this.size);
+            ctx.lineTo(-this.size, this.size);
+            ctx.lineTo(this.size, this.size);
             ctx.closePath();
-            ctx.fill();
+
+            if (fillStyle) {
+                ctx.fill();
+            }
+
+            if (strokeStyle) {
+                ctx.stroke();
+            }
 
             ctx.restore();
         }
