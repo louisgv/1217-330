@@ -12,13 +12,13 @@ var app = app || {};
 
 (function () {
     const {
-        FilterConfig,
+        EffectConfig,
         Interface,
         Helper,
         Global
     } = app;
 
-    app.FilterConfigUI = class {
+    app.EffectConfigUI = class {
 
         constructor(filterInstance) {
             this.filterInstance = filterInstance;
@@ -27,26 +27,26 @@ var app = app || {};
         // Generate a column of a viz UI
         generateCol(f, onChange) {
             const instance = this.filterInstance[f];
-            const [label, isEnabled] = FilterConfig.value[f];
+            const [label, isEnabled] = EffectConfig.value[f];
 
             const bodyEl = Helper.createElement(`<div class="flex-inline-row margin-bottom"></div>`);
 
-            const filterToggleEl = Interface.generateCheckBox(label, f, (e) => {
+            const toggleEl = Interface.generateCheckBox(label, f, (e) => {
                 instance.disabled = !e.target.checked;
 
                 onChange();
             }, !!isEnabled, 'margin-right');
 
-            bodyEl.appendChild(filterToggleEl);
+            bodyEl.appendChild(toggleEl);
 
-            const filterConfig = instance.config;
+            const effectConfig = instance.config;
 
-            FilterConfig.slider[f].forEach(([sliderLabel, sliderConfig, min, max]) => {
+            EffectConfig.slider[f].forEach(([sliderLabel, sliderConfig, min, max]) => {
                 const delta = max - min;
-                const defaultValue = (filterConfig[sliderConfig] - min ) /delta;
+                const defaultValue = (effectConfig[sliderConfig] - min ) /delta;
                 
                 const sliderEl = Interface.generateSlider(sliderLabel, `${sliderConfig}-slider`, (e) => {
-                    filterConfig[sliderConfig] = parseFloat(e.target.value) * delta + min;
+                    effectConfig[sliderConfig] = parseFloat(e.target.value) * delta + min;
                     
                     onChange();
                 }, defaultValue, 'margin-right');
@@ -59,7 +59,7 @@ var app = app || {};
 
         // Generate and mount the config UI onto the parentEl
         mount(parentEl, onChange) {
-            FilterConfig.values.map((v) => {
+            EffectConfig.values.map((v) => {
                 parentEl.appendChild(this.generateCol(v, onChange));
             });
         }

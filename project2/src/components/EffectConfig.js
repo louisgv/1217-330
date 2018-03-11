@@ -17,33 +17,28 @@ var app = app || {};
 
     // Label - Enabled
     const value = Object.seal({
-        'passThrough': [
-            'PassThrough', true
+        'lightNoise': [
+            'Light Noise'
         ],
-        'kaleidoscope': [
-            'Kaleidoscope', true
-        ]
     });
 
     const values = Object.keys(value);
 
     // Class - Default Config
     const defaultValue = Object.seal({
-        'passThrough': [
-            'PassThrough'
+        'lightNoise': [
+            'Noise', {
+                value: 234
+            }
         ],
-        'kaleidoscope': [
-            'Kaleidoscope',
-        ]
     });
 
     // label - config - min - max
     const slider = Object.seal({
-        'passThrough' : [],
-        'kaleidoscope': []
+        'lightNoise' : [],
     });
 
-    app.FilterConfig = {
+    app.EffectConfig = {
         value,
         values,
         defaultValue,

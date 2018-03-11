@@ -11,84 +11,111 @@ var app = app || {};
 (function () {
     const {
         Vector2,
-        
+
         Pattern,
         Filter,
 
         PatternConfigUI,
         FilterConfigUI,
-        
+
         Helper
     } = app;
 
     app.Drawpad = class {
         constructor() {
-            this.mainCanvas = Helper.createElement(`
+            this.dragging = false;
+            this.renderCanvas = Helper.createElement(`
                 <canvas id="main-canvas"></canvas>
             `);
-            this.mainCanvasCtx = this.mainCanvas.getContext('2d');
-
-            this.draftCanvas = Helper.createElement(`
-                <canvas id="draft-canvas"></canvas>
-            `);
-            this.draftCanvasCtx = this.draftCanvas.getContext('2d');
+            this.renderCanvasCtx = this.renderCanvas.getContext('2d');
 
             this.container = document.querySelector('#drawpad-container');
 
-            this.container.appendChild(this.mainCanvas);
+            this.container.appendChild(this.renderCanvas);
 
             this.pattern = new Pattern();
             this.patternConfigUI = new PatternConfigUI(this.pattern);
+            this.patternCtx = Helper.createCtx();
 
             this.filter = new Filter();
             this.filterConfigUI = new FilterConfigUI(this.filter);
+            this.filterCtx = Helper.createCtx();
 
             this.setupCache();
         }
 
         // Cache the size as well as update config for some child module
         setupCache() {
-            this.draftCanvas.center = this.mainCanvas.center = new Vector2(window.innerWidth / 2, window.innerHeight / 2);
+            this.renderCanvas.size = new Vector2(window.innerWidth, window.innerHeight);
+            this.renderCanvas.center = this.renderCanvas.size.iMul(0.5);
 
-            // NOTE: Storing the half-size of the canvas into itself for reuse later.
-            this.draftCanvas.width = this.mainCanvas.width = window.innerWidth;
-            this.draftCanvas.height = this.mainCanvas.height = window.innerHeight;
 
-            const size = this.size = new Vector2(this.draftCanvas.width, this.draftCanvas.height);
-            const mid = this.mid = this.size.iMul(0.5);
+            Helper.setFullsizeCtx(this.patternCtx);
+            Helper.setFullsizeCtx(this.filterCtx);
+            Helper.setFullsizeCtx(this.renderCanvasCtx);
 
-            this.pattern.updateConfig(this.draftCanvas, {
-                size,
-                mid
-            });
+            this.pattern.updateConfig(this.renderCanvas);
 
-            this.filter.updateConfig(this.draftCanvas, {
-                size,
-                mid
-            });
+            this.filter.updateConfig(this.renderCanvas);
         }
 
         /** Setup UI for the drawpad */
         setupUI() {
-            this.patternConfigUI.mount(document.querySelector('#pattern-ui-config'), ()=>{
-                Helper.clearCanvas(this.mainCanvasCtx);
+            this.patternConfigUI.mount(document.querySelector('#pattern-ui-config'), () => {
+                Helper.clearCanvas(this.renderCanvasCtx);
                 this.filter.refresh();
             });
 
-            this.filterConfigUI.mount(document.querySelector('#filter-ui-config'), ()=> {
-                Helper.clearCanvas(this.mainCanvasCtx);
+            this.filterConfigUI.mount(document.querySelector('#filter-ui-config'), () => {
+                Helper.clearCanvas(this.renderCanvasCtx);
                 this.filter.refresh();
             });
+
+            this.renderCanvas.addEventListener('mousedown', (e) => this.onMouseDownCanvas(e));
+            this.renderCanvas.addEventListener('mousemove', (e) => this.onMouseMoveCanvas(e));
+            this.renderCanvas.addEventListener('mouseup', (e) => this.onMouseUpCanvas(e));
+            this.renderCanvas.addEventListener('mouseout', (e) => this.onMouseOutCanvas(e));
+        }
+
+        onMouseDownCanvas(e) {
+            this.dragging = true;
+
+            // const mouse = Helper.getMouse(e);
+        }
+
+        onMouseMoveCanvas(e) {
+            Helper.clearCanvas(this.renderCanvasCtx);
+
+            this.filter.kaleidoscope.updateConfigOnMouseEvent(e);
+
+            if (!this.dragging) {
+                return;
+            }
+
+            const mouse = Helper.getMouse(e);
+        }
+
+        onMouseUpCanvas(e) {
+
+            this.dragging = false;
+        }
+
+        // if the user drags out of the canvas
+        onMouseOutCanvas(e) {
+
+            this.dragging = false;
         }
 
         // Render the drawpad into the canvas's ctx
         render(dt) {
-            this.pattern.draw(this.draftCanvasCtx, dt);
+            this.pattern.draw(this.patternCtx, dt);
 
-            this.filter.draw(this.draftCanvasCtx, dt);
+            this.filter.draw(this.patternCtx, this.filterCtx, dt);
 
-            this.mainCanvasCtx.drawImage(this.draftCanvas, 0, 0);
-            Helper.clearCanvas(this.draftCanvasCtx);
+            this.renderCanvasCtx.drawImage(this.filterCtx.canvas, 0, 0);
+
+            Helper.clearCanvas(this.patternCtx);
+            Helper.clearCanvas(this.filterCtx);
         }
 
     };
