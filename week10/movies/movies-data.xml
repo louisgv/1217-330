@@ -1,0 +1,26 @@
+<movies>
+	<movie rating="4">
+		<title>Peanutbutter</title>
+		<actor>Francis Pink</actor>
+	</movie>
+	<movie rating="3">
+		<title>On the bridge</title>
+		<actor>Micheal Key</actor>
+	</movie>
+	<movie rating="4">
+		<title>My god Jesus!</title>
+		<actor>Bernie Wu</actor>
+	</movie>
+	<movie rating="3">
+		<title>Balls on the court.</title>
+		<actor>Lucy Chevron</actor>
+	</movie>
+	<movie rating="5">
+		<title>Let the dogs lick it.</title>
+		<actor>Micheal Barkley</actor>
+	</movie>
+	<movie rating="3">
+		<title>Ruff, Ruff!</title>
+		<actor>Kyle "Doggees" Tyler</actor>
+	</movie>
+</movies>

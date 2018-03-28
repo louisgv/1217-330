@@ -12,27 +12,32 @@
 "use strict";
 var app = app || {};
 
-(function () {
-    const {
-        Vector2,
-        Global,
-        Helper
-    } = app;
+(function() {
+    const {Vector2, Global, Helper} = app;
     app.filter = app.filter || {};
 
     app.filter.Kaleidoscope = class {
         constructor(config = {
             offsetRotation: 0.0,
             offsetScale: 1.0,
-            offsetX: 0.0,
-            offsetY: 0.0,
+            offsetX: 0,
+            offsetY: 0,
             radius: 450,
-            slices: 23,
+            slices: 36,
             zoom: 1.0,
             timeout: 0,
-            ease: 0.1
+            ease: 0.1,
+            mouseAnim: false,
+            animate: true,
+            animateKey: {
+                offsetRotation: true,
+                offsetX: true,
+                offsetY: true,
+                // offsetScale: true,
+            }
         }) {
             this.config = config;
+            this.config.animateKeys = Object.keys(config.animateKey);
             this.currentTime = config.timeout;
         }
 
@@ -40,14 +45,29 @@ var app = app || {};
         updateConfig(canvas) {
             this.config.radius = Math.min(canvas.center.x * 2 / 3, canvas.center.y * 2 / 3);
 
-            this.config.scale = this.config.zoom * (this.config.radius / Math.min(canvas.width, canvas.height));
-
             this.config.center = canvas.center;
 
-            this.config.step = Global.TWO_PI / this.config.slices;
+            this.config.rawScale = this.config.radius / Math.min(canvas.width, canvas.height);
+
+            this.refresh();
         }
 
+        // Refresh timeout
+        refresh() {
+            this.currentTime = this.config.timeout;
+
+            this.config.step = Global.TWO_PI / this.config.slices;
+
+            this.config.arcStep = this.config.step * 0.51;
+
+            this.config.scale = this.config.zoom * this.config.rawScale;
+        }
+
+        // React to mouse event
         updateConfigOnMouseEvent(e) {
+            if (!this.config.mouseAnim) {
+                return;
+            }
             const dx = e.pageX / window.innerWidth;
             const dy = e.pageY / window.innerHeight;
 
@@ -67,18 +87,22 @@ var app = app || {};
             this.config.offsetRotation += (theta - this.config.offsetRotation) * this.config.ease;
         }
 
-        // Refresh timeout
-        refresh() {
-            this.currentTime = this.config.timeout;
-        }
-
         // Apply the filter effect
         draw(srcCtx, dstCtx, dt) {
-            if (this.currentTime < this.config.timeout) {
-                this.currentTime += dt;
-                return;
+            // if (this.currentTime < this.config.timeout) {
+            //     this.currentTime += dt;
+            //     return;
+            // }
+            // this.currentTime = 0;
+
+            if (this.config.animate) {
+                const easedDelta = dt;
+                this.config.animateKeys.forEach((k) => {
+                    if (this.config.animateKey[k]) {
+                        this.config[k] += easedDelta;
+                    }
+                });
             }
-            this.currentTime = 0;
 
             dstCtx.save();
             dstCtx.fillStyle = dstCtx.createPattern(srcCtx.canvas, 'repeat');
@@ -94,7 +118,7 @@ var app = app || {};
                 dstCtx.beginPath();
 
                 dstCtx.moveTo(-0.5, -0.5);
-                dstCtx.arc(0, 0, this.config.radius, this.config.step * -0.51, this.config.step * 0.51);
+                dstCtx.arc(0, 0, this.config.radius, -this.config.arcStep, this.config.arcStep);
                 dstCtx.lineTo(0.5, 0.5);
                 dstCtx.closePath();
 
@@ -112,7 +136,6 @@ var app = app || {};
 
                 dstCtx.restore();
             }
-
 
             dstCtx.restore();
         }

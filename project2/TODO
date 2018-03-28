@@ -1,0 +1,30 @@
+TODO:
+
+- Investigate using checkbox to halt animation
+
+- Using checkbox to halt mouse interaction
+
+- Refine alternative grid pattern
+
+- Using UI button to save images
+
+- Using UI button to open file dialog for choosing an image file
+
+- Investigate saving canvas
+
+- Duplicate the current alt grid and name is ShapeShiftedGrid
+
+- Create an overlay with instruction on how to use Pattar
+
+REVIEW:
+
+- Implement drop box to choose pre-loadeded images
+
+- Investigate extending options for kaleidoscope
+
+- Investigate background pattern layer, routing drop event, as well as preload images
+
+- Adding movement based on deltatime.... <-
+
+- Render by width or height of image, or stretch it
+    https://www.w3schools.com/tags/canvas_drawimage.asp

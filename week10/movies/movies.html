@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Movies data</title>
+	<style>
+		* {
+			font-family: tahoma, verdana, sans-serif;
+		}
+
+		.movie {
+			border: 1px solid black;
+			padding: 1em;
+			margin: 1em;
+		}
+	</style>
+	<script>
+		"use strict";
+
+		(function() {
+			window.onload = init;
+
+			function init() {
+				document.querySelector('#mybutton').onclick = loadData;
+			}
+
+			function loadData() {
+				var xhr = new XMLHttpRequest();
+				var allMovies = [];
+				xhr.onload = function() {
+					const allmoviesContainer = createElement(`
+						<section>
+							<h2>Here are the movies!</h2>
+						</section>
+						`)
+
+					var xml = xhr.responseXML;
+
+					allMovies = xml.querySelectorAll('movie');
+
+					allMovies.forEach((movie) => {
+						const title = movie.querySelector('title').firstChild.nodeValue;
+						const actor = movie.querySelector('actor').firstChild.nodeValue;
+						const rating = movie.getAttribute('rating');
+
+						const movieContainer = createElement(`
+							<div class="movie">
+								<h3>${title}</h3>
+								<p>
+									<em>${actor}</em>
+								</p>
+								<p>
+									Rating = ${rating}
+								</p>
+							</div>
+							`);
+
+						allmoviesContainer.appendChild(movieContainer);
+					});
+
+					const contentContainer = document.querySelector('#content');
+					contentContainer.innerHTML = '';
+					contentContainer.appendChild(allmoviesContainer);
+				}
+
+				var url = "movies-data.xml";
+				xhr.open('GET', url, true);
+				// try to prevent browser caching by sending a header to the server
+				xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2010 00:00:00 GMT");
+				xhr.send();
+			}
+
+			// Create html element. Code adapted from
+			// https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+			function createElement(html) {
+				const template = document.createElement('template');
+				html = html.trim(); // Never return a text node of whitespace as the result
+				template.innerHTML = html;
+				return template.content.firstChild;
+			}
+
+
+		}());
+	</script>
+</head>
+
+<body>
+	<h1>Movies!</h1>
+	<p><button id='mybutton'>Fetch Data</button></p>
+	<div id='content'></div>
+
+</body>
+
+</html>

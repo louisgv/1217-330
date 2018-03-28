@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Concert</title>
+    <style>
+        * {
+            font-family: tahoma, verdana, sans-serif;
+        }
+
+        .concert {
+            border: 1px solid black;
+            padding: 1em;
+            margin: 1em;
+        }
+    </style>
+    <script>
+        "use strict";
+
+        (function() {
+            window.onload = init;
+
+            function init() {
+                document.querySelector('#mybutton').onclick = loadData;
+            }
+
+            function loadData() {
+                var xhr = new XMLHttpRequest();
+                var allConcerts = [];
+                xhr.onload = function() {
+                    const allConcertsContainer = createElement(`
+						<section>
+							<h2>Here are the old concerts!</h2>
+						</section>
+						`)
+
+                    var xml = xhr.responseXML;
+
+                    allConcerts = xml.querySelectorAll('event');
+
+                    allConcerts.forEach((event) => {
+                        const title = event.querySelector('title').firstChild.nodeValue;
+                        const city = event.querySelector('city').firstChild.nodeValue;
+                        const startDate = event.querySelector('startDate').firstChild.nodeValue;
+
+                        const images = event.querySelectorAll('image');
+
+                        const image = images[images.length - 1].firstChild.nodeValue;
+
+                        const concertContainer = createElement(
+                            `
+							<div class="concert">
+								<h3>${title}</h3>
+								<p>
+									${city} -- ${startDate}
+								</p>
+                                <img src="${image}"/>
+							</div>
+							`);
+
+                        allConcertsContainer.appendChild(concertContainer);
+                    });
+
+                    const contentContainer = document.querySelector('#content');
+                    contentContainer.innerHTML = '';
+                    contentContainer.appendChild(allConcertsContainer);
+                }
+
+                var url = "last-fm-results.xml";
+                xhr.open('GET', url, true);
+                // try to prevent browser caching by sending a header to the server
+                xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2010 00:00:00 GMT");
+                xhr.send();
+            }
+
+            // Create html element. Code adapted from
+            // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+            function createElement(html) {
+                const template = document.createElement('template');
+                html = html.trim(); // Never return a text node of whitespace as the result
+                template.innerHTML = html;
+                return template.content.firstChild;
+            }
+
+
+        }())
+    </script>
+</head>
+
+<body>
+    <h1>Concerts!</h1>
+    <p><button id='mybutton'>Lets see some old concerts date</button></p>
+    <div id='content'></div>
+
+</body>
+
+</html>

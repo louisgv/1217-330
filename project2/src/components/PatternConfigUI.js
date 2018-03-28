@@ -10,13 +10,8 @@
 "use strict";
 var app = app || {};
 
-(function () {
-    const {
-        PatternConfig,
-        Interface,
-        Helper,
-        Global
-    } = app;
+(function() {
+    const {PatternConfig, Interface, Helper, Global} = app;
 
     app.PatternConfigUI = class {
 
@@ -41,24 +36,19 @@ var app = app || {};
 
             const patternConfig = instance.config;
 
-            PatternConfig.select[v].forEach(selectLabel => {
-                const selectConfig = selectLabel.toLowerCase();
-                const selectOptions = PatternConfig[`${selectConfig}s`];
-                const selectDefault = patternConfig[selectConfig];
-                const checkBoxEl = Interface.generateSelect(
-                    `Select value for ${selectLabel}`,
-                    selectOptions,
-                    selectDefault, (e) => {
+            if (PatternConfig.select[v]) {
+                PatternConfig.select[v].forEach(([selectLabel, selectConfig, selectOption, selectOptions]) => {
+                    const selectDefault = patternConfig[selectConfig];
+                    const checkBoxEl = Interface.generateSelect(`Select value for ${selectLabel}`, selectOptions, selectDefault, (e) => {
                         // TODO: make alpha tweakable
-                        patternConfig[selectConfig] = PatternConfig[selectConfig][e.target.value];
+                        patternConfig[selectConfig] = selectOption[e.target.value];
                         instance.updateCache();
                         onChange();
                     });
 
-                bodyEl.appendChild(checkBoxEl);
-
-            });
-
+                    bodyEl.appendChild(checkBoxEl);
+                });
+            }
 
             return bodyEl;
         }

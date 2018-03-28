@@ -15,38 +15,61 @@ var app = app || {};
 
     // Label - Enabled
     const value = Object.seal({
-        'shapeGrid': [
-            'Shape Grid', true
+        'backgroundImage': [
+            'Background Image', true
         ],
+        'shapeGrid': ['Shape Grid'],
+        'shapeAltGrid': ['Shape Alternative Grid']
     });
 
     // Class - Default Config
     const defaultValue = Object.seal({
+        'backgroundImage': [
+            'BackgroundImage', {
+                zoom: 0,
+                src: Global.BACKGROUND_IMAGES[0]
+            }
+        ],
         'shapeGrid': [
             'ShapeGrid', {
                 size: 10,
-                shape: 'Diamond',
+                shape: 'Diamond'
             }
         ],
+        'shapeAltGrid': [
+            'ShapeAltGrid', {
+                size: 10,
+                shape: 'Triangle'
+            }
+        ]
     });
 
-    const shape = Global.BASIC_SHAPE;
+    const shapeSelect = [
+        'Shape',
+        'shape',
+        Helper.makeEnum(Global.BASIC_SHAPES),
+        Global.BASIC_SHAPES
+    ];
 
-    const shapes = Object.keys(shape);
+    const backgroundSelect = [
+        'Source',
+        'src',
+        Helper.makeEnum(Global.BACKGROUND_IMAGES),
+        Global.BACKGROUND_IMAGES
+    ];
 
     const select = Object.seal({
-        'shapeGrid': ['Shape']
+        'shapeGrid': [shapeSelect],
+        'shapeAltGrid': [shapeSelect],
+        'backgroundImage': [backgroundSelect]
     });
-
 
     const values = Object.keys(value);
 
     app.PatternConfig = {
         value,
         values,
-        shape,
-        shapes,
         select,
-        defaultValue,
+        defaultValue
     };
 }());

@@ -18,7 +18,7 @@ var app = app || {};
     // Label - Enabled
     const value = Object.seal({
         'passThrough': [
-            'PassThrough', true
+            'PassThrough'
         ],
         'kaleidoscope': [
             'Kaleidoscope', true
@@ -39,8 +39,21 @@ var app = app || {};
 
     // label - config - min - max
     const slider = Object.seal({
-        'passThrough' : [],
-        'kaleidoscope': []
+        'kaleidoscope': [
+            ['Slices', 'slices', 0, 100],
+            ['Zoom', 'zoom', 0, 10]
+        ]
+    });
+
+    // label - path within config - config
+    const checkbox = Object.seal({
+        'kaleidoscope': [
+            ['Rotate', ['animateKey'], 'offsetRotation'],
+            ['Shift X', ['animateKey'], 'offsetX'],
+            ['Shift Y', ['animateKey'], 'offsetY'],
+            ['Animate', [], 'animate'],
+            ['Mouse Track', [], 'mouseAnim']
+        ],
     });
 
     app.FilterConfig = {
@@ -48,5 +61,6 @@ var app = app || {};
         values,
         defaultValue,
         slider,
+        checkbox,
     };
 }());
