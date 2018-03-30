@@ -68,11 +68,15 @@ var app = app || {};
         // Toggle all toggle target based on the menu button state
         toggleUIElement(e) {
 
+            const controlEl = document.querySelector('#controls');
+
             const shouldDisable = e.target.innerText === 'x';
 
             e.target.innerHTML = shouldDisable
                 ? '='
                 : 'x';
+
+            controlEl.classList.toggle('highlight');
 
             Array.from(document.querySelectorAll('.toggle-target')).map((target) => {
                 target.classList.toggle('toggle-disabled');

@@ -25,7 +25,7 @@ var app = app || {};
 
             const [label, isEnabled] = PatternConfig.value[v];
 
-            const bodyEl = Helper.createElement(`<div class="flex-inline-row margin-bottom"></div>`);
+            const bodyEl = Helper.createElement(`<div class="flex-inline-row flex-wrap margin-top-double margin-bottom-double"></div>`);
 
             const patternToggleEl = Interface.generateCheckBox(label, v, (e) => {
                 instance.disabled = !e.target.checked;
