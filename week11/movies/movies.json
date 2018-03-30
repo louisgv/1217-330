@@ -1,0 +1,27 @@
+{
+    "movies": [{
+            "t": "The Shawshank Redemption",
+            "a": ["Morgan Freeman", "Tim Robins"],
+            "rating": 9.3
+        }, {
+            "t": "The Godfather",
+            "a": ["Al Pacino"],
+            "rating": 9.2
+        },
+        {
+            "t": "The Godfather: Part II",
+            "a": ["John Cazale"],
+            "rating": 9.0
+        },
+        {
+            "t": "The Dark Knight",
+            "a": ["Heath Ledger", "Christian Bale", "Aaron Eckhart"],
+            "rating": 9.0
+        },
+        {
+            "t": "Schindler's List",
+            "a": ["Ben Kingsley", "Embeth Davidtz"],
+            "rating": 8.9
+        }
+    ]
+}

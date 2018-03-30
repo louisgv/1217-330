@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>XHR JSON Example</title>
+	<style>
+		* {
+			font-family: tahoma, verdana, sans-serif;
+		}
+
+		.movie {
+			border: 1px solid black;
+			padding: 5px;
+			margin-bottom: 10px;
+		}
+	</style>
+	<script>
+		(function() {
+			"use strict";
+			window.onload = init;
+
+			function init() {
+				document.querySelector('#mybutton').onclick = loadData;
+			}
+
+			function loadData() {
+				var xhr = new XMLHttpRequest();
+				xhr.onload = function() {
+					// JSON.parse() converts a string to JSON.
+					var myJSON = JSON.parse(xhr.responseText);
+
+					//	var myJSON = eval('(' + xhr.responseText + ')');
+					var allmovies = myJSON.movies;
+
+					const contentContainer = document.querySelector('#content');
+
+					contentContainer.innerHTML = "There are " + allmovies.length + " movies!";
+
+					const allmoviesContainer = createElement(`
+						<section>
+							<h2>Here are the movies!</h2>
+						</section>
+						`);
+
+					allmovies.forEach(({a, rating, t}) => {
+                        const actorUnorderdList = a.map((actor) =>`
+                            <li>
+                                ${actor}
+                            </li>
+                        `).join('');
+						const movieContainer = createElement(
+							`
+							<div class="movie">
+								<h3>${t}</h3>
+								<ul>
+									${actorUnorderdList}
+								</ul>
+								<p>
+									Rating = ${rating} / 10
+								</p>
+							</div>
+							`);
+
+						allmoviesContainer.appendChild(movieContainer);
+					});
+
+					contentContainer.appendChild(allmoviesContainer);
+				}
+
+				var url = "movies.json";
+				xhr.open('GET', url, true);
+				// try to prevent browser caching by sending a header to the server
+				xhr.setRequestHeader("If-Modified-Since", "Sat, 1 Jan 2010 00:00:00 GMT");
+				xhr.send();
+			}
+
+			// Create html element. Code adapted from
+			// https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro/35385518#35385518
+			function createElement(html) {
+				const template = document.createElement('template');
+				html = html.trim(); // Never return a text node of whitespace as the result
+				template.innerHTML = html;
+				return template.content.firstChild;
+			}
+
+		}())
+	</script>
+</head>
+
+<body>
+	<h1>movies!</h1>
+	<p><button id='mybutton'>Fetch Data</button></p>
+	<div id='content'></div>
+
+</body>
+
+</html>
