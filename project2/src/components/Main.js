@@ -51,7 +51,7 @@ var app = app || {};
          *
          */
         halt() {
-            // document.querySelector('#halt-notice').classList.add('enabled');
+            document.querySelector('#halt-notice').classList.add('enabled');
 
             this.paused = true;
             cancelAnimationFrame(this.animationID);
@@ -61,7 +61,7 @@ var app = app || {};
         /** Resume the application
          */
         resume() {
-            // document.querySelector('#halt-notice').classList.remove('enabled');
+            document.querySelector('#halt-notice').classList.remove('enabled');
 
             cancelAnimationFrame(this.animationID);
             this.paused = false;
