@@ -1,0 +1,39 @@
+button {
+    font-size: 11px;
+    position: absolute;
+    color: red;
+    font-weight: bold;
+    height: 30px;
+    width: 130px;
+    z-index: 100;
+}
+
+#worldZoomButton {
+top: 70px;
+left: 10px;
+}
+
+#defaultZoomButton {
+    top: 110px;
+    left: 10px;
+}
+
+#buildingZoomButton {
+    top: 150px;
+    left: 10px;
+}
+
+#isometricZoomButton {
+    top: 190px;
+    left: 10px;
+}
+
+#updateCoffee {
+    top: 230px;
+    left: 10px;
+}
+
+#updateBuildings {
+    top: 270px;
+    left: 10px;
+}

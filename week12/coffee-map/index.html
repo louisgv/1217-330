@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Map</title>
+    <meta name="viewport"
+          content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+
+        #map {
+            height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <link rel="stylesheet"
+          href="./index.css">
+</head>
+
+<body>
+    <p><button id="worldZoomButton"
+                name="World Zoom Button">World Zoom (1)</button></p>
+
+    <p><button id="defaultZoomButton"
+                name="Default Zoom Button">Default Zoom (16)</button></p>
+
+    <p><button id="buildingZoomButton"
+                name="Building Zoom Button">Building Zoom (20)</button></p>
+
+    <p><button id="isometricZoomButton"
+                name="Isometric Zoom Button">Isometric View (18)</button></p>
+
+    <p><button id="updateCoffee"
+                name="Update Coffee Button">
+                Update Coffee Shops
+            </button></p>
+
+    <p><button id="updateBuildings"
+                name="Update Buildings Button">
+        Update Buildings
+    </button></p>
+
+    <div id="map"></div>
+
+    <script src="./index.js"
+            charset="utf-8"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAuFHNsmQgfufpTkyA9vZ2e53MxxSIf8vk&callback=initMap"
+            async
+            defer></script>
+</body>
+
+</html>
+
+<!--
+A) Write below how you can specify the coordinate (latitude -80, longitude 22) as an
+object literal.
+    center: {lat: -80, lng: 22}
+
+B) Which zoom level will show ...
+    1: World
+    5: Landmass/continent
+    10: City
+    15: Streets
+    20: Buildings
+ -->
